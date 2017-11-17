@@ -3,16 +3,18 @@
     <div class="caseTab">
       <span class="caseJiankong active" @click="tabChange">案件监控</span>
       <span class="allCase" @click="tabChange">全部案件</span>
+      <div class="lineBox"></div>
     </div>
     <div class="manageContent">
+      <case-monitor v-if="jianKongActive"></case-monitor>
         <case-list v-if="allCaseActive"></case-list>
-        <case-monitor v-if="jianKongActive"></case-monitor>
+
     </div>
   </div>
 </template>
 <script>
-  import caseList from './caseList'
-  import caseMonitor from './caseMonitor'
+  import caseList from '@/components/caseList'
+  import caseMonitor from '@/components/caseMonitor'
   export default {
     data() {
       return{
@@ -25,7 +27,6 @@
         var attributes = event.target.attributes
         for(var i=0;i< attributes.length;i++){
           if(i == 1){
-
             if(attributes[i].nodeValue.indexOf('caseJiankong') > -1){
                attributes[i].nodeValue = 'caseJiankong active'
                $(".allCase").attr("class","allCase")
@@ -37,11 +38,8 @@
               this.jianKongActive = false;
               this.allCaseActive = true;
             }
-
           }
-
         }
-
       }
     },
     components: {
@@ -53,34 +51,45 @@
 </script>
 <style scoped>
   .caseManage{
-    width: 100%;
-    margin-top: 40px;
-    margin-left: 40px;
+    background: #fff;
+    margin: 15px auto;
+    width: 80%;
+    overflow-y: scroll;
+    height: 82vh;
+    padding-bottom: 20px;
   }
 .caseTab{
-  width: 80%;
-  border-bottom: 1px solid #2EAB3B;
-  padding-left: 10px;
+  width: 98%;
+  margin: 15px auto;
 }
   .caseJiankong, .allCase{
+    cursor: pointer;
     display: inline-block;
-    height: 35px;
-    width: 80px;
+    height: 45px;
+    width: 8%;
     background: #fff;
-    color: #2EAB3B;
-    line-height: 35px;
+    color: #232323;
+    line-height: 45px;
     text-align: center;
-    border: 1px solid #2EAB3B;
-    border-bottom: none;
+    border: 1px solid #DFE4ED;
+    font-size: 15px;
   }
   .caseJiankong{
     margin-right: -5px;
+    border-right: none;
   }
   .active{
-    background: #2EAB3B;
-    color: #fff;
+    color: #2EAB3B;
+    border-bottom: none;
   }
   .manageContent{
     margin-left: 10px;
+  }
+  .lineBox{
+    width: 90%;
+    height: 1px;
+    background: #DFE4ED;
+    margin-top: -1px;
+    margin-left: 8%;
   }
 </style>

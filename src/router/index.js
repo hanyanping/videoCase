@@ -2,9 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import surveyContant from  '@/page/surveyContant'
 import login from '@/page/login'
-import page1 from '@/page/page1'
-import page2 from '@/page/page2'
-import page3 from '@/page/page3'
+import one from '@/page/one'
+import caseManage from '@/page/caseManage'
+import seatManage from '@/page/seatManage'
+import institutionManage from '@/page/institutionManage'
+import insitutionEditor from '@/page/insitutionEditor'
 
 Vue.use(Router)
 
@@ -15,19 +17,27 @@ export default new Router({
       component: surveyContant,
       children: [{
         path: '/',
-        component: page1
+        component: caseManage
       }, {
-        path: '/page2',
-        component: page2
+        path: '/seatManage',
+        component: seatManage
       }, {
-        path: '/page3',
-        component: page3
+        path: '/institutionManage',
+        component: institutionManage,
+        children:[{
+          path:'/insitutionEditor',
+          component: insitutionEditor,
+        }]
       }]
     },
     {
       path: '/login',
       component: login
     },
+    {
+      path: '/one',
+      component: one
+    }
   ]
 })
 
