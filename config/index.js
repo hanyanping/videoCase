@@ -10,7 +10,17 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/insure_survey_web': {
+        // target: 'http://devaiganneo.aiganyisheng.com', // 测试
+           // target: 'http://dingxiaoxin.aiganyisheng.com', //个人服务器
+        target: 'https://api.accidentx.zhongchebaolian.com/insure_survey_web', // 正式
+        changeOrigin: true,
+        pathRewrite: {
+          '^/insure_survey_web': '/'
+        }
+      },
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

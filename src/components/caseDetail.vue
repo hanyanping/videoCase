@@ -188,7 +188,7 @@
                 <tr><td>保险公司:</td><td> 阳光保险集团 阳光保险集团</td><td>保险公司城市： </td><td>杭州</td><td> 处理机构：</td><td>中车北京查勘定损中心 </td></tr>
               </table>
               <div class="aimCarImg">
-                <ul>
+                <ul id="scaleImg">
                   <li>
                     <img src="../images/car.png">
                     <br>
@@ -213,7 +213,7 @@
               </div>
             </div>
           </div>
-          <div class="thirdCar AimCar" v-for="item in thirdCar">
+          <div class="thirdCar AimCar" v-for="(item,index) in thirdCar">
             <div class="aimheader">三者车(京A123454)</div>
             <div class="aimInfo">
               <table class="table" border="0" cellspacing="0" cellpadding="0">
@@ -222,24 +222,24 @@
                 <tr><td>保险公司:</td><td> 阳光保险集团 阳光保险集团</td><td>保险公司城市： </td><td>杭州</td><td> 处理机构：</td><td>中车北京查勘定损中心 </td></tr>
               </table>
               <div class="aimCarImg">
-                <ul>
+                <ul class="suibian">
                   <li>
-                    <img src="../images/car.png">
+                    <img data-src="../images/kefuBlue.png" src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img src="../images/car.png">
+                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img src="../images/car.png">
+                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816041149.jpg" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img src="../images/car.png">
+                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
@@ -276,6 +276,7 @@
   </div>
 </template>
 <script>
+import Viewer from 'viewerjs';
 export default {
   data() {
       return{
@@ -291,7 +292,24 @@ export default {
       }
     },
     created(){
-
+    },
+    mounted() {
+      this.$nextTick(() => {
+        new Viewer(document.getElementById('scaleImg'), {
+            url: 'src',
+            navbar:false,
+            toolbar:true,
+            loop: true
+          })
+        for (let i in this.thirdCar) {
+          new Viewer(document.getElementsByClassName('suibian')[i], {
+            url: 'data-src',
+            navbar:false,
+            toolbar:true,
+            loop: true
+          })
+        }
+      })
     },
       methods: {
         closCaseDetail(){

@@ -378,7 +378,6 @@
       }
     },
     mounted() {
-
     },
     created(){
       console.log(this.activeName)

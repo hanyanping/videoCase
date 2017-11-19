@@ -8,7 +8,29 @@
 <script>
   import headTop from '../components/header'
   import footerFoot from '../components/footer'
+  import axios from 'axios'
   export default {
+   data() {
+      return{
+       data: { sbiDriverlicenseNo: "420683198811214298",
+         sbiLicenseNo: "京M45352",
+         sbiPhone: "13910284063"
+         },
+       url: '/insure_survey_web'
+      }
+    },
+    created(){
+      axios.post(this.url+"/platform/didi/survey/detail/count", this.data)
+        .then(response => {
+          console.log(response.data)
+          resolve(response.data);
+        }, err => {
+            console.log(err);
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    },
     components: {
       headTop,
       footerFoot,
