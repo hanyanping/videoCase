@@ -3,8 +3,7 @@
     width: 90%;
     margin: 0 auto;
   }
-
-  .insitutionMinute{
+ .insitutionList .insitutionMinute{
     cursor: pointer;
     width: 20%;
     text-align:  center;
@@ -16,47 +15,45 @@
     border: 1px solid #bbb;
     margin-top: 10px;
   }
-  .insitutionMinute h3{
+  .insitutionList .insitutionMinute h3{
     margin-top: 5px;
     font-size: 24px;
   }
-  .insitutionMinute .minuterdetail{
+  .insitutionList .insitutionMinute .minuterdetail{
     color:#555;
     font-size:15px;
     text-align: left;
     margin-bottom: 15px;
     padding-left: 7%;
   }
-  .insitutionMinute  .minuteNuber{
+  .insitutionList .insitutionMinute  .minuteNuber{
     font-size: 16px;
     font-weight: 600;
   }
-  .seatListDialog{
+  .insititutListDialog{
     background: rgba(0,0,0,0.3);
     width:100%;
     position: fixed;
     height: 100vh;
     top: 0;
-    left: 0
+    left: 0;
+    z-index: 100;
   }
-  .seatListDialogBox{
-    width: 47%;
+  .insititutListDialogBox{
+    width: 38%;
     margin: 10vh auto;
     background: #fff;
     padding: 20px;
     max-height: 70vh;
     position: relative;
   }
-  .seatListDialogBoxAdd{
-    width: 38%;
-  }
-  .seatListDialog .dialogTitle{
+  .insititutListDialog .dialogTitle{
     color: #232323;
     font-size:16px;
     font-weight: 600;
   }
 
-  .seatListDialog .scrollBox{
+  .insititutListDialog .scrollBox{
     overflow-y: scroll;
     max-height: 60vh;
   }
@@ -74,38 +71,21 @@
     font-weight: normal;
     font-style: normal;
   }
-  .closSeatMontor{
+
+  .insitutionList .addFont{
+    margin: 90px auto;
+  }
+  .insitutionList .addFont img{
+    height: 50px;
+    width: 50px;
+  }
+  .insititutListDialog .closinsititutMontor{
     font-size: 42px;
     right: 15px;
     top: 0;
     position: absolute;
   }
-  .addFont{
-    margin: 90px auto;
-  }
-  .addFont img{
-    height: 50px;
-    width: 50px;
-  }
-  .InputSeatInfo{
-    font-size: 15px;
-    padding: 15px;
-  }
-  .InputSeatInfo span{
-    margin-left: 25px;
-    display: inline-block;
-    width: 13%;
-    text-align: left;
-  }
-  .InputSeatInfo input,.InputSeatInfo select{
-    width: 28%;
-    border: 1px solid #DCDCDC;
-    height: 35px;
-    line-height: 35px;
-    padding-left: 6px;
-    border-radius: 4px;
-  }
-  .InputSeatInfo .saveButton, .sureAddSeat{
+  .insititutListDialog .addinsitituteSure{
     color: #fff;
     font-size: 15px;
     display: inline-block;
@@ -117,32 +97,14 @@
     margin-left: 18%;
     cursor: pointer;
   }
-  .seatListFoot{
-    border: 1px solid #bbb;
-    font-size: 15px;
-    padding: 15px;
-  }
-
-  .seatInfoFoot{
-    padding-bottom: 10px;
-    padding-left: 25px;
-  }
-  .seatInfoFoot .infoDetail{
-    display: inline-block;
-    width: 45%;
-  }
-  .footBottom{
-    border-top:1px dashed #bbb;
-    padding-top: 20px;
-  }
-  .addSeatInput{
+  .addinsitituteInput{
     padding: 10px 0 10px 10%;
   }
-  .addSeatInput span{
+  .addinsitituteInput span{
     display: inline-block;
     min-width:20%;
   }
-  .addSeatInput input,.addSeatInput select{
+  .addinsitituteInput input,.addinsitituteInput select{
     height:35px;
     line-height:35px;
     padding-left: 6px;
@@ -153,98 +115,43 @@
 </style>
 <template>
   <div>
-    <div class="seatListDialog hide">
-      <div class="seatListDialogBox">
-        <span @click="closSeatDialog" class="right closSeatMontor">×</span>
+    <div class="insititutListDialog hide">
+      <div class="insititutListDialogBox">
+        <span @click="closinsititutMontor" class="closinsititutMontor">×</span>
         <div class="oneMonitor clear">
-          <h4 class="dialogTitle" v-if="editorActive">坐席信息</h4>
-          <h4 class="dialogTitle" v-else>添加坐席</h4>
+          <h4 class="dialogTitle">添加机构</h4>
           <div class="clear scrollBox">
-            <div v-if="editorActive" style="margin-top:20px;">
-              <div class="InputSeatInfo">
-                <span>坐席账号:</span>
-                <input type="text" disabled  value="jjj交警"/>
-                <span>坐席姓名:</span>
-                <input type="text"   value="jjj交警"/>
-              </div>
-              <div class="InputSeatInfo">
-                <span>坐席手机号:</span>
-                <input type="text"   value="jjj交警"/>
-                <span>坐席账号密码:</span>
-                <input type="text"   value="jjj交警"/>
-              </div>
-              <div class="InputSeatInfo">
-                <span>账号状态:</span>
-                <select>
-                  <option>正常</option>
-                  <option>冻结</option>
-                </select>
-              </div>
-              <div class="InputSeatInfo">
-                <span class="backColorGreen saveButton" @click="saveSeats"> 保存</span>
-              </div>
-              <div class="seatListFoot">
-                <div class="footTop">
-                  <div class="seatInfoFoot">
-                    <span class="infoDetail">当前状态: 繁忙 <i class="colorRed">(处理中-未连线)</i></span>
-                    <span class="infoDetail">未处理案件: 5</span>
-                  </div>
-                  <div class="seatInfoFoot">
-                    <span class="infoDetail">今日已处理案件: 4单</span>
-                    <span class="infoDetail">今日登陆时间: 2017-11-29 08:12:12</span>
-                  </div>
-                  <div class="seatInfoFoot" style="padding-bottom: 20px;">
-                    <span class="infoDetail">累计处理案件: 12单</span>
-                  </div>
-                </div>
-                <div class="footBottom">
-                  <div class="seatInfoFoot">
-                    <span class="infoDetail">报案人车牌号: 12333333</span>
-                    <span class="infoDetail">报案人手机号: 5</span>
-                  </div>
-                  <div class="seatInfoFoot">
-                    <span class="infoDetail">事故时间: 2017-11-29 08:12:12</span>
-                    <span class="infoDetail">事故地点: 北京市朝阳区啥UN机构in黄金进口123</span>
-
-                  </div>
-                  <div class="seatInfoFoot">
-                    <span class="infoDetail">开始处理时间: 2017-11-29 08:12:12</span>
-                    <span class="infoDetail">案件状态: 查勘中</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style="margin-top:20px;" v-else>
-              <div class="addSeatInput">
-                <span>坐席所属机构</span>
+            <div style="margin-top:20px;">
+              <div class="addinsitituteInput">
+                <span>机构名称</span>
                 <select>
                   <option></option>
                 </select>
               </div>
-              <div class="addSeatInput">
-                <span>坐席账号</span>
+              <div class="addinsitituteInput">
+                <span>机构账号</span>
                 <input type="text" placeholder="请输入坐席账号"/>
               </div>
-              <div class="addSeatInput">
-                <span>坐席账号密码</span>
+              <div class="addinsitituteInput">
+                <span>账号密码</span>
                 <input type="text" placeholder="请输入坐席账号密码"/>
               </div>
-              <div class="addSeatInput">
-                <span>坐席姓名</span>
+              <div class="addinsitituteInput">
+                <span>联系人</span>
                 <input type="text" placeholder="请输入坐席姓名"/>
               </div>
-              <div class="addSeatInput">
-                <span>坐席手机号</span>
+              <div class="addinsitituteInput">
+                <span>联系人手机号</span>
                 <input type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
               </div>
-              <div class="addSeatInput">
+              <div class="addinsitituteInput">
                 <span>账号状态</span>
                 <select>
                   <option>正常</option>
                 </select>
               </div>
-              <div class="addSeatInput">
-                <span class="sureAddSeat backColorGreen" @click="addSeats">确定</span>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSure backColorGreen" @click="addInsititution">确定</span>
               </div>
             </div>
           </div>
@@ -263,7 +170,7 @@
           <p class="minuterdetail">今日已处理案件: 0</p>
           <p class="minuterdetail">累计处理案件: 0</p>
         </div>
-        <div class="insitutionMinute left" style="background:#F8F8F9;min-height:260px;"  @click="addSeatsDialog">
+        <div class="insitutionMinute left" style="background:#F8F8F9;min-height:260px;"  @click="addInsitituDialog">
           <div class="addFont">
             <img src="../images/add.png">
           </div>
@@ -277,9 +184,7 @@
                     layout="total,prev,pager, next,jumper"
                     :total="totalCount">
     </el-pagination>
-
   </div>
-
 </template>
 <script>
   export default {
@@ -293,7 +198,6 @@
           {"statius":0},
           {"statius":2},
           {"statius":11}]
-
       }
     },
     props: {
@@ -336,43 +240,32 @@
       }]
     },
     watch: {
-      "editorActive": function(){
-        if(this.editorActive == false){
-          $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
-
-        }else{
-          $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
-        }
-      }
+//      "editorActive": function(){
+//        if(this.editorActive == false){
+//          $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
+//
+//        }else{
+//          $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
+//        }
+//      }
     },
     methods: {
       goInsititionEditor(){//机构信息编辑
-      this.insititutEditorActive = !this.insititutActive;
-      console.log(this.insititutEditorActive)
+      this.insititutEditorActive = true;
+      console.log(this.insititutEditorActive);
 
         this.$emit('message', this.insititutEditorActive);
       },
-      addSeatsDialog(){//打来添加坐席遮盖层
+      addInsitituDialog(){//打来添加机构遮盖层
         this.editorActive = false;
-        $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
-        $(".seatListDialog").removeClass("hide");
+        $(".insititutListDialog").addClass("insititutListDialogBoxAdd");
+        $(".insititutListDialog").removeClass("hide");
       },
-      addSeats(){//添加坐席
-        $(".seatListDialog").addClass("hide");
-        $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
+      addInsititution(){//添加坐席
+        $(".insititutListDialog").addClass("hide");
       },
-      saveSeats(){//保存编辑坐席
-        $(".seatListDialog").addClass("hide");
-      },
-      closSeatDialog(){//关闭遮盖层
-        $(".seatListDialog").addClass("hide");
-
-      },
-      goCaseDetail(){//打开查看案件详情
-        $(".caseDetail").removeClass("hide")
-      },
-      goSignSeat(){//打开坐席指派遮盖层
-        $(".signSeats").removeClass("hide")
+      closinsititutMontor(){//关闭遮盖层
+        $(".insititutListDialog ").addClass("hide");
       }
     },
     components: {

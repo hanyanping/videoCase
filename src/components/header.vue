@@ -1,69 +1,41 @@
-<template>
-    <div class="header">
-      <div style="display:flex">
-        <div style="display:flex;margin-top:12px;">
-          <img src="../images/logo.png"/>
-          <h3 class="headerText"><span>|</span>事故e处理-视频查勘定损平台</h3>
-        </div>
-        <div class="menu">
-          <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" router>
-            <el-menu-item index="1" route="/">案件管理</el-menu-item>
-            <el-menu-item index="2" route="/seatManage">坐席管理</el-menu-item>
-            <el-menu-item index="3" route="/institutionManage">机构管理</el-menu-item>
-          </el-menu>
-        </div>
-      </div>
-
-      <div class="headerLeft">
-        <span class="userName">站昂扬</span>
-        <span class="userInsitu">(中车宝联客服中心)</span>
-        <span class="signOut">退出</span>
-        <span class="creatCase">创建案件</span>
-      </div>
-    </div>
-</template>
-<script>
-  export default {
-    data(){
-      return{
-
-      }
-    }
-  }
-
-</script>
 <style scoped>
   .headerText{
     color: #555555;
-    line-height: 45px;
     font-size: 15px;
     margin-left: 15px;
+    display: inline-block;
+    margin-top: 25px;
+    width: 210px;
+
   }
   .headerText span{
     padding-right:10px;
   }
   .header{
     display: flex;
-    justify-content: space-between;
     background: #fff;
     width:100%;
-    padding:10px 10%;
+    padding:2px 10%;
     margin: 0 auto;
+    /*height: 80px;*/
+    justify-content: space-between;
   }
   .header img{
     height: 40px;
     width: 115px;
   }
   .headerLeft{
-    height:60px;
-    line-height: 60px;
     font-size: 15px;
     color: #555;
+    display: flex;
+    margin-top: 20px;
   }
   .signOut{
     color: #2EAB3B;
-    margin:0 15px;
+    margin:0 10px;
     cursor: pointer;
+    display: inline-block;
+    width: 40px;
   }
   .creatCase{
     height: 35px;
@@ -74,5 +46,465 @@
     color: #fff;
     background: #2EAB3B;
     cursor: pointer;
+    margin-top: -6px;
+  }
+
+  .creatCaseDialog,.cityDialog,.AdressDialog{
+    background: rgba(0,0,0,0.3);
+    width:100%;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .creatCaseDialogBox, .cityDialogBox,.AdressDialogBox{
+    width: 38%;
+    margin: 10vh auto;
+    background: #fff;
+    padding: 20px;
+    max-height: 70vh;
+    position: relative;
+  }
+  .AdressDialogBox{
+    width: 45%;
+  }
+  .cityDialogBox{
+    margin-top: 20vh;
+  }
+  .dialogTitle{
+    color: #232323;
+    font-size:16px;
+    font-weight: 600;
+  }
+
+  .creatCaseDialog .scrollBox{
+    overflow-y: scroll;
+    max-height: 60vh;
+  }
+  .imgBox img{
+    height: 68px;
+    width: 68px;
+    margin:0 auto;
+  }
+
+  .carInfoBox p{
+    line-height: 25px;
+    font-weight: normal;
+    font-style: normal;
+  }
+  .closCreatDiolag, .closeCityDiolag, .closeAdressDiolag{
+    font-size: 42px;
+    right: 15px;
+    top: 0;
+    position: absolute;
+  }
+  .creatCaseDialog{
+    font-size: 42px;
+    right: 15px;
+    top: 0;
+    position: absolute;
+  }
+  .creatCaseDialog .addinsitituteSure{
+    color: #fff;
+    font-size: 15px;
+    display: inline-block;
+    line-height: 35px;
+    height: 35px;
+    width: 100px;
+    text-align: center;
+    border-radius: 5px;
+    margin-left: 18%;
+    cursor: pointer;
+  }
+  .sureAdress{
+    color: #fff;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 6px 12px;
+  }
+  .addinsitituteInput{
+    padding: 10px 0 5px 10%;
+  }
+  .addinsitituteInput .addinsitituteSpan{
+    display: inline-block;
+    min-width: 20%;
+    font-size: 15px;
+  }
+  .addinsitituteInput .creatInput{
+    height:35px;
+    line-height:35px;
+    padding-left: 6px;
+    border: 1px solid #bbb;
+    border-radius:4px;
+    width: 200px;
+  }
+  .addinsitituteInput .creatInputNo{
+    height:35px;
+    line-height: 35px;
+    border: 1px solid #bbb;
+    border-radius:4px;
+    width: 35px;
+    background: #fff;
+    border-right: none;
+    text-align: center;
+  }
+  .cityDialogBox .cityNameBox{
+    width: 85%;
+    text-align: center;
+    clear: both;
+    margin-left: 30px;
+  }
+  .cityDialogBox .cityNameBox .citySimpleName{
+    width: 10%;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #bbb;
+    color: #232323;
+    border-radius: 5px;
+    text-align: center;
+    margin-right: 10px;
+    float: left;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  .inputadressBox{
+    margin: 15px;
+  }
+  .inputadressBox span{
+   margin-left: 15px;
+  }
+  .adressInput{
+    border: 1px solid #bbb;
+    height: 35px;
+    border-radius: 5px;
+    padding-left: 5px;
+    margin-bottom: 15px;
+  }
+  .oneMonitor{
+     font-size: 15px;
+  }
+    .el-icon-search{
+      font-size:20px;
+      margin-left: -25px;
+      cursor: pointer;
+    }
+  #allmap{
+    width: 100%;
+    height:38vh;
+  }
+  .el-icon-location{
+    font-size: 20px;
+    color: #666;
+    margin-left: -26px;
+  }
+  .radio__inner {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #d8dce5;
+    border-radius: 100%;
+    width: 14px;
+    height: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-left: 20%;
+  }
+  .radio__inner::after {
+    width: 4px;
+    height: 4px;
+    border-radius: 100%;
+    background-color: #fff;
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%) scale(0);
+    transform: translate(-50%,-50%) scale(0);
+    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
+    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6);
+    transition: transform .15s cubic-bezier(.71,-.46,.88,.6), -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
+  }
+  .isChecked{
+    border-color: #2EAB3B;
+    background: #2EAB3B;
+  }
+  .isChecked::after{
+    transform: translate(-50%,-50%) scale(1);
   }
 </style>
+<template>
+  <div>
+    <div class="creatCaseDialog hide">
+      <div class="creatCaseDialogBox">
+        <span @click="closCreatDiolag" class="closCreatDiolag">×</span>
+        <div class="oneMonitor clear">
+          <h4 class="dialogTitle">创建案件</h4>
+          <div class="clear scrollBox">
+            <div style="margin-top:20px;">
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">报案人手机号</span>
+                <input type="tel" class="creatInput"  maxlength="11" placeholder="请输入报案人手机号"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">报案人车牌号</span>
+                <input type="text" @click="openCityDialog" class="creatInputNo"  readonly :value="getCity" />
+                <input class="creatInput" type="text" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">报案人姓名</span>
+                <input class="creatInput" type="text" placeholder="请输入报案人姓名"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">保险报案号</span>
+                <input class="creatInput" type="text" placeholder="请输入保险报案号"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">保险公司</span>
+                <select class="creatInput">
+                  <option></option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">处理机构</span>
+                <select class="creatInput">
+                  <option></option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">查堪类型</span>
+                <select class="creatInput">
+                  <option></option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">事故地点</span>
+                <input class="creatInput" :value="adressValue" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
+                <i class="el-icon-location"></i>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="radio__inner isChecked" @click="checkRadio"></span>
+                <span style="margin-left:6px;">指派坐席</span>
+              </div>
+              <div class="addinsitituteInput">
+
+                <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
+              </div>
+
+            </div>
+        </div>
+          </div>
+      </div>
+    </div>
+    <div class="cityDialog hide">
+      <div class="cityDialogBox">
+        <span @click="closeCityDiolag" class="closeCityDiolag">×</span>
+        <div class="cityNameBox clear">
+          <span class="citySimpleName" v-for="item in cityData" @click="selectCity(item)">{{item}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="AdressDialog hide">
+      <div class="AdressDialogBox">
+        <span @click="closeAdressDiolag" class="closeAdressDiolag">×</span>
+        <div class="oneMonitor clear">
+          <h4 class="dialogTitle">事故地点</h4>
+          <div class="inputadressBox">
+            <span @click="searchAdress">事故地点</span>
+            <input class="adressInput" v-model="adressValue"  :value="adressValue" id="text_" style="width: 166px;" type="text" placeholder="请输入事故地点"/><i @click="searchAdress" class="el-icon-search"></i>
+            <span>经度</span>
+            <input class="adressInput"  id="result_Lng" type="text" readonly placeholder="请输入经度"/>
+            <span>纬度</span>
+            <input class="adressInput"  id="result_Lat" type="text" readonly placeholder="请输入纬度"/>
+            <span class="sureAdress backColorGreen hide" @click="sureAdress">确定</span>
+          </div>
+          <div id="allmap">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header" style="font-size: 85%;">
+      <div style="display: flex;">
+          <img style="margin-top:10px;" src="../images/logo.png"/>
+          <span class="headerText">  <span>|</span>事故e处理-视频查勘定损平台</span>
+         <div class="menu">
+          <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="案件管理" name="first">
+
+            </el-tab-pane>
+            <el-tab-pane label="坐席管理" name="second">
+
+            </el-tab-pane>
+            <el-tab-pane label="机构管理" name="third">
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
+      <div class="headerLeft">
+          <span class="userName">站昂扬</span>
+          <span class="userInsitu">(中车宝联客服中心)</span>
+          <span class="signOut">退出</span>
+          <span class="creatCase" @click="openCreatCase">创建案件</span>
+      </div>
+    </div>
+    <case-manage v-if="caseActive"></case-manage>
+    <seat-manage v-if="seatActive"></seat-manage>
+    <institution-manage v-if="insitituteActive"></institution-manage>
+  </div>
+
+</template>
+<script>
+//  import baiduAdress from '@/components/baiduAdress'
+  import caseManage from '@/components/caseManage'
+  import seatManage from '@/components/seatManage'
+  import institutionManage from '@/components/institutionManage'
+//  import BMap from 'BMap'
+  export default {
+    data(){
+      return{
+        radio: '',
+        adressValue: "",
+        getCity: "京",
+        activeName: 'first',
+        caseActive: true,
+        seatActive: false,
+        insitituteActive: false,
+        cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
+      }
+    },
+    mounted() {
+
+    },
+    created(){
+      console.log(this.activeName)
+    },
+    watch:{
+      "activeName" (){
+        console.log(this.activeName);
+        if(this.activeName == "first"){
+          this.caseActive = true;
+          this.seatActive = false;
+          this.insitituteActive = false;
+        }else if(this.activeName == "second"){
+          this.caseActive = false;
+          this.seatActive = true;
+          this.insitituteActive = false;
+        }else if(this.activeName == 'third'){
+          this.caseActive = false;
+          this.seatActive = false;
+          this.insitituteActive = true;
+        }
+      },
+  },
+    methods: {
+      initMap() {
+        // 添加百度地图
+       this.map = new BMap.Map("allmap");
+      },
+      handleClick(tab, event) {
+        console.log(tab, event);
+      },
+      openCreatCase(){
+        $(".creatCaseDialog").removeClass('hide')
+      },
+      closCreatDiolag(){
+        $(".creatCaseDialog").addClass('hide')
+      },
+      creatNewCase() {//创建案件
+        $(".creatCaseDialog").addClass('hide')
+      },
+      openCityDialog(){
+        $(".cityDialog").removeClass("hide")
+      },
+      closeCityDiolag(){//关闭城市遮盖层
+        $(".cityDialog").addClass("hide")
+      },
+      selectCity(city){
+        this.getCity = city;
+        $(".cityDialog").addClass("hide")
+      },
+      openAdressDialog(){
+        $(".AdressDialog").removeClass("hide")
+      },
+      closeAdressDiolag(){
+        $(".AdressDialog").addClass("hide")
+      },
+      searchAdress(){
+        if(this.adressValue!=''){
+          var map = '';
+          map = new BMap.Map("allmap");
+          map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+          map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+          map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+          map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+          map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+          map.clearOverlays();//清空原来的标注
+          var keyword = this.adressValue;
+          var localSearch = new BMap.LocalSearch(map);
+          localSearch.enableAutoViewport(); //允许自动调节窗体大小
+          localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0);
+            if(poi === undefined){
+              alert('请输入合法地址')
+            }else{
+//              $("#container").removeClass('none');
+              $(".sureAdress").removeClass('hide')
+              document.getElementById("result_Lng").value = poi.point.lng ;
+              document.getElementById("result_Lat").value = poi.point.lat;
+              map.centerAndZoom(poi.point, 13);
+              var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+              var geoc = new BMap.Geocoder();
+              map.addOverlay(marker);
+              marker.enableDragging();  //设置可拖拽
+              marker.addEventListener("dragend", function(e){  //拖动事件
+                var pt = e.point;
+                var dizhi;
+                geoc.getLocation(pt, function(rs){
+                  var addComp = rs.addressComponents;
+                  dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                  document.getElementById('text_').value = dizhi;//更新地址数据
+                  this.adressValue = dizhi;
+                  var content = dizhi + "<br/><br/>经度：" + e.point.lng + "<br/>纬度：" + e.point.lat;
+                  var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                  marker.openInfoWindow(infoWindow,map.getCenter());//将经纬度信息显示在提示框内
+                });
+                document.getElementById("result_Lng").value = e.point.lng;
+                document.getElementById("result_Lat").value = e.point.lat;
+              });
+              var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+              var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+              marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+              // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            }
+          });
+
+          localSearch.search(keyword);
+        }else{
+          alert("请输入地址")
+        }
+      },
+      sureAdress() {
+        if(this.adressValue == ""){
+          alert("请输入地址")
+        }else{
+          $(".AdressDialog").addClass("hide")
+        }
+      },
+      checkRadio(){
+        $(".radio__inner").toggleClass("isChecked")
+      }
+  },
+    components: {
+      caseManage,
+      seatManage,
+      institutionManage,
+    },
+  }
+
+</script>
+

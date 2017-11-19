@@ -7,7 +7,7 @@
     </div>
     <div class="manageContent">
       <case-monitor v-if="jianKongActive"></case-monitor>
-        <case-list v-if="allCaseActive"></case-list>
+      <case-list v-if="allCaseActive"></case-list>
 
     </div>
   </div>
@@ -24,14 +24,14 @@
     },
     methods: {
       tabChange(event){
-        var attributes = event.target.attributes
+        var attributes = event.target.attributes;
         for(var i=0;i< attributes.length;i++){
           if(i == 1){
             if(attributes[i].nodeValue.indexOf('caseJiankong') > -1){
-               attributes[i].nodeValue = 'caseJiankong active'
-               $(".allCase").attr("class","allCase")
-               this.jianKongActive = true;
-               this.allCaseActive = false;
+              attributes[i].nodeValue = 'caseJiankong active';
+              $(".allCase").attr("class","allCase");
+              this.jianKongActive = true;
+              this.allCaseActive = false;
             }else  if(event.target.attributes[i].nodeValue.indexOf('allCase') > -1){
               $(".caseJiankong").attr("class","caseJiankong");
               attributes[i].nodeValue = 'allCase active';
@@ -58,15 +58,15 @@
     height: 82vh;
     padding-bottom: 20px;
   }
-.caseTab{
-  width: 98%;
-  margin: 15px auto;
-}
+  .caseTab{
+    width: 86%;
+    margin: 15px auto;
+  }
   .caseJiankong, .allCase{
     cursor: pointer;
     display: inline-block;
     height: 45px;
-    width: 8%;
+    width: 100px;
     background: #fff;
     color: #232323;
     line-height: 45px;
@@ -83,13 +83,14 @@
     border-bottom: none;
   }
   .manageContent{
-    margin-left: 10px;
+    width: 95%;
+    margin: 0 auto;
   }
   .lineBox{
     width: 90%;
     height: 1px;
     background: #DFE4ED;
     margin-top: -1px;
-    margin-left: 8%;
+    margin-left: 100px;
   }
 </style>

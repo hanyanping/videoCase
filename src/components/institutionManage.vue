@@ -8,14 +8,14 @@
     padding-bottom: 20px;
   }
   .insitutionTab{
-    width: 98%;
+    width: 86%;
     margin: 15px auto;
   }
   .insitutionTab .insitutionTitle{
     cursor: pointer;
     display: inline-block;
     height: 45px;
-    width: 8%;
+    width: 100px;
     background: #fff;
     color: #232323;
     line-height: 45px;
@@ -35,7 +35,7 @@
     height: 1px;
     background: #DFE4ED;
     margin-top: -1px;
-    margin-left: 8%;
+    margin-left: 100px;
   }
 </style>
 <template>
@@ -46,7 +46,7 @@
       <div class="lineBox"></div>
     </div>
     <div class="insitutionContent">
-      <insitution-Editor :inputValue="insititutEditorActive"   v-if="insititutEditorActive"></insitution-Editor>
+      <insitution-Editor :inputValue="insititutEditorActive" @message="recieveMessage"  v-if="insititutEditorActive"></insitution-Editor>
       <insitution-list  :inputValue="insititutEditorActive" @message="recieveMessage" v-else></insitution-list>
     </div>
   </div>
@@ -57,7 +57,7 @@
   export default {
     data() {
       return{
-        insititutEditorActive: true,
+        insititutEditorActive: false,
       }
     },
     methods: {

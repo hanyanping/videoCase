@@ -8,14 +8,14 @@
     padding-bottom: 20px;
   }
   .seatTab{
-    width: 98%;
+    width: 86%;
     margin: 15px auto;
   }
- .seatTab .seatTitle{
+  .seatTab .seatTitle{
     cursor: pointer;
     display: inline-block;
     height: 45px;
-    width: 8%;
+    width: 100px;
     background: #fff;
     color: #232323;
     line-height: 45px;
@@ -27,7 +27,7 @@
   .seatManage .active{
     color: #2EAB3B;
   }
- .seatManage .seatContent{
+  .seatManage .seatContent{
     margin-left: 10px;
   }
   .seatManage .lineBox{
@@ -35,7 +35,7 @@
     height: 1px;
     background: #DFE4ED;
     margin-top: -1px;
-    margin-left: 8%;
+    margin-left: 100px;
   }
 </style>
 <template>
@@ -60,12 +60,12 @@
     },
     methods: {
       tabChange(event){
-        var attributes = event.target.attributes
+        var attributes = event.target.attributes;
         for(var i=0;i< attributes.length;i++){
           if(i == 1){
             if(attributes[i].nodeValue.indexOf('caseJiankong') > -1){
-              attributes[i].nodeValue = 'caseJiankong active'
-              $(".allCase").attr("class","allCase")
+              attributes[i].nodeValue = 'caseJiankong active';
+              $(".allCase").attr("class","allCase");
               this.jianKongActive = true;
               this.allCaseActive = false;
             }else  if(event.target.attributes[i].nodeValue.indexOf('allCase') > -1){

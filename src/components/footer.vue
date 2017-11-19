@@ -1,7 +1,7 @@
 <template>
   <div class="footer">
     <div class="footer-inner footer_p">
-      <p>技术支持：北京中车宝联科技有限责任公司</p>
+      <p> 版权所有：北京中车宝联科技有限责任公司</p>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    height:75px;
+    height: 60px;
     width: 100%;
     background: #2EAB3B;
   }

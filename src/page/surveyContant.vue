@@ -1,7 +1,6 @@
 <template>
   <div class="contanter">
     <head-top head-title="" go-back='true'></head-top>
-    <router-view></router-view>
     <footer-foot></footer-foot>
   </div>
 </template>

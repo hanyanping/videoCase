@@ -9,7 +9,7 @@
     text-align:  center;
     border-radius: 6px;
     margin-right: 30px;
-    max-height: 305px;
+    min-height: 305px;
     overflow: scroll;
     margin-top: 30px;
   }
@@ -33,7 +33,8 @@
     position: fixed;
     height: 100vh;
     top: 0;
-    left: 0
+    left: 0;
+    z-index: 100;
   }
   .seatListDialogBox{
     width: 47%;
@@ -253,11 +254,11 @@
             <img src="../images/kefuBlue.png">
             <h3 class="minuteNuber" style="color:#46A0FC">张扬</h3>
           </div>
-          <p class="minuterdetail">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
-          <p class="minuterdetail">未处理订单: 1)</p>
-          <p class="minuterdetail">今日已处理订单: 0</p>
-          <p class="minuterdetail">今日登陆时间: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
+          <p class="minuterdetail" style="padding-left: 8%;">未处理订单: 1)</p>
+          <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: 0</p>
+          <p class="minuterdetail" style="padding-left: 8%;">今日登陆时间: 0</p>
+          <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: 0</p>
         </div>
         <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo" v-if="item.statius ==1">
           <div class="imgBox">
@@ -357,7 +358,7 @@
       },
       addSeatsDialog(){//打来添加坐席遮盖层
         this.editorActive = false;
-        $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
+        $(".seatListDialogBox").addClass("seatListDialogBoxAdd");
         $(".seatListDialog").removeClass("hide");
       },
       addSeats(){//添加坐席

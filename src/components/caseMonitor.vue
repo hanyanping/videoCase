@@ -1,6 +1,6 @@
 <style scoped>
   .caseMontor{
-    width: 80%;
+    width: 90%;
     margin:20px auto;
   }
   .caseMontorBox{
@@ -12,7 +12,7 @@
   .caseMinute{
     cursor: pointer;
     width: 22%;
-    height: 160px;
+    min-height: 160px;
     text-align:  center;
     border: 1px solid;
     border-radius: 6px;
@@ -310,7 +310,7 @@ import signSeats from '../components/signSeats'
     methods: {
       goCase(item){//进入案件列表
         $(".caseMontorDialog").removeClass("hide");
-        console.log(item)
+        console.log(item);
         switch(item)
         {
           case "1":
