@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/boot-pub-survey-manage': {
-        target: 'http://192.168.1.185:8080',      // 志猛个人服务器
+        target: 'http://192.168.1.69:18081',      // 志猛个人服务器
         // target: 'http://192.168.1.113:8080',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
         // target: 'http://devaiganneo.aiganyisheng.com', // 测试

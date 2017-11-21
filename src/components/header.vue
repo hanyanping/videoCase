@@ -253,8 +253,8 @@
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人车牌号</span>
-                <input type="text" @click="openCityDialog" v-model="getCity" class="creatInputNo"  readonly :value="getCity" />
-                <input class="creatInput" type="text" v-model="licenseno" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
+                <input type="text" @click="openCityDialog" class="creatInputNo"  readonly :value="getCity" />
+                <input class="creatInput" type="text" v-model="licensenoTwo" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人姓名</span>
@@ -262,46 +262,48 @@
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">保险报案号</span>
-                <input class="creatInput" v-model="company" type="text" placeholder="请输入保险报案号"/>
+                <input class="creatInput"  v-model="reportno" type="text" placeholder="请输入保险报案号"/>
               </div>
               <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">保险公司</span>
-                <select class="creatInput" v-model="company">
-                  <option v-for="item in cityOption" :value="item.code">{{item.name}}</option>
+                <span class="addinsitituteSpan" >保险公司</span>
+                <select class="creatInput" v-model="company" id="companyName">
+                  <option value="">请选择保险公司</option>
+                  <option v-for="item in companeyOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">城市</span>
-                <select class="creatInput" v-model="city">
-                  <option v-for="item in companeyOption" :vlaue="item.dcCitycode">{{item.dcCityName}}</option>
+                <select class="creatInput" id="cityName" v-model="city">
+                  <option value="">请选择城市</option>
+                  <option v-for="item in cityOption" :value="item.dcCitycode">{{item.dcCityName}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">处理机构</span>
-                <select class="creatInput">
+                <select class="creatInput" v-model="orgCode">
+                  <option value="">请选择机构</option>
                   <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">查堪类型</span>
-                <select class="creatInput">
-                  <option vlaue="1">视频</option>
+                <select class="creatInput" v-model="surveyType">
+                  <option value="">请选择查堪类型</option>
+                  <option value="1">视频</option>
                   <option value="0">照片</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">事故地点</span>
-                <input type="hidden" v-model="lng"/>
-                <input type="hidden" v-model="lat"/>
-                <input class="creatInput" v-model="adressValue" :value="adressValue" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
+
+                <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
                 <i class="el-icon-location"></i>
               </div>
               <div class="addinsitituteInput">
-                <span class="radio__inner isChecked" @click="checkRadio"></span>
+                <span class="radio__inner" @click="checkRadio"></span>
                 <span style="margin-left:6px;">指派坐席</span>
               </div>
               <div class="addinsitituteInput">
-
                 <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
               </div>
 
@@ -325,11 +327,11 @@
           <h4 class="dialogTitle">事故地点</h4>
           <div class="inputadressBox">
             <span @click="searchAdress">事故地点</span>
-            <input class="adressInput" v-model="adressValue"  :value="adressValue" id="text_" style="width: 166px;" type="text" placeholder="请输入事故地点"/><i @click="searchAdress" class="el-icon-search"></i>
+            <input class="adressInput" v-model="adressValue" id="text_" style="width: 166px;" type="text" placeholder="请输入事故地点"/><i @click="searchAdress" class="el-icon-search"></i>
             <span>经度</span>
-            <input class="adressInput"  id="result_Lng" type="text" readonly placeholder="请输入经度"/>
+            <input class="adressInput" :value="lng" id="result_Lng" type="text" readonly placeholder="请输入经度"/>
             <span>纬度</span>
-            <input class="adressInput"  id="result_Lat" type="text" readonly placeholder="请输入纬度"/>
+            <input class="adressInput" :value="lat" id="result_Lat" type="text" readonly placeholder="请输入纬度"/>
             <span class="sureAdress backColorGreen hide" @click="sureAdress">确定</span>
           </div>
           <div id="allmap">
@@ -340,7 +342,7 @@
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
-          <span class="headerText">  <span>|</span>事故e处理-视频查勘定损平台</span>
+          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
          <div class="menu">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="案件管理" name="first">
@@ -377,19 +379,24 @@
   export default {
     data(){
       return{
+        orgCode: "",
+        surveyType: "",
+        mark: "0",
         surveynoOption: {},
         cityOption: {},
         companeyOption: {},
         orgOption: {},
         reportno: "",
         person: "",
-        licenseno: "",
+        licensenoTwo: "",
         phoneno: "",
         company: "",
         city: "",
         lng: "",
         lat: "",
+        cityName: "",
         adressValue: "",
+        accidentaddress: "",
         ajaxUrl: "/boot-pub-survey-manage",
         radio: '',
         getCity: "京",
@@ -424,6 +431,12 @@
       },
   },
     methods: {
+      open4(resdes) {
+        this.$message.error(resdes);
+      },
+      open2(resdes) {
+        this.$message.success(resdes);
+      },
       initMap() {
         // 添加百度地图
        this.map = new BMap.Map("allmap");
@@ -431,7 +444,14 @@
         handleClick(tab, event) {
         },
         openCreatCase(){//打开创建案件
+//            this.cityOption = [];
+//            this.companeyOption = [];
+//            this.orgOption = [];
+          this.companeyOption = [{"code":1,"name":"中车传参"},{"code":2,"name":"中车地点"},{"code":3,"name":"中车地点"}];
+          this.orgOption = [{"code":1,"name":"中车"},{"code":2,"name":"中车2"},{"code":3,"name":"中车4"}];
+          this.cityOption = [{"dcCitycode":"11","dcCityName":"北京"},{"dcCitycode":"12","dcCityName":"长沙"}]
           $(".creatCaseDialog").removeClass('hide');
+          return;
           var paramData = {
             "action": "detail"
           }
@@ -439,20 +459,17 @@
             .then(response => {
               if(response.status == 200){
                 if(response.data.rescode == 200){
-                  console.log(response.data)
-                  this.open2();
+//                  this.open2();
                   this.cityOption = response.data.data.city;
                   this.companeyOption = response.data.data.company ;
                    this.orgOption= response.data.data.org;
                 }else if(response.data.rescode == 217){
                   this.open4(response.resdes);
-                  this.getCode()
                   this.valicode = '';
                 }else{
                   if(response.data.rescode == "rescode"){
                     this.$router.push({path:"/login"})
                   }
-                  this.getCode()
                   this.open4(responseata.resdes);
                 }
               }
@@ -467,6 +484,84 @@
           $(".creatCaseDialog").addClass('hide')
         },
         creatNewCase() {//确定创建案件
+          this.companyName = $("#companyName").find("option:selected").text();
+          this.cityName = $("#cityName").find("option:selected").text();
+          if(this.phoneno == ""){
+            this.open4("请输入手机号")
+          }else if(this.licensenoTwo == ""){
+            this.open4("请输入车牌号")
+          }else if(this.person == ""){
+            this.open4("请输入报案人姓名")
+          }else if(this.reportno == ""){
+            this.open4("请输入保险报案号")
+          }else if(this.company == ""){
+            this.open4("请选择保险公司")
+          }else if(this.city == ""){
+            this.open4("请选择城市")
+          }else if(this.orgCode == ""){
+            this.open4("请选择处理机构")
+          }else if(this.surveyType == ""){
+            this.open4("请选择查勘类型")
+          }else if(this.accidentaddress == ""){
+            this.open4("请输入事故地点")
+          }else {
+            var paramData = {
+              "action": "push",
+              "phoneno": this.phoneno,
+              "licenseno": this.getCity+this.licensenoTwo,
+              "person": this.person,
+              "reportno": this.reportno,
+              "company": this.company,
+              "companyName": this.companyName,
+              "city": this.city,
+              "cityName": this.cityName,
+              "orgCode": this.orgCode,
+              "surveyType": this.surveyType,
+              "accidentaddress": this.accidentaddress,
+              "lng": this.lng,
+              "lat": this.lat,
+              "mark": this.mark,
+            }
+            console.log(paramData)
+//            return
+            axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
+              .then(response => {
+                if(response.status == 200){
+                  if(response.data.rescode == 200){
+                  this.open2(response.resdes);
+                    $(".creatCaseDialog").addClass('hide');
+                    this.phoneno = '';
+                    this.licensenoTwo = "",
+                    this.cityOption = [];
+                    this.companeyOption = [];
+                    this.orgOption = [];
+                    this.reportno = "";
+                    this.person = "";
+                    this.city = "";
+                    this.company = "";
+                    this.lat = "";
+                    this.lng = "";
+                    this.adressValue = "";
+                    this.mark = "0";
+                    this.getCity = "京";
+                    this.lng = "";
+                    this.lat = "";
+                    this.cityName = "";
+                    $(".creatCaseDialog").addClass('hide');
+                 }else{
+                    if(response.data.rescode == "300"){
+                      this.$router.push({path:"/login"})
+                    }
+                    this.open4(responseata.resdes);
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
 
 
         },
@@ -527,6 +622,7 @@
                   });
                   document.getElementById("result_Lng").value = e.point.lng;
                   document.getElementById("result_Lat").value = e.point.lat;
+
                 });
                 var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
                 var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
@@ -534,7 +630,6 @@
                 // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
               }
             });
-
             localSearch.search(keyword);
           }else{
             alert("请输入地址")
@@ -544,11 +639,21 @@
           if(this.adressValue == ""){
             alert("请输入地址")
           }else{
+            this.accidentaddress = this.adressValue;
+            this.lng = document.getElementById("result_Lng").value;
+            this.lat = document.getElementById("result_Lat").value;
             $(".AdressDialog").addClass("hide")
+            document.getElementById("result_Lng").value = "";
+            document.getElementById("result_Lat").value = "";
           }
         },
         checkRadio(){
-          $(".radio__inner").toggleClass("isChecked")
+          $(".radio__inner").toggleClass("isChecked");
+          if($(".radio__inner").attr("class").indexOf("isChecked")>0){
+            this.mark = "1";
+          }else{
+            this.mark = "0";
+          }
         }
   },
     components: {

@@ -3,7 +3,7 @@
     <div class="caseListHeader">
       <form>
         <span>车牌号:</span>
-        <input type="text" v-modle="reporterCarLicenseNo" placeholder="请输入车牌号"/>
+        <input type="text" v-model="reporterCarLicenseNo" placeholder="请输入车牌号"/>
         <span>手机号:</span>
         <input type="tel" v-model="reporterPhoneNo" placeholder="请输入手机号" maxlength="11"/>
         <span>保险报案号:</span>
@@ -11,29 +11,29 @@
         <span>保险公司:</span>
         <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in companeyOptions"
+            :key="item.insureCompanyName"
+            :label="item.insureCompanyCode"
+            :value="item.insureCompanyName">
           </el-option>
         </el-select>
 
         <span>机构:</span>
         <el-select v-model="orgCode" name="insititution" placeholder="请选择机构">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in organizations"
+            :key="item.orgCode"
+            :label="item.orgName"
+            :value="item.orgCode">
           </el-option>
         </el-select>
         <span >案件状态:</span>
-        <el-select v-model="surveyStatus" name="case" placeholder="请选择机构">
+        <el-select v-model="surveyStatus" name="case" placeholder="请选择案件状态">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in surveyOption"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code">
           </el-option>
         </el-select>
         <span>事故时间:</span>
@@ -46,7 +46,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
-        <input type="hidden" placeholder="开始时间"  v-moodle="accidentStartTime" style="margin-right: 5px;" class="smInp" name="startDate" id="startTime" readonly="readonly">
+        <input type="hidden" placeholder="开始时间"  v-model="accidentStartTime" style="margin-right: 5px;" class="smInp" name="startDate" id="startTime" readonly="readonly">
         <input class="smInp" name="endDate" v-model="accidentEndTime" style="margin-left: 5px;" type="hidden" id="endTime" readonly="readonly" placeholder="结束时间">
         <span>处理时间:</span>
         <div class="" style="display:inline-block;">
@@ -61,12 +61,12 @@
         <input type="hidden" v-model="handleStartTime" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="dealstartDate" id="dealstartTime" readonly="readonly"/>
         <input class="smInp" name="dealendDate" v-model="handleEndTime" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
         <a href="#" class="caseListSure" @click="formSure">确定 </a>
-        <a href="#" class="caseListReset">重置</a>
+        <a href="#" class="caseListReset" @click="resetData">重置</a>
       </form>
     </div>
-    <div class="caseListTable">
+    <div class="caseListTable" v-if="tableActive">
       <div class="tableTitle">
-        <span>共: {{pages}},</span>
+        <span>共: {{pages}}页,</span>
         <span>{{totalCount}}条, </span>
         <span>当前页: {{currentCount}}条</span>
       </div>
@@ -112,30 +112,37 @@
           <td>{{item.reporterName}}</td>
           <td>{{item.reporterPhoneNo}}</td>
           <td>{{item.insuranceCompanyName}}</td>
-          <td>{{item.accidentTime}}</td>
+          <td style="width:160px;">{{item.accidentTime}}</td>
           <td>{{item.accidentAddress}}</td>
           <td>{{item.survey}}</td>
           <td>{{item.videoConnectRequestCount}}</td>
-          <td><a href="#" class="listAssign">指派</a>|<a href="#" class="listView">查看</a></td>
+          <td><a href="#" class="listAssign">指派</a>|<a href="#" class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</a></td>
         </tr>
         </tbody>
       </table>
-
+      <el-pagination  @current-change="handleCurrentChange"
+                      :current-page="currentPageNo"
+                      :page-size = "8"
+                      layout="prev,pager,next"
+                      :total="totalCount">
+      </el-pagination>
     </div>
-    <el-pagination  @current-change="handleCurrentChange"
-      :current-page="currentPageNo"
-      :page-size = "8"
-     layout="prev,pager,next"
-      :total="totalCount">
-    </el-pagination>
+    <div class="caseListTable" v-else>
+      <p style="text-align:center;margin-top: 15px;">暂无数据</p>
+    </div>
+    <case-detail ></case-detail>
+    <sign-Seats></sign-Seats>
     <!--&lt;!&ndash;layout="total,prev,pager, next,jumper"&ndash;&gt;layout="total,prev,pager, next,jumper"-->
   </div>
 </template>
 <script>
   import axios from 'axios'
+  import caseDetail from '../components/caseDetail'
+  import signSeats from '../components/signSeats'
   export default {
     data() {
       return {
+        tableActive: true,
         reporterPhoneNo: "",
         reporterCarLicenseNo: "",
         reportInsuranceNo: "",
@@ -149,27 +156,21 @@
         pageNo: '',
         pageSize: 8,
         pages: '',
+        surveyOption:[
+          {"name":"待查堪","code":"06"},
+          {"name":"查勘中","code":"07"},
+          {"name":"已查勘","code":"08"},
+          {"name":"查勘完成","code":"09"},
+          {"name":"待补拍","code":"10"},
+          {"name":" 已取消","code":"11"}
+        ],
         currentPageNo: 1,
         currentCount: "",
         survey: "",
         tableData: [],
-        totalCount: "",
-        options: [{
-          value: '1',
-          label: '黄金糕'
-        }, {
-          value: '2',
-          label: '双皮奶'
-        }, {
-          value: '3',
-          label: '蚵仔煎'
-        }, {
-          value: '4',
-          label: '龙须面'
-        }, {
-          value: '5',
-          label: '北京烤鸭'
-        }],
+        totalCount: 0,
+        companeyOptions: {},
+        organizations: [],
         pickerOptions2: {
           shortcuts: [{
             text: '最近一周',
@@ -204,15 +205,59 @@
     },
      watch: {
        tableData: function(){
-          this.currentCount = this.tableData.length;
-          console.log(this.tableData.length)
+//          this.currentCount = this.tableData.length;
         }
       },
       created() {
       this.getCaseList();
+      this.getCompaney();
       },
       methods: {
+        getCompaney(){
+          axios.get(this.ajaxUrl+"/pub/survey/v1/insure-company")
+            .then(response => {
+              console.log(response)
+              if(response.data.rescode == 200){
+                this.companeyOptions = response.data.data.insureCompany;
+                this.organizations = response.data.data.organizations;
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
         getCaseList() {
+          console.log(this.currentPageNo)
+          if(this.value6){
+            for(let i in this.value6){
+              if(i == 0){
+                this.accidentStartTime = new Date(this.value6[0]);
+              }else if(i == 1){
+                this.accidentEndTime = new Date(this.value6[1])
+              }
+            }
+            this.accidentStartTime = this.accidentStartTime.getFullYear() + '-' + (this.accidentStartTime.getMonth() + 1) + '-' + this.accidentStartTime.getDate();
+            this.accidentEndTime = this.accidentEndTime.getFullYear() + '-' + (this.accidentEndTime.getMonth() + 1) + '-' + this.accidentEndTime.getDate();
+          }else{
+            this.accidentStartTime = "";
+              this.accidentEndTime = "";
+          }
+          if(this.value7){
+            for(let i in this.value7){
+              if(i == 0){
+                this.handleStartTime = new Date(this.value6[0]);
+              }else if(i == 1){
+                this.handleEndTime = new Date(this.value6[1])
+              }
+            }
+            this.handleStartTime = this.handleStartTime.getFullYear() + '-' + (this.handleStartTime.getMonth() + 1) + '-' + this.handleStartTime.getDate();
+            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate();
+          }else{
+            this.handleStartTime = "";
+            this.handleEndTime = "";
+          }
           var paramData = {
             "currentPageNo": this.currentPageNo,
             "pageSize": this.pageSize,
@@ -232,24 +277,30 @@
               console.log(response)
               if(response.data.rescode == 200){
                 this.tableData = response.data.data.records;
-                this.totalCount = response.data.data.total;
-                this.currentCount = response.data.data.size;
-                this.pages = response.data.data.pages;
-                for(let i in this.tableData){
-                  if(this.tableData[i].surveyStatus == '06'){
-                    this.tableData[i].survey = "待查勘"
-                  }else if(this.tableData[i].surveyStatus == '07'){
-                    this.tableData[i].survey = "查勘中"
-                  }else if(this.tableData[i].surveyStatus == '08'){
-                    this.tableData[i].survey = "已查勘"
-                  }else if(this.tableData[i].surveyStatus == '09'){
-                    this.tableData[i].survey = "查勘完成"
-                  }else if(this.tableData[i].surveyStatus == '10'){
-                    this.tableData[i].survey = "待补拍"
-                  }else if(this.tableData[i].surveyStatus == '11'){
-                    this.tableData[i].survey = "查勘订单已取消"
+                if(response.data.data.records.length !=0){
+                  this.tableActive = true;
+                  this.totalCount = parseInt(response.data.data.total);
+                  this.currentCount = response.data.data.size;
+                  this.pages = response.data.data.pages;
+                  for(let i in this.tableData){
+                    if(this.tableData[i].surveyStatus == '06'){
+                      this.tableData[i].survey = "待查勘"
+                    }else if(this.tableData[i].surveyStatus == '07'){
+                      this.tableData[i].survey = "查勘中"
+                    }else if(this.tableData[i].surveyStatus == '08'){
+                      this.tableData[i].survey = "已查勘"
+                    }else if(this.tableData[i].surveyStatus == '09'){
+                      this.tableData[i].survey = "查勘完成"
+                    }else if(this.tableData[i].surveyStatus == '10'){
+                      this.tableData[i].survey = "待补拍"
+                    }else if(this.tableData[i].surveyStatus == '11'){
+                      this.tableData[i].survey = "查勘订单已取消"
+                    }
                   }
+                }else{
+                  this.tableActive = false;
                 }
+
               }
             }, err => {
               console.log(err);
@@ -262,20 +313,54 @@
           console.log(row);
         },
         formSure() {
-          console.log("CompaneyValue==============" + this.CompaneyValue)
-          console.log("insitituValue===============" + this.insitituValue)
-          console.log("案件状态:============" + this.caseValue)
-          console.log("事故时间:==============" + this.value6)
-          console.log("处理时间时间:==============" + this.value7)
+          this.getCaseList()
         },
-        handleCurrentChange(currentPage) {
+        resetData(){
+          this.insuranceCompanyCode = "";
+          this.orgCode = "";
+          this.reporterCarLicenseNo = "";
+          this.reporterPhoneNo = "";
+          this.reportInsuranceNo = "";
+          this.surveyStatus = "";
+          this.accidentStartTime = "";
+          this.accidentEndTime = "";
+          this.handleStartTime = "";
+          this.handleEndTime = "";
+          this.value6 = "";
+          this.value7 = "";
+
+        },
+        handleCurrentChange(currentPage) {//跳转
           //当前页改变调用接口  pageNo  pageSize
           console.log(currentPage)
           this.currentPageNo = currentPage;
           this.getCaseList()
         },
+        goCaseDetail(id,orderStatus){
+          $(".caseDetail").removeClass("hide");
+            var paramData = {
+              "id": parseInt(id),
+              "orderStatus": orderStatus
+            }
+            axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  console.log(response.data.data)
+                  var data = JSON.parse(response.data.data)
+                  localStorage.setItem("caseDetailData",data)
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+        }
       },
-      components: {}
+    components: {
+      caseDetail,
+      signSeats,
+    },
 
   }
 

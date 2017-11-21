@@ -177,7 +177,7 @@
                 </div>
 
               </div>
-              <div class="caseInfoBox"><span>异常原因：</span><i>多车</i></div>
+              <div class="caseInfoBox"><span>异常原因：</span><i>多车1212</i></div>
           </div>
           <div class="AimCar">
             <div class="aimheader">标的车</div>
@@ -277,9 +277,11 @@
 </template>
 <script>
 import Viewer from 'viewerjs';
+import axios from 'axios'
 export default {
   data() {
       return{
+        caseDetailData: {},
         thirdCar: [{
 
         },{
@@ -292,7 +294,8 @@ export default {
       }
     },
     created(){
-      this.getCaseDetail()
+     this.caseDetailData =  JSON.stringify(localStorage.getItem("caseDetailData"));
+     console.log(this.caseDetailData);
     },
     mounted() {
       this.$nextTick(() => {
@@ -316,9 +319,7 @@ export default {
 //      caseOrder: string
     },
       methods: {
-        getCaseDetail(){
 
-        },
         closCaseDetail(){
           $(".caseDetail").addClass("hide")
         },

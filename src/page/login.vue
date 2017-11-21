@@ -180,7 +180,6 @@
           $(".el-icon-refresh").removeClass("rotateBoxClick")
         },500)
       },
-
       open2() {
         this.$message({
           message: '登陆成功',
@@ -219,20 +218,17 @@
         }else{
           axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/login",paramData)
             .then(response => {
-              if(response.status == 200){
                 if(response.data.rescode == 200){
                   this.open2();
                   this.$router.push({path:'/'})
-                }else if(response.data.rescode == 217){
-                  this.open4(response.resdes);
+                }else if(response.data.rescode == '217'){
+                  this.open4(response.data.resdes);
                   this.getCode()
                   this.valicode = '';
                 }else{
-
-                  this.getCode()
-                  this.open4(responseata.resdes);
+                  this.getCode();
+                  this.open4(responseata.data.resdes);
                 }
-              }
             }, err => {
               console.log(err);
             })
