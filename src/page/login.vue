@@ -220,7 +220,7 @@
             .then(response => {
                 if(response.data.rescode == 200){
                   this.open2();
-                  this.$router.push({path:'/'})
+                  this.$router.push({path:'/surveyContant'})
                 }else if(response.data.rescode == '217'){
                   this.open4(response.data.resdes);
                   this.getCode()

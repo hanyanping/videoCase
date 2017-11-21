@@ -60,8 +60,8 @@
         </div>
         <input type="hidden" v-model="handleStartTime" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="dealstartDate" id="dealstartTime" readonly="readonly"/>
         <input class="smInp" name="dealendDate" v-model="handleEndTime" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
-        <a href="#" class="caseListSure" @click="formSure">确定 </a>
-        <a href="#" class="caseListReset" @click="resetData">重置</a>
+        <span class="caseListSure" @click="formSure">确定 </span>
+        <span class="caseListReset" @click="resetData">重置</span>
       </form>
     </div>
     <div class="caseListTable" v-if="tableActive">
@@ -116,7 +116,7 @@
           <td>{{item.accidentAddress}}</td>
           <td>{{item.survey}}</td>
           <td>{{item.videoConnectRequestCount}}</td>
-          <td><a href="#" class="listAssign">指派</a>|<a href="#" class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</a></td>
+          <td><span class="listAssign">指派</span>|<span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
         </tr>
         </tbody>
       </table>
@@ -130,7 +130,7 @@
     <div class="caseListTable" v-else>
       <p style="text-align:center;margin-top: 15px;">暂无数据</p>
     </div>
-    <case-detail ></case-detail>
+    <case-detail v-if="caseDetailActive"></case-detail>
     <sign-Seats></sign-Seats>
     <!--&lt;!&ndash;layout="total,prev,pager, next,jumper"&ndash;&gt;layout="total,prev,pager, next,jumper"-->
   </div>
@@ -142,7 +142,7 @@
   export default {
     data() {
       return {
-        tableActive: true,
+        tableActive: false,
         reporterPhoneNo: "",
         reporterCarLicenseNo: "",
         reportInsuranceNo: "",
@@ -200,7 +200,9 @@
         },
         value6: '',
         value7: '',
-        ajaxUrl: "/boot-pub-survey-manage"
+        ajaxUrl: "/boot-pub-survey-manage",
+        showCaseDetail: false,
+        caseDetailActive: false
       }
     },
      watch: {
@@ -209,8 +211,11 @@
         }
       },
       created() {
-      this.getCaseList();
-      this.getCompaney();
+        this.getCaseList();
+        this.getCompaney();
+      },
+      mounted() {
+        this.caseDetailActive = this.$store.state.caseDetailActive
       },
       methods: {
         getCompaney(){
@@ -337,17 +342,19 @@
           this.getCaseList()
         },
         goCaseDetail(id,orderStatus){
-          $(".caseDetail").removeClass("hide");
+
             var paramData = {
               "id": parseInt(id),
               "orderStatus": orderStatus
             }
             axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
-              .then(response => {
+              .then(response => {``
                 if(response.data.rescode == 200){
-                  console.log(response.data.data)
-                  var data = JSON.parse(response.data.data)
+                  var data = JSON.stringify(response.data.data)
                   localStorage.setItem("caseDetailData",data)
+                  this.$store.commit('setCaseDetailActive', true)
+                  this.caseDetailActive = this.$store.state.caseDetailActive
+                  $(".caseDetail").removeClass("hide");
                 }
               }, err => {
                 console.log(err);
@@ -402,6 +409,7 @@
     padding: 6px 15px;
     display: inline-block;
     margin-bottom: 5px;
+    cursor: pointer;
   }
 .caseListSure{
   color: #fff;
@@ -429,6 +437,7 @@
   .listAssign, .listView{
     color: #0D70D8;
     padding:6px;
+    cursor: pointer;
   }
 
 </style>

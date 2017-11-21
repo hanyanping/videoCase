@@ -363,7 +363,7 @@
         axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/detail", paramData)
           .then(response => {
             if(response.data.rescode == 200){
-              this.$router.push({path:'/login'})
+              this.$router.push({path:'/'})
               this.seatInfo = response.data.data;
               for(let i in this.seatInfo){
                 if(this.seatInfo[i].isLocked != null ){
@@ -396,12 +396,12 @@
             }else{
               alert(response.data.resdes)
               if(response.data.rescode == 300){
-                this.$router.push({path:'/login'})
+                this.$router.push({path:'/'})
               }
             }
             resolve(response.data);
           }, err => {
-            this.$router.push({path:'/login'})
+            this.$router.push({path:'/'})
             console.log(err);
           })
           .catch((error) => {

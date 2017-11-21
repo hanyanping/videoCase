@@ -8,7 +8,7 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path:'/',
+      path:'/surveyContant',
       component: surveyContant,
       // children: [{
       //   path: '/',
@@ -26,7 +26,7 @@ export default new Router({
       // }]
     },
     {
-      path: '/login',
+      path: '/',
       component: login
     }
   ]

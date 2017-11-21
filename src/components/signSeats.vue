@@ -143,6 +143,7 @@
     methods: {
       closSignSeat(){
         $(".signSeats").addClass("hide")
+        //清除本地存
       }
     },
     components: {

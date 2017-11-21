@@ -294,7 +294,7 @@ export default {
       }
     },
     created(){
-     this.caseDetailData =  JSON.stringify(localStorage.getItem("caseDetailData"));
+     this.caseDetailData =  JSON.parse(localStorage.getItem("caseDetailData"));
      console.log(this.caseDetailData);
     },
     mounted() {
@@ -319,9 +319,9 @@ export default {
 //      caseOrder: string
     },
       methods: {
-
         closCaseDetail(){
           $(".caseDetail").addClass("hide")
+          this.$store.commit('setCaseDetailActive', false)
         },
         enter(){
           $("#detailMap").removeClass("hide")

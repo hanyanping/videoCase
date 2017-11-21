@@ -550,7 +550,7 @@
                     $(".creatCaseDialog").addClass('hide');
                  }else{
                     if(response.data.rescode == "300"){
-                      this.$router.push({path:"/login"})
+                      this.$router.push({path:"/surveyContant"})
                     }
                     this.open4(responseata.resdes);
                   }
