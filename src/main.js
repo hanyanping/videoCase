@@ -11,8 +11,7 @@ import 'viewerjs/dist/viewer.css'
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 router.beforeEach((to, from, next) => {
-  //  判断用户是否登录
-  // next('/login')
+  var ajaxUrl = "/boot-pub-survey-manage";
   next()
 });
 /* eslint-disable no-new */

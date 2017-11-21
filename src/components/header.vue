@@ -249,42 +249,51 @@
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人手机号</span>
-                <input type="tel" class="creatInput"  maxlength="11" placeholder="请输入报案人手机号"/>
+                <input type="tel" class="creatInput" v-model="phoneno" maxlength="11" placeholder="请输入报案人手机号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人车牌号</span>
-                <input type="text" @click="openCityDialog" class="creatInputNo"  readonly :value="getCity" />
-                <input class="creatInput" type="text" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
+                <input type="text" @click="openCityDialog" v-model="getCity" class="creatInputNo"  readonly :value="getCity" />
+                <input class="creatInput" type="text" v-model="licenseno" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人姓名</span>
-                <input class="creatInput" type="text" placeholder="请输入报案人姓名"/>
+                <input class="creatInput" v-model="person" type="text" placeholder="请输入报案人姓名"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">保险报案号</span>
-                <input class="creatInput" type="text" placeholder="请输入保险报案号"/>
+                <input class="creatInput" v-model="company" type="text" placeholder="请输入保险报案号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">保险公司</span>
-                <select class="creatInput">
-                  <option></option>
+                <select class="creatInput" v-model="company">
+                  <option v-for="item in cityOption" :value="item.code">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSpan">城市</span>
+                <select class="creatInput" v-model="city">
+                  <option v-for="item in companeyOption" :vlaue="item.dcCitycode">{{item.dcCityName}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">处理机构</span>
                 <select class="creatInput">
-                  <option></option>
+                  <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">查堪类型</span>
                 <select class="creatInput">
-                  <option></option>
+                  <option vlaue="1">视频</option>
+                  <option value="0">照片</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">事故地点</span>
-                <input class="creatInput" :value="adressValue" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
+                <input type="hidden" v-model="lng"/>
+                <input type="hidden" v-model="lat"/>
+                <input class="creatInput" v-model="adressValue" :value="adressValue" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
                 <i class="el-icon-location"></i>
               </div>
               <div class="addinsitituteInput">
@@ -363,12 +372,26 @@
   import caseManage from '@/components/caseManage'
   import seatManage from '@/components/seatManage'
   import institutionManage from '@/components/institutionManage'
+  import axios from 'axios'
 //  import BMap from 'BMap'
   export default {
     data(){
       return{
-        radio: '',
+        surveynoOption: {},
+        cityOption: {},
+        companeyOption: {},
+        orgOption: {},
+        reportno: "",
+        person: "",
+        licenseno: "",
+        phoneno: "",
+        company: "",
+        city: "",
+        lng: "",
+        lat: "",
         adressValue: "",
+        ajaxUrl: "/boot-pub-survey-manage",
+        radio: '',
         getCity: "京",
         activeName: 'first',
         caseActive: true,
@@ -404,99 +427,129 @@
       initMap() {
         // 添加百度地图
        this.map = new BMap.Map("allmap");
-      },
-      handleClick(tab, event) {
-        console.log(tab, event);
-      },
-      openCreatCase(){
-        $(".creatCaseDialog").removeClass('hide')
-      },
-      closCreatDiolag(){
-        $(".creatCaseDialog").addClass('hide')
-      },
-      creatNewCase() {//创建案件
-        $(".creatCaseDialog").addClass('hide')
-      },
-      openCityDialog(){
-        $(".cityDialog").removeClass("hide")
-      },
-      closeCityDiolag(){//关闭城市遮盖层
-        $(".cityDialog").addClass("hide")
-      },
-      selectCity(city){
-        this.getCity = city;
-        $(".cityDialog").addClass("hide")
-      },
-      openAdressDialog(){
-        $(".AdressDialog").removeClass("hide")
-      },
-      closeAdressDiolag(){
-        $(".AdressDialog").addClass("hide")
-      },
-      searchAdress(){
-        if(this.adressValue!=''){
-          var map = '';
-          map = new BMap.Map("allmap");
-          map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
-          map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
-          map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
-          map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
-          map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
-          map.clearOverlays();//清空原来的标注
-          var keyword = this.adressValue;
-          var localSearch = new BMap.LocalSearch(map);
-          localSearch.enableAutoViewport(); //允许自动调节窗体大小
-          localSearch.setSearchCompleteCallback(function (searchResult) {
-            var poi = searchResult.getPoi(0);
-            if(poi === undefined){
-              alert('请输入合法地址')
-            }else{
-//              $("#container").removeClass('none');
-              $(".sureAdress").removeClass('hide')
-              document.getElementById("result_Lng").value = poi.point.lng ;
-              document.getElementById("result_Lat").value = poi.point.lat;
-              map.centerAndZoom(poi.point, 13);
-              var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
-              var geoc = new BMap.Geocoder();
-              map.addOverlay(marker);
-              marker.enableDragging();  //设置可拖拽
-              marker.addEventListener("dragend", function(e){  //拖动事件
-                var pt = e.point;
-                var dizhi;
-                geoc.getLocation(pt, function(rs){
-                  var addComp = rs.addressComponents;
-                  dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-                  document.getElementById('text_').value = dizhi;//更新地址数据
-                  this.adressValue = dizhi;
-                  var content = dizhi + "<br/><br/>经度：" + e.point.lng + "<br/>纬度：" + e.point.lat;
-                  var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
-                  marker.openInfoWindow(infoWindow,map.getCenter());//将经纬度信息显示在提示框内
-                });
-                document.getElementById("result_Lng").value = e.point.lng;
-                document.getElementById("result_Lat").value = e.point.lat;
-              });
-              var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
-              var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
-              marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
-              // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-            }
-          });
+       },
+        handleClick(tab, event) {
+        },
+        openCreatCase(){//打开创建案件
+          $(".creatCaseDialog").removeClass('hide');
+          var paramData = {
+            "action": "detail"
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
+            .then(response => {
+              if(response.status == 200){
+                if(response.data.rescode == 200){
+                  console.log(response.data)
+                  this.open2();
+                  this.cityOption = response.data.data.city;
+                  this.companeyOption = response.data.data.company ;
+                   this.orgOption= response.data.data.org;
+                }else if(response.data.rescode == 217){
+                  this.open4(response.resdes);
+                  this.getCode()
+                  this.valicode = '';
+                }else{
+                  if(response.data.rescode == "rescode"){
+                    this.$router.push({path:"/login"})
+                  }
+                  this.getCode()
+                  this.open4(responseata.resdes);
+                }
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
+        closCreatDiolag(){
+          $(".creatCaseDialog").addClass('hide')
+        },
+        creatNewCase() {//确定创建案件
 
-          localSearch.search(keyword);
-        }else{
-          alert("请输入地址")
-        }
-      },
-      sureAdress() {
-        if(this.adressValue == ""){
-          alert("请输入地址")
-        }else{
+
+        },
+        openCityDialog(){//打开城市
+          $(".cityDialog").removeClass("hide")
+        },
+        closeCityDiolag(){//关闭城市遮盖层
+          $(".cityDialog").addClass("hide")
+        },
+        selectCity(city){
+          this.getCity = city;
+          $(".cityDialog").addClass("hide")
+        },
+        openAdressDialog(){
+          $(".AdressDialog").removeClass("hide")
+        },
+        closeAdressDiolag(){
           $(".AdressDialog").addClass("hide")
+        },
+        searchAdress(){
+          if(this.adressValue!=''){
+            var map = '';
+            map = new BMap.Map("allmap");
+            map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+            map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+            map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+            map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+            map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+            map.clearOverlays();//清空原来的标注
+            var keyword = this.adressValue;
+            var localSearch = new BMap.LocalSearch(map);
+            localSearch.enableAutoViewport(); //允许自动调节窗体大小
+            localSearch.setSearchCompleteCallback(function (searchResult) {
+              var poi = searchResult.getPoi(0);
+              if(poi === undefined){
+                alert('请输入合法地址')
+              }else{
+  //              $("#container").removeClass('none');
+                $(".sureAdress").removeClass('hide')
+                document.getElementById("result_Lng").value = poi.point.lng ;
+                document.getElementById("result_Lat").value = poi.point.lat;
+                map.centerAndZoom(poi.point, 13);
+                var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+                var geoc = new BMap.Geocoder();
+                map.addOverlay(marker);
+                marker.enableDragging();  //设置可拖拽
+                marker.addEventListener("dragend", function(e){  //拖动事件
+                  var pt = e.point;
+                  var dizhi;
+                  geoc.getLocation(pt, function(rs){
+                    var addComp = rs.addressComponents;
+                    dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                    document.getElementById('text_').value = dizhi;//更新地址数据
+                    this.adressValue = dizhi;
+                    var content = dizhi + "<br/><br/>经度：" + e.point.lng + "<br/>纬度：" + e.point.lat;
+                    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                    marker.openInfoWindow(infoWindow,map.getCenter());//将经纬度信息显示在提示框内
+                  });
+                  document.getElementById("result_Lng").value = e.point.lng;
+                  document.getElementById("result_Lat").value = e.point.lat;
+                });
+                var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+                var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+                // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+              }
+            });
+
+            localSearch.search(keyword);
+          }else{
+            alert("请输入地址")
+          }
+        },
+        sureAdress() {
+          if(this.adressValue == ""){
+            alert("请输入地址")
+          }else{
+            $(".AdressDialog").addClass("hide")
+          }
+        },
+        checkRadio(){
+          $(".radio__inner").toggleClass("isChecked")
         }
-      },
-      checkRadio(){
-        $(".radio__inner").toggleClass("isChecked")
-      }
   },
     components: {
       caseManage,

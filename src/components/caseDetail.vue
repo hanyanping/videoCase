@@ -224,22 +224,22 @@
               <div class="aimCarImg">
                 <ul class="suibian">
                   <li>
-                    <img data-src="../images/kefuBlue.png" src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg">
+                    <img data-src="../images/kefuBlue.png" src="../images/kefuBlue.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg" src="../images/car.png">
+                    <img data-src="" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816041149.jpg" src="../images/car.png">
+                    <img data-src="../images/kefuBlue.png" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
                   <li>
-                    <img data-src="http://api.accidentx.zhongchebaolian.com/photobase/photos/didisurvey/2017-10-24/845990/f05d6f3b2ffc42f894f3df7f9757d29c_1508816033514.jpg" src="../images/car.png">
+                    <img data-src="../images/kefuBlue.png" src="../images/car.png">
                     <br>
                     <span>但是人与车合影</span>
                   </li>
@@ -292,6 +292,7 @@ export default {
       }
     },
     created(){
+      this.getCaseDetail()
     },
     mounted() {
       this.$nextTick(() => {
@@ -304,14 +305,20 @@ export default {
         for (let i in this.thirdCar) {
           new Viewer(document.getElementsByClassName('suibian')[i], {
             url: 'data-src',
-            navbar:false,
-            toolbar:true,
+            navbar: false,
+            toolbar: true,
             loop: true
           })
         }
       })
     },
+    props: {
+//      caseOrder: string
+    },
       methods: {
+        getCaseDetail(){
+
+        },
         closCaseDetail(){
           $(".caseDetail").addClass("hide")
         },

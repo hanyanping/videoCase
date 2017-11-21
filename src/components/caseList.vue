@@ -3,13 +3,13 @@
     <div class="caseListHeader">
       <form>
         <span>车牌号:</span>
-        <input type="text" placeholder="请输入车牌号"/>
+        <input type="text" v-modle="reporterCarLicenseNo" placeholder="请输入车牌号"/>
         <span>手机号:</span>
-        <input type="tel" placeholder="请输入手机号" maxlength="11"/>
+        <input type="tel" v-model="reporterPhoneNo" placeholder="请输入手机号" maxlength="11"/>
         <span>保险报案号:</span>
-        <input type="text" placeholder="请输入保险报案号"/>
+        <input type="text" v-model="reportInsuranceNo" placeholder="请输入保险报案号"/>
         <span>保险公司:</span>
-        <el-select v-model="CompaneyValue" name="Companey" placeholder="请选择保险公司">
+        <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -19,7 +19,7 @@
         </el-select>
 
         <span>机构:</span>
-        <el-select v-model="insitituValue" name="insititution" placeholder="请选择机构">
+        <el-select v-model="orgCode" name="insititution" placeholder="请选择机构">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -28,7 +28,7 @@
           </el-option>
         </el-select>
         <span >案件状态:</span>
-        <el-select v-model="caseValue" name="case" placeholder="请选择机构">
+        <el-select v-model="surveyStatus" name="case" placeholder="请选择机构">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -46,8 +46,8 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
-        <input type="hidden" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="startDate" id="startTime" readonly="readonly">
-        <input class="smInp" name="endDate" style="margin-left: 5px;" type="hidden" id="endTime" readonly="readonly" placeholder="结束时间">
+        <input type="hidden" placeholder="开始时间"  v-moodle="accidentStartTime" style="margin-right: 5px;" class="smInp" name="startDate" id="startTime" readonly="readonly">
+        <input class="smInp" name="endDate" v-model="accidentEndTime" style="margin-left: 5px;" type="hidden" id="endTime" readonly="readonly" placeholder="结束时间">
         <span>处理时间:</span>
         <div class="" style="display:inline-block;">
           <el-date-picker
@@ -58,15 +58,15 @@
             end-placeholder="结束日期">
           </el-date-picker>
         </div>
-        <input type="hidden" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="dealstartDate" id="dealstartTime" readonly="readonly"/>
-        <input class="smInp" name="dealendDate" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
+        <input type="hidden" v-model="handleStartTime" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="dealstartDate" id="dealstartTime" readonly="readonly"/>
+        <input class="smInp" name="dealendDate" v-model="handleEndTime" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
         <a href="#" class="caseListSure" @click="formSure">确定 </a>
         <a href="#" class="caseListReset">重置</a>
       </form>
     </div>
     <div class="caseListTable">
       <div class="tableTitle">
-        <span>共: 10页,</span>
+        <span>共: {{pages}},</span>
         <span>{{totalCount}}条, </span>
         <span>当前页: {{currentCount}}条</span>
       </div>
@@ -108,14 +108,14 @@
         <tbody>
         <tr v-for="(item,index) in tableData">
           <td>{{index+1}}</td>
-          <td>{{item.reportNo}}</td>
-          <td>{{item.reportName}}</td>
-          <td>{{item.phone}}</td>
-          <td>{{item.gongsi}}</td>
-          <td>{{item.time}}</td>
-          <td>{{item.address}}</td>
-          <td>{{item.status}}</td>
-          <td>{{item.shipin}}</td>
+          <td>{{item.reporterCarLicenseNo}}</td>
+          <td>{{item.reporterName}}</td>
+          <td>{{item.reporterPhoneNo}}</td>
+          <td>{{item.insuranceCompanyName}}</td>
+          <td>{{item.accidentTime}}</td>
+          <td>{{item.accidentAddress}}</td>
+          <td>{{item.survey}}</td>
+          <td>{{item.videoConnectRequestCount}}</td>
           <td><a href="#" class="listAssign">指派</a>|<a href="#" class="listView">查看</a></td>
         </tr>
         </tbody>
@@ -123,8 +123,8 @@
 
     </div>
     <el-pagination  @current-change="handleCurrentChange"
-      :current-page="currentPage"
-      :page-size = "5"
+      :current-page="currentPageNo"
+      :page-size = "8"
      layout="prev,pager,next"
       :total="totalCount">
     </el-pagination>
@@ -132,18 +132,28 @@
   </div>
 </template>
 <script>
-
+  import axios from 'axios'
   export default {
     data() {
       return {
-        insitituValue: '',
-        CompaneyValue: '',
-        caseValue: '',
+        reporterPhoneNo: "",
+        reporterCarLicenseNo: "",
+        reportInsuranceNo: "",
+        orgCode: '',
+        accidentStartTime:"",
+        accidentEndTime: "",
+        handleStartTime: "",
+        handleEndTime: "",
+        insuranceCompanyCode: '',
+        surveyStatus: '',
         pageNo: '',
-        currentPage: 1,
+        pageSize: 8,
+        pages: '',
+        currentPageNo: 1,
         currentCount: "",
+        survey: "",
         tableData: [],
-        totalCount: 40,
+        totalCount: "",
         options: [{
           value: '1',
           label: '黄金糕'
@@ -188,7 +198,8 @@
           }]
         },
         value6: '',
-        value7: ''
+        value7: '',
+        ajaxUrl: "/boot-pub-survey-manage"
       }
     },
      watch: {
@@ -198,166 +209,55 @@
         }
       },
       created() {
-        this.tableData = [{
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司对对对对对",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "新案件-已指派",
-          date: '2016-05-02',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "新案件-已指派",
-          date: '2016-05-02',
-          address: '北京市朝阳区双井百万字劲松达到128号'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司对对对对对",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "新案件-已指派",
-          date: '2016-05-02',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "4",
-          date: '2016-05-02',
-          address: '北京市朝阳区双井百万字劲松达到128号'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司对对对对对",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "2",
-          date: '2016-05-02',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "4",
-          date: '2016-05-02',
-          address: '北京市朝阳区双井百万字劲松达到128号'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司对对对对对",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "2",
-          date: '2016-05-02',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "4",
-          date: '2016-05-02',
-          address: '北京市朝阳区双井百万字劲松达到128号'
-        }, {
-          reportNo: "A京12334",
-          reportName: "李四交警",
-          phone: "134555553333",
-          gongsi: "平安报喜那公司对对对对对",
-          time: "2017-11-12 12:12:12",
-          caozuo: '02',
-          shipin: '3',
-          status: "2",
-          date: '2016-05-02',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-          {
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "4",
-            date: '2016-05-02',
-            address: '北京市朝阳区双井百万字劲松达到128号'
-          }, {
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司对对对对对",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "2",
-            date: '2016-05-02',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "4",
-            date: '2016-05-02',
-            address: '北京市朝阳区双井百万字劲松达到128号'
-          }, {
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司对对对对对",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "2",
-            date: '2016-05-02',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "4",
-            date: '2016-05-02',
-            address: '北京市朝阳区双井百万字劲松达到128号'
-          }];
-        this.totalCount = this.tableData.length;
-        this.currentCount = this.tableData.length;
+      this.getCaseList();
       },
       methods: {
+        getCaseList() {
+          var paramData = {
+            "currentPageNo": this.currentPageNo,
+            "pageSize": this.pageSize,
+            "insuranceCompanyCode": this.insuranceCompanyCode,
+            "orgCode": this.orgCode,
+            "reporterCarLicenseNo":this.reporterCarLicenseNo,
+            "reporterPhoneNo": this.reporterPhoneNo,
+            "reportInsuranceNo": this.reportInsuranceNo,
+            "surveyStatus":this.surveyStatus,
+            "accidentStartTime": this.accidentStartTime,
+            "accidentEndTime": this.accidentEndTime,
+            "handleStartTime":this.handleStartTime,
+            "handleEndTime":this.handleEndTime,
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/page",paramData)
+            .then(response => {
+              console.log(response)
+              if(response.data.rescode == 200){
+                this.tableData = response.data.data.records;
+                this.totalCount = response.data.data.total;
+                this.currentCount = response.data.data.size;
+                this.pages = response.data.data.pages;
+                for(let i in this.tableData){
+                  if(this.tableData[i].surveyStatus == '06'){
+                    this.tableData[i].survey = "待查勘"
+                  }else if(this.tableData[i].surveyStatus == '07'){
+                    this.tableData[i].survey = "查勘中"
+                  }else if(this.tableData[i].surveyStatus == '08'){
+                    this.tableData[i].survey = "已查勘"
+                  }else if(this.tableData[i].surveyStatus == '09'){
+                    this.tableData[i].survey = "查勘完成"
+                  }else if(this.tableData[i].surveyStatus == '10'){
+                    this.tableData[i].survey = "待补拍"
+                  }else if(this.tableData[i].surveyStatus == '11'){
+                    this.tableData[i].survey = "查勘订单已取消"
+                  }
+                }
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
         handleClick(row) {
           console.log(row);
         },
@@ -371,19 +271,8 @@
         handleCurrentChange(currentPage) {
           //当前页改变调用接口  pageNo  pageSize
           console.log(currentPage)
-          this.pageNo = currentPage;
-          this.tableData = [{
-            reportNo: "A京12334",
-            reportName: "李四交警",
-            phone: "134555553333",
-            gongsi: "平安报喜那公司对对对对对",
-            time: "2017-11-12 12:12:12",
-            caozuo: '02',
-            shipin: '3',
-            status: "新案件-已指派",
-            date: '2016-05-02',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }]
+          this.currentPageNo = currentPage;
+          this.getCaseList()
         },
       },
       components: {}

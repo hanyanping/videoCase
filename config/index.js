@@ -6,18 +6,31 @@ const path = require('path');
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/insure_survey_web': {
+      '/boot-pub-survey-manage': {
+        target: 'http://192.168.1.185:8080',      // 志猛个人服务器
+        // target: 'http://192.168.1.113:8080',      // 和鹏个人服务器
+        // target: 'http://192.168.1.18:8080',//元鹏
         // target: 'http://devaiganneo.aiganyisheng.com', // 测试
-           // target: 'http://dingxiaoxin.aiganyisheng.com', //个人服务器
-        target: 'https://api.accidentx.zhongchebaolian.com/insure_survey_web', // 正式
+        // target: 'https://neo.aiganyisheng.cn', // 正式
         changeOrigin: true,
         pathRewrite: {
-          '^/insure_survey_web': '/'
+          '^/boot-pub-survey-manage': '/boot-pub-survey-manage'
+        }
+      },
+      '/insure_survey_web': {
+        // target: 'http://lipengwei.furui.com',      // 个人服务器
+        // target: 'http://liangxing.furui.com',      // 个人服务器
+        // target: 'http://luhongguang.furui.com',
+        // target: 'http://testmall.aiganyisheng.com', // 测试
+        target: 'https://api.accidentx.zhongchebaolian.com', // 正式
+
+        changeOrigin: true,
+        pathRewrite: {
+          '^/insure_survey_web': '/insure_survey_web'
         }
       },
     },

@@ -189,54 +189,48 @@
 
       </div>
     </div>
-    <case-detail></case-detail>
+    <case-detail ></case-detail>
     <sign-Seats></sign-Seats>
 
   <div class="caseMontor">
     <div class="caseMontorBox">
       <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;"  @click="goCase(caseNuber.one)">
-        <h3 class="minuteNuber" style="color:#46A0FC">3</h3>
+        <h3 class="minuteNuber" style="color:#46A0FC">{{caseMonitor.todayNotAssignedMoreThanTwoMinutesCount}}</h3>
         <p class="minuterdetail">当日超过2分钟未分派查勘员</p>
       </div>
       <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;" @click="goCase(caseNuber.two)">
-        <h3 class="minuteNuber" style="color:#6AC044">3</h3>
+        <h3 class="minuteNuber" style="color:#6AC044">{{caseMonitor.todaySceneSurveyorExpectTimeNonArrivalCount}}</h3>
         <p class="minuterdetail">当日现场查勘员预计到达时间未到达的</p>
       </div>
       <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.three)">
-        <h3 class="minuteNuber"  style="color:#F79E14;">3</h3>
+        <h3 class="minuteNuber"  style="color:#F79E14;">{{caseMonitor.todaySceneSurveyorArrivedMoreThanFiveMinutesNoVideoRequestCount}}</h3>
          <p class="minuterdetail">当日现场查勘员到达现场超过5分钟未发起视频请求</p>
       </div>
       <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.foure)">
-        <h3 class="minuteNuber" style="color:#F75759;">3</h3>
+        <h3 class="minuteNuber" style="color:#F75759;">{{caseMonitor.todaySceneSurveyorVideoRequestMoreThanThreeTimesNotConnectedCount}}</h3>
         <p class="minuterdetail">现场查勘员发起视频请求超过3次未连接的</p>
       </div>
     </div>
     <div class="caseMontorBox">
       <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;"  @click="goCase(caseNuber.five)">
-        <h3 class="minuteNuber" style="color:#6AC044;">3</h3>
+        <h3 class="minuteNuber" style="color:#6AC044;">{{caseMonitor.todayMoreThanTwoTimesWithinThirtySecondsNotAnswerCount}}</h3>
         <p class="minuterdetail">当日坐席超过2次30s内未接听视频的</p>
       </div>
       <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.six)">
-        <h3 class="minuteNuber" style="color:#F75759;"> 3</h3>
+        <h3 class="minuteNuber" style="color:#F75759;"> {{caseMonitor.todaySurveyTimeMoreThanTwentyMinutesNotCompletedCount}}</h3>
         <p class="minuterdetail">当前订单处理时间超过20分钟未查勘完成的</p>
       </div>
       <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;" @click="goCase(caseNuber.seven)">
-        <h3 class="minuteNuber" style="color:#46A0FC;">3</h3>
-        <p class="minuterdetail">待处理订单超过20分钟未处理的</p>
+        <h3 class="minuteNuber" style="color:#46A0FC;">{{caseMonitor.todayCompletedOfExceptionCount}}</h3>
+        <p class="minuterdetail">当日异常查勘完成的案件</p>
       </div>
 
       <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.eight)">
-        <h3 class="minuteNuber" style="color:#F79E14;">3</h3>
-        <p class="minuterdetail">当日异常查勘完成的案件</p>
-      </div>
-    </div>
-    <div class="caseMontorBox" style="justify-content: flex-start;" @click="goCase(caseNuber.nigh)">
-      <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;">
-        <h3 class="minuteNuber" style="color:#F79E14;">3</h3>
+        <h3 class="minuteNuber" style="color:#F79E14;">{{caseMonitor.todayWaitAllocatBackstageSurveyorCount}}</h3>
         <p class="minuterdetail">待分配后台坐席订单数</p>
       </div>
-
     </div>
+
   </div>
 
   </div>
@@ -244,10 +238,13 @@
 <script>
 import caseDetail from '../components/caseDetail'
 import signSeats from '../components/signSeats'
+import axios from 'axios'
   export default {
     data() {
       return{
-        cars:[],
+        caseMonitor: {},
+        ajaxUrl: "/boot-pub-survey-manage",
+        cars: [],
         caseNuber : {
           "one":"1",
           "two":"2",
@@ -273,6 +270,7 @@ import signSeats from '../components/signSeats'
       }
     },
     created(){
+      this.getCaseMonitor()
       this.cars= [{
         "carNo": "京123333",
         "name": "张着呢",
@@ -308,6 +306,20 @@ import signSeats from '../components/signSeats'
       }]
     },
     methods: {
+      getCaseMonitor(){
+        axios.get(this.ajaxUrl+"/monitor/v1/overview")
+          .then(response => {
+            console.log(response)
+            if(response.data.rescode == 200){
+              this.caseMonitor = response.data.data;
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    },
       goCase(item){//进入案件列表
         $(".caseMontorDialog").removeClass("hide");
         console.log(item);
@@ -356,6 +368,7 @@ import signSeats from '../components/signSeats'
         this.caseActive.nighcase = false;
       },
       goCaseDetail(){//查看案件详情
+//        传参给案件详情
         $(".caseDetail").removeClass("hide")
       },
       goSignSeat(){//坐席指派

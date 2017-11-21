@@ -156,56 +156,59 @@
             <h4 class="dialogTitle" v-if="editorActive">坐席信息</h4>
             <h4 class="dialogTitle" v-else>添加坐席</h4>
             <div class="clear scrollBox">
-              <div v-if="editorActive" style="margin-top:20px;">
+              <div v-if="editorActive" style="margin-top:20px;" v-for="seatInfo in seatInfo">
                 <div class="InputSeatInfo">
                   <span>坐席账号:</span>
-                  <input type="text" disabled  value="jjj交警"/>
+                  <input type="text" disabled  :value="seatInfo.userName"/>
                   <span>坐席姓名:</span>
-                  <input type="text"   value="jjj交警"/>
+                  <input type="text" v-model="chinaName"  :value="seatInfo.chinaName"/>
                 </div>
                 <div class="InputSeatInfo">
                   <span>坐席手机号:</span>
-                  <input type="text"   value="jjj交警"/>
+                  <input type="text" v-model="telephone" maxlength="11" :value="seatInfo.telephone"/>
                   <span>坐席账号密码:</span>
-                  <input type="text"   value="jjj交警"/>
+                  <input v-model="password" type="password"  maxlength="80"  :value="seatInfo.password"/>
                 </div>
                 <div class="InputSeatInfo">
                   <span>账号状态:</span>
-                  <select>
-                    <option>正常</option>
-                    <option>冻结</option>
+                  <select v-model="isLocked">
+                    <option v-for="item in isLockedOption" :value="item.isLocked"  v-if="item.isLocked == isLocked">{{item.name}}</option>
+                    <option :value="item.isLocked" v-else>{{item.name}}</option>
+
                   </select>
                 </div>
                 <div class="InputSeatInfo">
-                  <span class="backColorGreen saveButton" @click="saveSeats"> 保存</span>
+                  <span class="backColorGreen saveButton" @click="saveSeats()"> 保存</span>
                 </div>
                 <div class="seatListFoot">
                   <div class="footTop">
                     <div class="seatInfoFoot">
-                      <span class="infoDetail">当前状态: 繁忙 <i class="colorRed">(处理中-未连线)</i></span>
-                      <span class="infoDetail">未处理案件: 5</span>
+                      <span class="infoDetail" v-if="seatInfo.userStatus == 2">当前状态: 繁忙 <i class="colorRed">(处理中-未连线)</i></span>
+                      <span class="infoDetail" v-if="seatInfo.userStatus == 0">当前状态: 空闲 </span>
+                      <span class="infoDetail" v-if="seatInfo.userStatus == 1">当前状态: 不在线 </span>
+                      <span class="infoDetail">未处理案件: {{seatInfo.waitingCaseCount}}单</span>
                     </div>
                     <div class="seatInfoFoot">
-                      <span class="infoDetail">今日已处理案件: 4单</span>
-                      <span class="infoDetail">今日登陆时间: 2017-11-29 08:12:12</span>
+                      <span class="infoDetail">今日已处理案件: {{seatInfo.handleCaseCount}}单</span>
+                      <span class="infoDetail">今日登陆时间: {{seatInfo.loginTime}}</span>
                     </div>
                     <div class="seatInfoFoot" style="padding-bottom: 20px;">
-                      <span class="infoDetail">累计处理案件: 12单</span>
+                      <span class="infoDetail">累计处理案件: {{seatInfo.totalHandleCaseCount}}单</span>
                     </div>
                   </div>
-                  <div class="footBottom">
+                  <div class="footBottom" v-if="accidendsActive">
                     <div class="seatInfoFoot">
-                      <span class="infoDetail">报案人车牌号: 12333333</span>
-                      <span class="infoDetail">报案人手机号: 5</span>
+                      <span class="infoDetail">报案人车牌号: {{seatInfo.siReportLicenseNo}}</span>
+                      <span class="infoDetail">报案人手机号: {{seatInfo.siReportPhone}}</span>
                     </div>
                     <div class="seatInfoFoot">
-                      <span class="infoDetail">事故时间: 2017-11-29 08:12:12</span>
-                      <span class="infoDetail">事故地点: 北京市朝阳区啥UN机构in黄金进口123</span>
+                      <span class="infoDetail">事故时间: {{seatInfo.siAccidentTime}}</span>
+                      <span class="infoDetail">事故地点: {{seatInfo.siAccidentAddress}}</span>
 
                     </div>
                     <div class="seatInfoFoot">
-                      <span class="infoDetail">开始处理时间: 2017-11-29 08:12:12</span>
-                      <span class="infoDetail">案件状态: 查勘中</span>
+                      <span class="infoDetail">开始处理时间: {{seatInfo.siStartTime}}</span>
+                      <span class="infoDetail">案件状态: {{seatInfo.siStatusText}}</span>
                     </div>
                   </div>
                 </div>
@@ -249,38 +252,38 @@
     </div>
     <div class="seatList">
       <div class="seatListBox clear">
-        <div class="seatListMinute left bordercolorRed" v-for="item in seatsList"  @click="goSeatInfo" v-if="item.statius ==0">
+        <div class="seatListMinute left bordercolorRed" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 2">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber" style="color:#46A0FC">张扬</h3>
+            <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
           </div>
           <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
-          <p class="minuterdetail" style="padding-left: 8%;">未处理订单: 1)</p>
-          <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: 0</p>
-          <p class="minuterdetail" style="padding-left: 8%;">今日登陆时间: 0</p>
-          <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: 0</p>
+          <p class="minuterdetail" style="padding-left: 8%;">未处理订单:  {{item.waitingCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: {{item.handleCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;">今日登陆时间:{{item.loginTime}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo" v-if="item.statius ==1">
+        <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 0">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber" style="color:#46A0FC">张扬</h3>
+            <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
           </div>
           <p class="minuterdetail">当前状态: 空闲</p>
-          <p class="minuterdetail">未处理订单: 1)</p>
-          <p class="minuterdetail">今日已处理订单: 0</p>
-          <p class="minuterdetail">今日登陆时间: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail">未处理订单: {{item.waitingCaseCount}}</p>
+          <p class="minuterdetail">今日已处理订单: {{item.handleCaseCount}}</p>
+          <p class="minuterdetail">今日登陆时间:{{item.loginTime}}</p>
+          <p class="minuterdetail">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo" v-if="item.statius ==2">
+        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 1">
           <div class="imgBox">
             <img src="../images/kefuhui.png">
-            <h3 class="minuteNuber" style="color:#999">张扬</h3>
+            <h3 class="minuteNuber" style="color:#999">{{item.chinaName}}</h3>
           </div>
           <p class="minuterdetail minuterdetailGray">当前状态: 未在线</p>
-          <p class="minuterdetail minuterdetailGray">未处理订单: 1)</p>
-          <p class="minuterdetail minuterdetailGray">今日已处理订单: 0</p>
-          <p class="minuterdetail minuterdetailGray">今日登陆时间: 0</p>
-          <p class="minuterdetail minuterdetailGray">累计处理案件: 0</p>
+          <p class="minuterdetail minuterdetailGray">未处理订单: {{item.waitingCaseCount}}</p>
+          <p class="minuterdetail minuterdetailGray">今日已处理订单:{{item.handleCaseCount}}</p>
+          <p class="minuterdetail minuterdetailGray">今日登陆时间: {{item.loginTime}}</p>
+          <p class="minuterdetail minuterdetailGray">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
         <div class="seatListMinute left" style="background:#F8F8F9;min-height:305px;"  @click="addSeatsDialog">
           <div class="addFont">
@@ -294,52 +297,30 @@
 
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return{
+        userId: "",
+        chinaName: "",
+        password: "",
+        telephone: "",
+        isLocked: "",
+        isLockedOption: [
+          {"isLocked":"0",name:"正常"},
+          {"isLocked":"1",name:"锁定"}],
+        accidendsActive: true,
         editorActive: false,
-        seatsList:[{"statius":1},
-          {"statius":0},
-          {"statius":0},
-          {"statius":2},
-          {"statius":11}]
-
+        seatsList: [],
+        seatInfo: [],
+        paramData: {"orgcode":"started"},
+        ajaxUrl: "/boot-pub-survey-manage"
       }
     },
     created(){
-      this.cars= [{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      }]
+    },
+    mounted() {
+      this.getSeatList()
     },
     watch: {
       "editorActive": function(){
@@ -352,9 +333,81 @@
       }
     },
     methods: {
-      goSeatInfo(){//坐席信息编辑
+      getSeatList(){
+        axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", this.paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.seatsList = response.data.data.list;
+              for(let i in this.seatsList){
+                this.seatsList[i].loginTime = this.seatsList[i].loginTime.substring(10,(this.seatsList[i].loginTime.length)+1);
+              }
+            }else{
+              alert(response.data.resdes)
+            }
+            resolve(response.data);
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      goSeatInfo(userId){//坐席信息编辑
+        this.userId = userId
+        var paramData = {
+              "userId": userId,
+              "orgcode": "started"
+        }
         $(".seatListDialog").removeClass("hide");
         this.editorActive = true;
+        axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/detail", paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.$router.push({path:'/login'})
+              this.seatInfo = response.data.data;
+              for(let i in this.seatInfo){
+                if(this.seatInfo[i].isLocked != null ){
+                  this.isLocked = this.seatInfo[i].isLocked;
+                }
+                this.password = "••••••••";
+                this.telephone = this.seatInfo[i].telephone;
+                this.chinaName = this.seatInfo[i].chinaName;
+                if(this.seatInfo[i].siReportLicenseNo == null && this.seatInfo[i].siStartTime == null){
+                  this.accidendsActive = false
+                }else{
+                  this.accidendsActive = true;
+                }
+                if(this.seatInfo[i].siStatus != null){
+                  if(this.seatInfo[i].siStatus == "08"){
+                    this.seatInfo[i].siStatusText = "已查勘"
+                  }else if(this.seatInfo[i].siStatus == "07"){
+                    this.seatInfo[i].siStatusText = "查勘中"
+                  }else if(this.seatInfo[i].siStatus == "06"){
+                    this.seatInfo[i].siStatusText = "待查勘"
+                  }else if(this.seatInfo[i].siStatus == "09"){
+                    this.seatInfo[i].siStatusText = "查勘完成"
+                  }else if(this.seatInfo[i].siStatus == "11"){
+                    this.seatInfo[i].siStatusText = "查勘订单已取消"
+                  }else if(this.seatInfo[i].siStatus == "10"){
+                    this.seatInfo[i].siStatusText = "待补拍"
+                  }
+                }
+              }
+            }else{
+              alert(response.data.resdes)
+              if(response.data.rescode == 300){
+                this.$router.push({path:'/login'})
+              }
+            }
+            resolve(response.data);
+          }, err => {
+            this.$router.push({path:'/login'})
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
       },
       addSeatsDialog(){//打来添加坐席遮盖层
         this.editorActive = false;
@@ -366,7 +419,43 @@
         $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
       },
       saveSeats(){//保存编辑坐席
-        $(".seatListDialog").addClass("hide");
+        var paramData = {
+          "chinaName": this.chinaName,
+          "password": this.password,
+          "telephone": this.telephone,
+          "isLocked": this.isLocked,
+          "advancePassword": "",
+          "userId": this.userId
+        }
+        if(this.chinaName == ""){
+          alert("请输入坐席姓名")
+        }else if(this.chinaName.length > 80){
+          alert("请输入合理姓名")
+        }else if(this.telephone == ""){
+          alert("请输入坐席手机号")
+        }else  if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.telephone))){
+          alert("请输入合理手机号")
+        }else if(this.password == "" || this.password == null){
+          alert("请输入坐席密码")
+        }else{
+          axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/update", paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.getSeatList()
+                $(".seatListDialog").addClass("hide");
+              }else{
+                alert(response.data.resdes)
+                $(".seatListDialog").addClass("hide");
+              }
+              resolve(response.data);
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+
       },
       closSeatDialog(){//关闭遮盖层
         $(".seatListDialog").addClass("hide");

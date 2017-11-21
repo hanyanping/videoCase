@@ -259,3 +259,8 @@ input:-ms-input-placeholder{
 input::-webkit-input-placeholder{
   color: #C5BCCF;opacity:1;
 }
+.el-icon-refresh{
+  position: absolute;
+  left: 272px;
+  top: 13px;
+}
