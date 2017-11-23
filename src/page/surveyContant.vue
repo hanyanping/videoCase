@@ -10,19 +10,6 @@
   import footerFoot from '../components/footer'
   import axios from 'axios'
   export default {
-//    beforeRouteEnter(to, from, next) {
-//
-//      var userId = "1212"
-//      //  判断用户是否登录
-//      if(userId == "1212"){
-//        console.log(232323232)
-//        next('/login')
-//      }else{
-//        next(true);
-//      }
-//    },
-
-
    data() {
       return{
          data:{
@@ -33,8 +20,6 @@
     created(){
       axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", this.data)
         .then(response => {
-          console.log(response.data)
-          resolve(response.data);
         }, err => {
             console.log(err);
         })

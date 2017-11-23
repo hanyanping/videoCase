@@ -46,8 +46,11 @@
       <div class="lineBox"></div>
     </div>
     <div class="insitutionContent">
-      <insitution-Editor :inputValue="insititutEditorActive" @message="recieveMessage"  v-if="insititutEditorActive"></insitution-Editor>
-      <insitution-list  :inputValue="insititutEditorActive" @message="recieveMessage" v-else></insitution-list>
+      <!--<insitution-Editor :inputValue="insititutEditorActive" @message="recieveMessage"  v-if="insititutEditorActive"></insitution-Editor>-->
+      <!--<insitution-list  :inputValue="insititutEditorActive" @message="recieveMessage" v-else></insitution-list>-->
+
+      <insitution-Editor v-if="insititutEditorActive"></insitution-Editor>
+      <insitution-list  v-else></insitution-list>
     </div>
   </div>
 </template>
@@ -57,18 +60,34 @@
   export default {
     data() {
       return{
-        insititutEditorActive: false,
+        insititutEditorActive: '',
       }
+    },
+    watch: {
+      getUserIcons(val) {
+        this.insititutEditorActive = val;
+        console.log(this.insititutEditorActive)
+      }
+    },
+    mounted() {
+      this.insititutEditorActive = this.$store.state.insititutEditorActive;
     },
     methods: {
       recieveMessage(insititutEditorActive){
-        this.insititutEditorActive = insititutEditorActive
+        this.insititutEditorActive = insititutEditorActive;
+        console.log(this.insititutEditorActive)
       }
     },
     components: {
       insitutionList,
       insitutionEditor,
     },
+    computed: {
+      getUserIcons(){
+        return this.$store.state.insititutEditorActive;
+      }
+    }
+
   }
 
 </script>

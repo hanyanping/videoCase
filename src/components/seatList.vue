@@ -159,15 +159,15 @@
               <div v-if="editorActive" style="margin-top:20px;" v-for="seatInfo in seatInfo">
                 <div class="InputSeatInfo">
                   <span>坐席账号:</span>
-                  <input type="text" disabled  :value="seatInfo.userName"/>
+                  <input type="text" disabled id="seatuserName" :value="seatInfo.userName"/>
                   <span>坐席姓名:</span>
-                  <input type="text" v-model="chinaName"  :value="seatInfo.chinaName"/>
+                  <input type="text" v-model="chinaName"/>
                 </div>
                 <div class="InputSeatInfo">
                   <span>坐席手机号:</span>
-                  <input type="text" v-model="telephone" maxlength="11" :value="seatInfo.telephone"/>
+                  <input type="text" v-model="telephone" maxlength="11" />
                   <span>坐席账号密码:</span>
-                  <input v-model="password" type="password"  maxlength="80"  :value="seatInfo.password"/>
+                  <input v-model="password" type="text"  maxlength="80" />
                 </div>
                 <div class="InputSeatInfo">
                   <span>账号状态:</span>
@@ -190,7 +190,7 @@
                     </div>
                     <div class="seatInfoFoot">
                       <span class="infoDetail">今日已处理案件: {{seatInfo.handleCaseCount}}单</span>
-                      <span class="infoDetail">今日登陆时间: {{seatInfo.loginTime}}</span>
+                      <span class="infoDetail" v-if="seatInfo.loginTime != null">今日登陆时间: {{seatInfo.loginTime}}</span>
                     </div>
                     <div class="seatInfoFoot" style="padding-bottom: 20px;">
                       <span class="infoDetail">累计处理案件: {{seatInfo.totalHandleCaseCount}}单</span>
@@ -213,33 +213,28 @@
                   </div>
                 </div>
               </div>
-              <div style="margin-top:20px;" v-else>
-                <div class="addSeatInput">
-                  <span>坐席所属机构</span>
-                  <select>
-                    <option></option>
-                  </select>
-                </div>
+              <div style="margin-top:20px;" v-if="editorActive == false">
                 <div class="addSeatInput">
                   <span>坐席账号</span>
-                  <input type="text" placeholder="请输入坐席账号"/>
+                  <input v-model="username" type="text" placeholder="请输入坐席账号"/>
                 </div>
                 <div class="addSeatInput">
                   <span>坐席账号密码</span>
-                  <input type="text" placeholder="请输入坐席账号密码"/>
+                  <input v-model="userpwd" type="text" placeholder="请输入坐席账号密码"/>
                 </div>
                 <div class="addSeatInput">
                   <span>坐席姓名</span>
-                  <input type="text" placeholder="请输入坐席姓名"/>
+                  <input v-model="userchinaname" type="text" placeholder="请输入坐席姓名"/>
                 </div>
                 <div class="addSeatInput">
                   <span>坐席手机号</span>
-                  <input type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
+                  <input v-model="userphone" type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
                 </div>
                 <div class="addSeatInput">
                   <span>账号状态</span>
-                  <select>
-                    <option>正常</option>
+                  <select v-model="addislocked">
+                    <option value="">请选择账号状态</option>
+                    <option v-for="item in isLockedOption" :value="item.isLocked">{{item.name}}</option>
                   </select>
                 </div>
                 <div class="addSeatInput">
@@ -274,7 +269,7 @@
           <p class="minuterdetail">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 1">
+        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 1 || item.sysUserStatus == null">
           <div class="imgBox">
             <img src="../images/kefuhui.png">
             <h3 class="minuteNuber" style="color:#999">{{item.chinaName}}</h3>
@@ -282,7 +277,7 @@
           <p class="minuterdetail minuterdetailGray">当前状态: 未在线</p>
           <p class="minuterdetail minuterdetailGray">未处理订单: {{item.waitingCaseCount}}</p>
           <p class="minuterdetail minuterdetailGray">今日已处理订单:{{item.handleCaseCount}}</p>
-          <p class="minuterdetail minuterdetailGray">今日登陆时间: {{item.loginTime}}</p>
+          <p class="minuterdetail minuterdetailGray" v-if="item.loginTime != null">今日登陆时间: {{item.loginTime}}</p>
           <p class="minuterdetail minuterdetailGray">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
         <div class="seatListMinute left" style="background:#F8F8F9;min-height:305px;"  @click="addSeatsDialog">
@@ -301,6 +296,12 @@
   export default {
     data() {
       return{
+        seatuserName: "",
+        username: "",
+        userpwd: "",
+        userchinaname: "",
+        userphone: "",
+        addislocked: "",
         userId: "",
         chinaName: "",
         password: "",
@@ -314,7 +315,8 @@
         seatsList: [],
         seatInfo: [],
         paramData: {"orgcode":"started"},
-        ajaxUrl: "/boot-pub-survey-manage"
+        ajaxUrl: "/boot-pub-survey-manage",
+        caseDetailActive: false,
       }
     },
     created(){
@@ -330,21 +332,35 @@
           }else{
             $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
           }
-      }
+      },
+      getUserIcons(val) {
+        this.caseDetailActive = val;
+        console.log(typeof this.caseDetailActive)
+      },
+      getsignSeatsActive(val) {
+        this.signSeatsActive = val;
+      },
     },
     methods: {
+      open4(resdes) {
+        this.$message.error(resdes);
+      },
+      open2(resdes) {
+        this.$message.success(resdes);
+      },
       getSeatList(){
         axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", this.paramData)
           .then(response => {
             if(response.data.rescode == 200){
               this.seatsList = response.data.data.list;
               for(let i in this.seatsList){
-                this.seatsList[i].loginTime = this.seatsList[i].loginTime.substring(10,(this.seatsList[i].loginTime.length)+1);
+                if(this.seatsList[i].loginTime != null){
+                  this.seatsList[i].loginTime = this.seatsList[i].loginTime.substring(10,(this.seatsList[i].loginTime.length)+1);
+                }
               }
             }else{
-              alert(response.data.resdes)
+              this.open4(response.data.resdes)
             }
-            resolve(response.data);
           }, err => {
             console.log(err);
           })
@@ -356,20 +372,21 @@
         this.userId = userId
         var paramData = {
               "userId": userId,
-              "orgcode": "started"
         }
         $(".seatListDialog").removeClass("hide");
         this.editorActive = true;
         axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/detail", paramData)
           .then(response => {
             if(response.data.rescode == 200){
-              this.$router.push({path:'/'})
               this.seatInfo = response.data.data;
               for(let i in this.seatInfo){
+                this.seatuserName = this.seatInfo[i].userName
                 if(this.seatInfo[i].isLocked != null ){
                   this.isLocked = this.seatInfo[i].isLocked;
                 }
-                this.password = "••••••••";
+                if(this.seatInfo[i].password == null){
+                  this.password = "••••••••";
+                }
                 this.telephone = this.seatInfo[i].telephone;
                 this.chinaName = this.seatInfo[i].chinaName;
                 if(this.seatInfo[i].siReportLicenseNo == null && this.seatInfo[i].siStartTime == null){
@@ -399,7 +416,6 @@
                 this.$router.push({path:'/'})
               }
             }
-            resolve(response.data);
           }, err => {
             this.$router.push({path:'/'})
             console.log(err);
@@ -411,22 +427,53 @@
       },
       addSeatsDialog(){//打来添加坐席遮盖层
         this.editorActive = false;
-        $(".seatListDialogBox").addClass("seatListDialogBoxAdd");
         $(".seatListDialog").removeClass("hide");
+        $(".seatListDialogBox").addClass("seatListDialogBoxAdd");
       },
       addSeats(){//添加坐席
-        $(".seatListDialog").addClass("hide");
-        $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
+        if(this.username == ''){
+          this.open4('请输入坐席账号')
+        }else if(this.userpwd == ""){
+          this.open4('请输入坐席账号密码')
+        }else if(this.userchinaname == ""){
+          this.open4('请输入坐席姓名')
+        }else if(this.userphone == ""){
+          this.open4('请输入坐席手机号')
+        }else if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.userphone))){
+          this.open4("请输入合理手机号")
+        }else if(this.islocked == ""){
+          this.open4('请选择账号状态')
+        }else{
+          var paramData = {
+            "username": this.username,
+            "userpwd": this.userpwd,
+            "userchinaname":this.userchinaname,
+            "userphone":this.userphone,
+            "islocked": this.addislocked,
+          }
+          axios.post(this.ajaxUrl+"/pubsurvey/manage/user/v1/useradd", paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.open2(response.data.resdes);
+                $(".seatListDialog").addClass("hide");
+                $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
+              }else{
+                this.open4(response.data.resdes)
+                if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }
+              }
+            }, err => {
+              this.$router.push({path:'/'})
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+
       },
       saveSeats(){//保存编辑坐席
-        var paramData = {
-          "chinaName": this.chinaName,
-          "password": this.password,
-          "telephone": this.telephone,
-          "isLocked": this.isLocked,
-          "advancePassword": "",
-          "userId": this.userId
-        }
         if(this.chinaName == ""){
           alert("请输入坐席姓名")
         }else if(this.chinaName.length > 80){
@@ -435,9 +482,22 @@
           alert("请输入坐席手机号")
         }else  if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.telephone))){
           alert("请输入合理手机号")
-        }else if(this.password == "" || this.password == null){
+        }else if(this.password == ""){
           alert("请输入坐席密码")
         }else{
+          if(this.password == '••••••••'){
+            this.password = ''
+          }
+
+          var paramData = {
+            "userName": this.seatuserName,
+            "chinaName": this.chinaName,
+            "password": this.password,
+            "telephone": this.telephone,
+            "isLocked": this.isLocked,
+            "advancePassword": "",
+            "userId": this.userId
+          }
           axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/update", paramData)
             .then(response => {
               if(response.data.rescode == 200){
@@ -447,7 +507,6 @@
                 alert(response.data.resdes)
                 $(".seatListDialog").addClass("hide");
               }
-              resolve(response.data);
             }, err => {
               console.log(err);
             })
@@ -461,13 +520,14 @@
         $(".seatListDialog").addClass("hide");
 
       },
-      goCaseDetail(){//打开查看案件详情
-        $(".caseDetail").removeClass("hide")
+      goCaseDetail(id,orderStatus){//打开查看案件详情
+
       },
       goSignSeat(){//打开坐席指派遮盖层
         $(".signSeats").removeClass("hide")
       }
     },
+
     components: {
     },
   }

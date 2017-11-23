@@ -6,16 +6,19 @@ import router from './router'
 import ElementUI from 'element-ui'
 import axios from 'axios'
 import store from './vuex/index'
-import 'element-ui/lib/theme-chalk/index.css'
-import '@/style/reset.css'
-// Vue.prototype.a = {}
-import 'viewerjs/dist/viewer.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+// import '@/style/reset.css'
+// import 'viewerjs/dist/viewer.css'
+Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
+
 
 // http请求拦截器
-// var loadinginstace
+var loadinginstace
 axios.interceptors.request.use(config => {
   // element ui Loading方法
-  // loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+  if(config.url != '/boot-pub-survey-manage/pub/survey/v1/page' || config.url != 'survey-detail/v1/photo/page'){
+    loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+  }
   return config
 }, error => {
   // loadinginstace.close()
@@ -26,7 +29,9 @@ axios.interceptors.request.use(config => {
 })
 // http响应拦截器
 axios.interceptors.response.use(data => {// 响应成功关闭loading
-  // loadinginstace.close()
+  if (loadinginstace) {
+    loadinginstace.close()
+  }
   if (data.data.rescode == 300) {
     router.push('/')
   }
@@ -42,12 +47,13 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
-Vue.use(axios);
+// Vue.use(axios);
+Vue.prototype.$ajax = axios;
 
-router.beforeEach((to, from, next) => {
-  var ajaxUrl = "/boot-pub-survey-manage";
-  next()
-});
+// router.beforeEach((to, from, next) => {
+//   var ajaxUrl = "/boot-pub-survey-manage";
+//   next()
+// });
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

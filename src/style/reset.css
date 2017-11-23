@@ -179,6 +179,20 @@ html,body{
 .btn-next:before{
   content: "下一页";
 }
+.phonesPaging .btn-prev:before{
+  content: "";
+}
+.phonesPaging .btn-next:before{
+  content: "";
+}
+.phonesPaging .el-pagination .btn-next, .phonesPaging .el-pagination .btn-prev {
+  background-size: 16px;
+  cursor: pointer;
+  background: #2EAB3B;
+  margin-left: 15px;
+  height: 1px;
+  width: 100px;
+}
 .el-pagination .btn-next .el-icon, .el-pagination .btn-prev .el-icon{
   display: none;
 }
@@ -259,8 +273,20 @@ input:-ms-input-placeholder{
 input::-webkit-input-placeholder{
   color: #C5BCCF;opacity:1;
 }
-.el-icon-refresh{
-  position: absolute;
-  left: 272px;
-  top: 13px;
+.el-checkbox{
+  margin: 5px 30px 5px 0;
+}
+.el-checkbox+.el-checkbox {
+  margin-left: 0px;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #2EAB3B;
+  border-color: #2EAB3B;
+}
+el-checkbox__inner:hover{
+  /*color: #333;*/
+  border: 1px solid #d8dce5;
+}
+.el-checkbox__input.is-checked+.el-checkbox__label {
+  color: #333;
 }

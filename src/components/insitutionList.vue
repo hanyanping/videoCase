@@ -124,30 +124,49 @@
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
                 <span>机构名称</span>
-                <select>
-                  <option></option>
-                </select>
+                <input v-model="orgname" placeholder="请输入机构名称" type="text"/>
               </div>
               <div class="addinsitituteInput">
                 <span>机构账号</span>
-                <input type="text" placeholder="请输入坐席账号"/>
+                <input type="text" v-model="username" placeholder="请输入坐席账号"/>
               </div>
               <div class="addinsitituteInput">
                 <span>账号密码</span>
-                <input type="text" placeholder="请输入坐席账号密码"/>
+                <input type="text" v-model="userpwd" placeholder="请输入坐席账号密码"/>
               </div>
               <div class="addinsitituteInput">
                 <span>联系人</span>
-                <input type="text" placeholder="请输入坐席姓名"/>
+                <input type="text" v-model="userchinaname" placeholder="请输入坐席姓名"/>
               </div>
               <div class="addinsitituteInput">
                 <span>联系人手机号</span>
-                <input type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
+                <input type="tel" v-model="userphone" maxlength="11" placeholder="请输入坐席手机号"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span>所属保险公司</span>
+                <select v-model="insurecode">
+                  <option value="">请选择保险公司</option>
+                  <option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span>开通省份</span>
+                <select v-model="provinces">
+                  <option value="">请选择开通省份</option>
+                  <option  v-for="item in provincesOption" :value="item.id">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput" style="display: flex;">
+                <span>开通城市</span>
+                <el-checkbox-group v-model="cl" @change="handleCheckedCitiesChange">
+                  <el-checkbox v-for="city in cities" :label="city.id" :key="city.name">{{city.name}}</el-checkbox>
+                </el-checkbox-group>
               </div>
               <div class="addinsitituteInput">
                 <span>账号状态</span>
-                <select>
-                  <option>正常</option>
+                <select v-model="islocked">
+                  <option value="0">正常</option>
+                  <option value="1">锁定</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
@@ -160,15 +179,15 @@
     </div>
     <div class="insitutionList">
       <div class="insitutionBox clear">
-        <div class="insitutionMinute left" v-for="item in seatsList"  @click="goInsititionEditor" >
+        <div class="insitutionMinute left" v-for="item in seatsList"  @click="goInsititionEditor(item.userid,item.orgcode,item.todaynotprocess,item.todayprocess,item.totalprocess)">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber">中车查看定损中心</h3>
+            <h3 class="minuteNuber">{{item.orgname}}</h3>
           </div>
-          <p class="minuterdetail">当前状态: 正常</p>
-          <p class="minuterdetail">未处理案件: 1</p>
-          <p class="minuterdetail">今日已处理案件: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail">当前状态: {{item.islockedText}}</p>
+          <p class="minuterdetail">未处理案件: {{item.todaynotprocess}}</p>
+          <p class="minuterdetail">今日已处理案件: {{item.todayprocess}}</p>
+          <p class="minuterdetail">累计处理案件: {{item.totalprocess}}</p>
         </div>
         <div class="insitutionMinute left" style="background:#F8F8F9;min-height:260px;"  @click="addInsitituDialog">
           <div class="addFont">
@@ -177,92 +196,227 @@
         </div>
       </div>
     </div>
-    <el-pagination  @size-change="handleSizeChange"  @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size = "5"
-
-                    layout="total,prev,pager, next,jumper"
-                    :total="totalCount">
+    <el-pagination  @current-change="handleCurrentChange"
+                    :current-page="pageno"
+                    :page-size = "pagesize"
+                    layout="prev,pager,next"
+                    :total="totalcount">
     </el-pagination>
   </div>
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return{
+        provinces: '',
+        seatsListActive: false,
+        checkAll: false,
+        cities: [{name:'上海',code:"1"}, {name:'北京',code:"2"}, {name:'深圳',code:"3"}, {name:'长沙',code:"4"}],
+        isIndeterminate: true,
+        orgname: "",
+        username: "",
+        userpwd: "",
+        userchinaname: "",
+        userphone: "",
+        islocked: "",
+        cl: [],
+        insurecode: '',
+        insurecodeOption : [],
+        provincesOption: [],
         insititutEditorActive: '',
-        totalCount: 100,
+        totalcount: 0,
         editorActive: false,
-        seatsList:[{"statius":1},
-          {"statius":0},
-          {"statius":0},
-          {"statius":2},
-          {"statius":11}]
+        seatsList: [],
+        pageno: 1,
+        pagesize: 5
       }
+    },
+    watch: {
+        "provinces": function(){
+          axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.provinces+"/citys")
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.cities = response.data.data
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
     },
     props: {
       insititutActive: Boolean
     },
     created(){
+      this.getInsitituList();
+    },
 
-      this.cars= [{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      }]
-    },
-    watch: {
-//      "editorActive": function(){
-//        if(this.editorActive == false){
-//          $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
-//
-//        }else{
-//          $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
-//        }
-//      }
-    },
     methods: {
-      goInsititionEditor(){//机构信息编辑
-      this.insititutEditorActive = true;
-      console.log(this.insititutEditorActive);
 
-        this.$emit('message', this.insititutEditorActive);
+      handleCheckedCitiesChange(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.cities.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
       },
-      addInsitituDialog(){//打来添加机构遮盖层
+      open4(resdes) {
+        this.$message.error(resdes);
+      },
+      open2(resdes) {
+        this.$message.success(resdes);
+      },
+      getInsitituList(){
+        var paramData = {
+          "pageno": this.pageno,
+          "pagesize": this.pagesize,
+        }
+        axios.post(this.ajaxUrl+"/pubsurvey/manage/department/v1/orglist",paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.totalcount = parseInt(response.data.data.totalcount);
+              this.seatsList = response.data.data.departs;
+              if(response.data.data.departs.length !=0){
+                this.seatsListActive = true;
+                for(let i in this.seatsList){
+                  if(this.seatsList[i].islocked == '0'){
+                    this.seatsList[i].islockedText = "正常"
+                  }else{
+                    this.seatsList[i].islockedText = "锁定"
+                  }
+                }
+
+              }else{
+                this.seatsListActive = false;
+              }
+            }else{
+              this.open4(response.data.resdes)
+              if(response.data.rescode == 300){
+                this.$router.push({path:'/'})
+              }
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      handleCurrentChange(pageno) {//跳转
+        //当前页改变调用接口  pageNo  pageSize
+        console.log(pageno)
+        this.pageno = pageno;
+        this.getInsitituList()
+      },
+
+      goInsititionEditor(userId,orgcode,todaynotprocess,todayprocess,totalprocess){//打开机构信息编辑
+//        this.userId = userId
+        var insitituData = {
+          "todaynotprocess":todaynotprocess,
+          "todayprocess":todayprocess,
+          "totalprocess":totalprocess,
+        }
+        var paramData = {
+          "userId": userId,
+          "orgcode": orgcode
+        }
+        $(".seatListDialog").removeClass("hide");
+        this.editorActive = true;
+        axios.post(this.ajaxUrl+"/pub/survey/v1/org/service/list", paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+                console.log(response.data)
+                this.$store.commit('setInsititutEditorActive', true);
+                localStorage.setItem("insititutEditorData",JSON.stringify(response.data.data))
+                localStorage.setItem("insitituData",JSON.stringify(insitituData))
+            }else{
+              alert(response.data.resdes)
+              if(response.data.rescode == 300){
+                this.$router.push({path:'/'})
+              }
+            }
+          }, err => {
+            this.$router.push({path:'/'})
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      addInsitituDialog(){//打来添加机构遮盖层 获取保险公司和开通省份
         this.editorActive = false;
         $(".insititutListDialog").addClass("insititutListDialogBoxAdd");
         $(".insititutListDialog").removeClass("hide");
+        axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/provinceinsure")
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.insurecodeOption = response.data.data.insures;
+              this.provincesOption = response.data.data.provinces
+              console.log(response.data)
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       addInsititution(){//添加坐席
-        $(".insititutListDialog").addClass("hide");
+        if(this.orgname == ''){
+          this.open4("请输入机构名称")
+        }else if(this.username == ''){
+          this.open4("请输入机构账号")
+        }else if(this.userpwd == ''){
+          this.open4("请输入账号密码")
+        }else if(this.userchinaname == ''){
+          this.open4("请输入联系人")
+        }else if(this.userphone == ''){
+          this.open4("请输入联系人手机号")
+        }else if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.userphone))){
+          this.open4("请输入合理手机号")
+        }else if(this.insurecode == ''){
+          this.open4("请选择保险公司")
+        }else if(this.cl.length == 0){
+          this.open4("请选择开通省份和城市")
+        }else if(this.islocked == ''){
+          this.open4("请选择账号状态")
+        }else{
+          var paramData={
+            "orgname": this.orgname,
+            "username": this.username,
+            "userpwd": this.userpwd,
+            "userchinaname": this.userchinaname,
+            "userphone": this.userphone,
+            "islocked": this.islocked,
+            "cl": this.cl,
+            "insurecode": this.insurecode,
+          }
+          console.log(paramData)
+          axios.post(this.ajaxUrl+"/pubsurvey/manage/department/v1/orgadd",paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.open2(response.data.resdes)
+                $(".insititutListDialog").addClass("hide");
+              }else{
+                this.open4(response.data.resdes)
+                if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+
+
       },
       closinsititutMontor(){//关闭遮盖层
         $(".insititutListDialog ").addClass("hide");

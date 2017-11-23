@@ -116,13 +116,13 @@
           <td>{{item.accidentAddress}}</td>
           <td>{{item.survey}}</td>
           <td>{{item.videoConnectRequestCount}}</td>
-          <td><span class="listAssign">指派</span>|<span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
+          <td><span class="listAssign" @click="signSeats(item.id)" v-if="item.surveyorStatus == 11">指派</span><i v-if="item.surveyorStatus == 11">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
         </tr>
         </tbody>
       </table>
       <el-pagination  @current-change="handleCurrentChange"
                       :current-page="currentPageNo"
-                      :page-size = "8"
+                      :page-size = "pageSize"
                       layout="prev,pager,next"
                       :total="totalCount">
       </el-pagination>
@@ -131,7 +131,7 @@
       <p style="text-align:center;margin-top: 15px;">暂无数据</p>
     </div>
     <case-detail v-if="caseDetailActive"></case-detail>
-    <sign-Seats></sign-Seats>
+    <sign-Seats v-if="signSeatsActive"></sign-Seats>
     <!--&lt;!&ndash;layout="total,prev,pager, next,jumper"&ndash;&gt;layout="total,prev,pager, next,jumper"-->
   </div>
 </template>
@@ -153,8 +153,7 @@
         handleEndTime: "",
         insuranceCompanyCode: '',
         surveyStatus: '',
-        pageNo: '',
-        pageSize: 8,
+        pageSize: 2,
         pages: '',
         surveyOption:[
           {"name":"待查堪","code":"06"},
@@ -202,22 +201,68 @@
         value7: '',
         ajaxUrl: "/boot-pub-survey-manage",
         showCaseDetail: false,
-        caseDetailActive: false
+        caseDetailActive: false,
+        signSeatsActive: false,
+        caseListActive: false,
+        time: '',
       }
     },
-     watch: {
-       tableData: function(){
-//          this.currentCount = this.tableData.length;
+    watch: {
+      getUserIcons(val) {
+        this.caseDetailActive = val;
+      },
+      getsignSeatsActive(val) {
+        this.signSeatsActive = val;
+      },
+      getCaseListActive(val) {
+        this.caseListActive = val;
+        if(this.caseListActive){
+          this.getCaseList()
         }
       },
-      created() {
-        this.getCaseList();
-        this.getCompaney();
-      },
-      mounted() {
-        this.caseDetailActive = this.$store.state.caseDetailActive
-      },
+    },
+
+    created() {
+      this.getCompaney();
+      this.getCaseList()
+    },
+    beforeMount() {
+//      this.time = setInterval(() => {
+//        this.getCaseList()
+//      }, 3000)
+
+    },
+    mounted() {
+
+      this.caseDetailActive = this.$store.state.caseDetailActive;
+    },
       methods: {
+        open4(resdes) {
+          this.$message.error(resdes);
+        },
+        signSeats(id){
+          console.log(id)
+          this.$store.commit('getsurveyOrderId',id);
+          axios.get(this.ajaxUrl+'/web-surveyor/v1/list')
+            .then(response => {
+              if(response.data.rescode == 200){
+                console.log(response.data)
+                localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
+                this.$store.commit('setSignSeatsActive', true);
+                this.signSeatsActive = this.$store.state.signSeatsActive;
+              }else{
+                this.open4(response.data.resdes)
+                if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
         getCompaney(){
           axios.get(this.ajaxUrl+"/pub/survey/v1/insure-company")
             .then(response => {
@@ -225,6 +270,11 @@
               if(response.data.rescode == 200){
                 this.companeyOptions = response.data.data.insureCompany;
                 this.organizations = response.data.data.organizations;
+              }else{
+                this.open4(response.data.resdes)
+                if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }
               }
             }, err => {
               console.log(err);
@@ -234,7 +284,6 @@
             })
         },
         getCaseList() {
-          console.log(this.currentPageNo)
           if(this.value6){
             for(let i in this.value6){
               if(i == 0){
@@ -279,9 +328,9 @@
           }
           axios.post(this.ajaxUrl+"/pub/survey/v1/page",paramData)
             .then(response => {
-              console.log(response)
               if(response.data.rescode == 200){
                 this.tableData = response.data.data.records;
+                this.$store.commit('getcaseListActive', false)//监听调用列表接口关闭
                 if(response.data.data.records.length !=0){
                   this.tableActive = true;
                   this.totalCount = parseInt(response.data.data.total);
@@ -306,6 +355,11 @@
                   this.tableActive = false;
                 }
 
+              }else{
+                this.open4(response.data.resdes)
+                if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }
               }
             }, err => {
               console.log(err);
@@ -333,7 +387,7 @@
           this.handleEndTime = "";
           this.value6 = "";
           this.value7 = "";
-
+          this.getCaseList()
         },
         handleCurrentChange(currentPage) {//跳转
           //当前页改变调用接口  pageNo  pageSize
@@ -348,13 +402,12 @@
               "orderStatus": orderStatus
             }
             axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
-              .then(response => {``
+              .then(response => {
                 if(response.data.rescode == 200){
                   var data = JSON.stringify(response.data.data)
-                  localStorage.setItem("caseDetailData",data)
-                  this.$store.commit('setCaseDetailActive', true)
-                  this.caseDetailActive = this.$store.state.caseDetailActive
-                  $(".caseDetail").removeClass("hide");
+                  localStorage.setItem("caseDetailData",data);
+                  this.$store.commit('setCaseDetailActive', true);
+                  this.caseDetailActive = this.$store.state.caseDetailActive;
                 }
               }, err => {
                 console.log(err);
@@ -368,7 +421,20 @@
       caseDetail,
       signSeats,
     },
-
+    computed: {
+     getUserIcons(){
+       return this.$store.state.caseDetailActive;
+     },
+      getsignSeatsActive() {
+        return this.$store.state.signSeatsActive;
+      },
+      getCaseListActive(){
+        return this.$store.state.caseListActive;
+      }
+    },
+    destroyed () {
+      clearInterval(this.time);
+    },
   }
 
 </script>

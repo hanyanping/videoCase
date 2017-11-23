@@ -295,9 +295,8 @@
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">事故地点</span>
-
                 <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
-                <i class="el-icon-location"></i>
+                <i class="el-icon-location" @click="openAdressDialog"></i>
               </div>
               <div class="addinsitituteInput">
                 <span class="radio__inner" @click="checkRadio"></span>
@@ -343,24 +342,26 @@
       <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
           <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
-         <div class="menu">
-          <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="案件管理" name="first">
-
-            </el-tab-pane>
-            <el-tab-pane label="坐席管理" name="second">
-
-            </el-tab-pane>
-            <el-tab-pane label="机构管理" name="third">
+         <div class="menu" v-if="headerActiveOne == 'true'">
+           <el-tabs v-model="activeName" @tab-click="handleClick" >
+              <el-tab-pane  label="案件管理" name="first">
+              </el-tab-pane>
+              <el-tab-pane  label="坐席管理" name="second">
+              </el-tab-pane>
+           </el-tabs>
+        </div>
+        <div class="menu" v-else>
+          <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
+            <el-tab-pane  label="机构管理" name="third">
             </el-tab-pane>
           </el-tabs>
         </div>
       </div>
       <div class="headerLeft">
-          <span class="userName">站昂扬</span>
-          <span class="userInsitu">(中车宝联客服中心)</span>
-          <span class="signOut">退出</span>
-          <span class="creatCase" @click="openCreatCase">创建案件</span>
+          <span class="userName">{{chinaName}}</span>
+          <span class="userInsitu">({{userName}})</span>
+          <span class="signOut" @click="clickSignOut">退出</span>
+          <span class="creatCase" v-if="headerActiveOne == 'true'" @click="openCreatCase">创建案件</span>
       </div>
     </div>
     <case-manage v-if="caseActive"></case-manage>
@@ -376,9 +377,13 @@
   import institutionManage from '@/components/institutionManage'
   import axios from 'axios'
 //  import BMap from 'BMap'
+
   export default {
     data(){
       return{
+        chinaName: '',
+        userName: '',
+        headerActiveOne: false,
         orgCode: "",
         surveyType: "",
         mark: "0",
@@ -401,20 +406,31 @@
         radio: '',
         getCity: "京",
         activeName: 'first',
+        activeNameTwo: 'third',
         caseActive: true,
         seatActive: false,
-        insitituteActive: false,
+        insitituteActive: true,
         cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
       }
     },
     mounted() {
     },
     created(){
-      console.log(this.activeName)
+      this.chinaName = localStorage.getItem('chinaName')
+      this.userName = localStorage.getItem('userName')
+      this.headerActiveOne = localStorage.getItem('setHeaderActive');
+      if(this.headerActiveOne == 'true'){
+        this.insitituteActive = false;
+        this.caseActive = true;
+        this.seatActive = false;
+      }else{
+        this.insitituteActive = true;
+        this.caseActive = false;
+        this.seatActive = false;
+      }
     },
     watch:{
       "activeName" (){
-        console.log(this.activeName);
         if(this.activeName == "first"){
           this.caseActive = true;
           this.seatActive = false;
@@ -423,14 +439,43 @@
           this.caseActive = false;
           this.seatActive = true;
           this.insitituteActive = false;
-        }else if(this.activeName == 'third'){
+        }
+      },
+      "activeNameTwo"(){
+        if(this.activeNameTwo == 'third'){
           this.caseActive = false;
           this.seatActive = false;
           this.insitituteActive = true;
         }
-      },
+      }
   },
     methods: {
+      //退出
+      clickSignOut() {
+        axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout")
+          .then(response => {
+              if(response.data.rescode == 200){
+                localStorage.removeItem('insititutEditorData');//机构编辑
+                localStorage.removeItem('caseDetailData');//详情信息
+                localStorage.removeItem("setHeaderActive");
+                localStorage.removeItem("orgcode");//登录信息
+                localStorage.removeItem("insitituData");//机构信息
+                localStorage.removeItem("signSeatData");//坐席信息
+                //清除缓存
+                this.$router.push({path:"/"})
+              }else{
+                if(response.data.rescode == "300"){
+                  this.$router.push({path:"/"})
+                }
+                this.open4(response.data.resdes);
+              }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
       open4(resdes) {
         this.$message.error(resdes);
       },
@@ -444,35 +489,22 @@
         handleClick(tab, event) {
         },
         openCreatCase(){//打开创建案件
-//            this.cityOption = [];
-//            this.companeyOption = [];
-//            this.orgOption = [];
-          this.companeyOption = [{"code":1,"name":"中车传参"},{"code":2,"name":"中车地点"},{"code":3,"name":"中车地点"}];
-          this.orgOption = [{"code":1,"name":"中车"},{"code":2,"name":"中车2"},{"code":3,"name":"中车4"}];
-          this.cityOption = [{"dcCitycode":"11","dcCityName":"北京"},{"dcCitycode":"12","dcCityName":"长沙"}]
           $(".creatCaseDialog").removeClass('hide');
-          return;
           var paramData = {
             "action": "detail"
           }
           axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
             .then(response => {
-              if(response.status == 200){
                 if(response.data.rescode == 200){
-//                  this.open2();
                   this.cityOption = response.data.data.city;
                   this.companeyOption = response.data.data.company ;
-                   this.orgOption= response.data.data.org;
-                }else if(response.data.rescode == 217){
-                  this.open4(response.resdes);
-                  this.valicode = '';
+                  this.orgOption= response.data.data.org;
                 }else{
-                  if(response.data.rescode == "rescode"){
+                  if(response.data.rescode == "300"){
                     this.$router.push({path:"/login"})
                   }
-                  this.open4(responseata.resdes);
+                  this.open4(response.data.resdes);
                 }
-              }
             }, err => {
               console.log(err);
             })
@@ -523,12 +555,10 @@
               "mark": this.mark,
             }
             console.log(paramData)
-//            return
-            axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
+            axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
               .then(response => {
-                if(response.status == 200){
                   if(response.data.rescode == 200){
-                  this.open2(response.resdes);
+                     this.open2(response.resdes);
                     $(".creatCaseDialog").addClass('hide');
                     this.phoneno = '';
                     this.licensenoTwo = "",
@@ -550,11 +580,10 @@
                     $(".creatCaseDialog").addClass('hide');
                  }else{
                     if(response.data.rescode == "300"){
-                      this.$router.push({path:"/surveyContant"})
+                      this.$router.push({path:"/"})
                     }
                     this.open4(responseata.resdes);
                   }
-                }
               }, err => {
                 console.log(err);
               })

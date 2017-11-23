@@ -98,6 +98,9 @@
     /*-o-transition: All 0.4s ease-in-out;*/
   /*}*/
   .rotateBox {
+    position: absolute;
+    left: 273px;
+    top: 12px;
     height: 16px;
     width: 16px;
     display: inline-block;
@@ -220,14 +223,22 @@
             .then(response => {
                 if(response.data.rescode == 200){
                   this.open2();
+                  var setHeaderActive;
+                  localStorage.setItem('chinaName',response.data.data.user.chinaName)
+                  localStorage.setItem('userName',response.data.data.user.userName)
+                  localStorage.setItem('orgcode',response.data.data.user.orgcode)
+                  if(response.data.data.userfunctions.length == 1){
+                    setHeaderActive = false
+                    localStorage.setItem('setHeaderActive',setHeaderActive)
+                  }else{
+                    setHeaderActive = true
+                    localStorage.setItem('setHeaderActive',setHeaderActive)
+                  }
                   this.$router.push({path:'/surveyContant'})
-                }else if(response.data.rescode == '217'){
+                }else {
                   this.open4(response.data.resdes);
                   this.getCode()
                   this.valicode = '';
-                }else{
-                  this.getCode();
-                  this.open4(responseata.data.resdes);
                 }
             }, err => {
               console.log(err);

@@ -14,8 +14,7 @@
     margin-top: 10px;
   }
  .insitutionEditorBottom .insitutionEditorBox{
-   display: flex;
-   justify-content: center;
+   margin-left: 5%;
  }
  .insitutionEditorBottom .insitutionMinute h3{
     margin-top: 5px;
@@ -102,134 +101,190 @@
       <div class="flex">
         <div class="insittituLeft">
           <p class="infoInsitute">
-            <span class="infoInsituteItem">坐席数: 12</span>
-            <span class="infoInsituteItem">未处理案件: 4</span>
+            <span class="infoInsituteItem">坐席数: {{seatCount}}</span>
+            <span class="infoInsituteItem">未处理案件:{{insitituData.todaynotprocess}}</span>
           </p>
           <p class="infoInsitute">
-            <span class="infoInsituteItem">坐席数: 12</span>
-            <span class="infoInsituteItem">未处理案件: 4</span>
+            <span class="infoInsituteItem">今日已处理案件: {{insitituData.todayprocess}}</span>
+            <span class="infoInsituteItem">累计处理案件: {{insitituData.totalprocess}}</span>
           </p>
         </div>
         <div class="insitituRight">
           <div class="infoInsitute">
-            <span>机构账号: </span><input type="text" value="kdkdmjk"/>
-            <span>账号密码: </span><input type="text" value="ddfdfdfd">
+            <span>机构账号: </span><input type="text" v-model="userName"/>
+            <span>账号密码: </span><input type="text" v-model="password">
           </div>
-          <div class="infoInsitute"><span>联系人:</span> <input type="text" value="kdkdmjk"/>
-          <span>手机号: </span><input type="tel" maxlength="11" value="ddfdfdfd">
+          <div class="infoInsitute"><span>联系人:</span> <input type="text" v-model="chinaName"/>
+          <span>手机号: </span><input type="tel" maxlength="11" v-model="telephone">
           </div>
-          <div class="infoInsitute">当前状态: <select>
-            <option>正常</option>
-          </select>
+          <div class="infoInsitute">当前状态:
+            <select v-model="editorLocked">
+               <option value="0">正常</option>
+              <option value="1">锁定</option>
+            </select>
             </div>
         </div>
       </div>
-
     </div>
     <div class="insitutionEditorBottom">
-      <div class="insitutionEditorBox">
-        <div class="insitutionMinute bordercolorRed" v-for="item in seatsList"  @click="goInsititionEditor" v-if="item.statius == 0">
+      <div class="insitutionEditorBox clear" v-if="seatListActive">
+        <div class="insitutionMinute bordercolorRed left" v-for="item in insitituEdirorList" v-if="item.sysUserStatus == 2">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber">张扬</h3>
+            <h3 class="minuteNuber">{{item.chinaName}}</h3>
           </div>
-          <p class="minuterdetail">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
-          <p class="minuterdetail">未处理案件: 1</p>
-          <p class="minuterdetail">今日已处理案件: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail" style="padding-left:5%;">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
+          <p class="minuterdetail" style="padding-left:5%;">未处理案件:{{item.totalWaitingCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left:5%;">今日已处理案件:{{item.handleCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left:5%;">今日登陆时间: {{item.loginTime}}</p>
+          <p class="minuterdetail" style="padding-left:5%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="insitutionMinute bordercolorGreen" v-for="item in seatsList"  @click="goInsititionEditor" v-if="item.statius == 1">
+        <div class="insitutionMinute bordercolorGreen left" v-for="item in insitituEdirorList"  v-if="item.sysUserStatus == 0">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber">张扬</h3>
+            <h3 class="minuteNuber">{{item.chinaName}}</h3>
           </div>
-          <p class="minuterdetail">当前状态: 正常</p>
-          <p class="minuterdetail">未处理案件: 1</p>
-          <p class="minuterdetail">今日已处理案件: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail">当前状态: 空闲</p>
+          <p class="minuterdetail">未处理案件:{{item.totalWaitingCaseCount}}</p>
+          <p class="minuterdetail">今日已处理案件:{{item.handleCaseCount}}</p>
+          <p class="minuterdetail">今日登陆时间: {{item.loginTime}}</p>
+          <p class="minuterdetail">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="insitutionMinute bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goInsititionEditor" v-if="item.statius == 2">
+        <div class="insitutionMinute bordercolorGray left" style="background:#F8F8F9;" v-for="item in insitituEdirorList"  v-if="item.sysUserStatus == 1 || item.sysUserStatus == null">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber">张扬</h3>
+            <h3 class="minuteNuber">{{item.chinaName}}</h3>
           </div>
           <p class="minuterdetail">当前状态: 未在线</p>
-          <p class="minuterdetail">未处理案件: 1</p>
-          <p class="minuterdetail">今日已处理案件: 0</p>
-          <p class="minuterdetail">累计处理案件: 0</p>
+          <p class="minuterdetail">未处理案件:{{item.totalWaitingCaseCount}}</p>
+          <p class="minuterdetail">今日已处理案件:{{item.handleCaseCount}}</p>
+          <p class="minuterdetail">今日登陆时间: {{item.loginTime}}</p>
+          <p class="minuterdetail">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
       </div>
-    </div>
-    <el-pagination  @size-change="handleSizeChange"  @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-size = "5"
+      <div v-else style="text-align: center;margin-top: 20px;">
+        <p>暂无数据</p>
+      </div>
 
-                    layout="total,prev,pager, next,jumper"
-                    :total="totalCount">
-    </el-pagination>
+    </div>
+    <!--<div id="insitituEditor">-->
+        <!--<el-pagination   @current-change="handleCurrentChange"-->
+        <!--:current-page="pageno"-->
+        <!--:page-size = "pagesize"-->
+        <!--layout="prev,pager, next"-->
+        <!--:total="totalcount">-->
+        <!--</el-pagination>-->
+    <!--</div>-->
+
 
   </div>
 
 </template>
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return{
+        seatListActive: true,
+        seatCount: "",
+        userId: "",
+        editorLocked: '',
+        telephone: '',
+        chinaName: '',
+        password: '',
+        userName:"",
         insititutEditorActive: '',
-        totalCount: 100,
-        seatsList:[{"statius":1},
-          {"statius":0},
-          {"statius":0},
-          {"statius":2}]
-
+        insitituEdirorList: [],
+        insititutEditorData: [],
+        insitituData: {}
       }
     },
-    props: {
-      insititutActive: Boolean
-    },
+//    props: {
+//      insititutActive: Boolean
+//    },
     created(){
-      this.cars= [{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      },{
-        "carNo": "京123333",
-        "name": "张着呢",
-        "phone": "14323434234",
-        "adress":"事故地点北京市朝阳区广渠路31号",
-        "companey":"保险公司阳光保险集团-杭州",
-        "statu":"案件状态：新案件-待指派",
-        "time":"2017-11-12"
-      }]
+      this.insitituData = JSON.parse(localStorage.getItem("insitituData"))
+      this.insititutEditorData = JSON.parse(localStorage.getItem("insititutEditorData"));
+      console.log(this.insititutEditorData)
+      this.seatCount = this.insititutEditorData.list.length;
+      if(this.seatCount == 0){
+        this.seatListActive = false
+      }else{
+        this.seatListActive = true
+      }
+      this.insitituEdirorList = this.insititutEditorData.list;
+      for(let i in this.insitituEdirorList){
+        if(this.insitituEdirorList[i].loginTime !== null){
+          this.insitituEdirorList[i].loginTime = this.insitituEdirorList[i].loginTime.substring(10,(this.insitituEdirorList[i].loginTime.length+1))
+        }
+      }
+      this.userName =  this.insititutEditorData.userInfo.userName;
+      if(this.insititutEditorData.userInfo.password == null){
+        this.password = "••••••••"
+      }else{
+        this.password = this.insititutEditorData.userInfo.password;
+      }
+      this.chinaName = this.insititutEditorData.userInfo.chinaName;
+      this.telephone = this.insititutEditorData.userInfo.telephone;
+      this.userId = this.insititutEditorData.userInfo.userId;
+      if(this.insititutEditorData.userInfo.isLocked == 0){
+        this.editorLocked = "0"
+      }else{
+        this.editorLocked = "1"
+      }
+      console.log(this.insititutEditorData)
     },
     watch: {
 
     },
     methods: {
+      open4(resdes) {
+        this.$message.error(resdes);
+      },
+      open2(resdes) {
+        this.$message.success(resdes);
+      },
       goBackInsititionList(){//保存编辑
-        this.insititutEditorActive = false;
-        console.log(this.insititutEditorActive);
-        this.$emit('message', this.insititutEditorActive);
+        if(this.userName == ""){
+          this.open4("请输入机构账号")
+        }else if(this.userName.length > 80){
+          this.open4("请输入合理机构账号")
+        }else if(this.password == ""){
+          this.open4("请输入账号密码")
+        }else if(this.telephone == ""){
+          this.open4("请输入手机号")
+        }else  if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.telephone))){
+          this.open4("请输入合理手机号")
+        }else if(this.chinaName == ""){
+          this.open4("请输入联系人姓名")
+        }else{
+          if(this.password == '••••••••'){
+            this.password = ''
+          }
+          var paramData = {
+            "userName": this.userName,
+            "chinaName": this.chinaName,
+            "password": this.password,
+            "telephone": this.telephone,
+            "isLocked": this.editorLocked,
+            "userId": this.userId
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/update", paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.$store.commit('setInsititutEditorActive', false);
+                this.open2(response.data.resdes)
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+
       }
     },
     components: {
