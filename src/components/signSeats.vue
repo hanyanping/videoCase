@@ -140,6 +140,7 @@
     },
     created(){
       this.signSeatData = JSON.parse(localStorage.getItem("signSeatData"));
+      console.log(this.signSeatData)
     },
     methods: {
       open4(resdes) {

@@ -46,9 +46,6 @@
       <div class="lineBox"></div>
     </div>
     <div class="insitutionContent">
-      <!--<insitution-Editor :inputValue="insititutEditorActive" @message="recieveMessage"  v-if="insititutEditorActive"></insitution-Editor>-->
-      <!--<insitution-list  :inputValue="insititutEditorActive" @message="recieveMessage" v-else></insitution-list>-->
-
       <insitution-Editor v-if="insititutEditorActive"></insitution-Editor>
       <insitution-list  v-else></insitution-list>
     </div>
@@ -73,10 +70,7 @@
       this.insititutEditorActive = this.$store.state.insititutEditorActive;
     },
     methods: {
-      recieveMessage(insititutEditorActive){
-        this.insititutEditorActive = insititutEditorActive;
-        console.log(this.insititutEditorActive)
-      }
+
     },
     components: {
       insitutionList,

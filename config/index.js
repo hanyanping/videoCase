@@ -12,10 +12,9 @@ module.exports = {
     proxyTable: {
       '/boot-pub-survey-manage': {
         // target: 'http://192.168.1.69:18081',      // 志猛个人服务器
-        target: 'http://192.168.1.113:9099',      // 和鹏个人服务器
+        // target: 'http://192.168.1.113:9099',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
-        // target: 'http://devaiganneo.aiganyisheng.com', // 测试
-        // target: 'https://neo.aiganyisheng.cn', // 正式
+        target: 'https://chakan.zhongchebaolian.com', // 测试
         changeOrigin: true,
         pathRewrite: {
           '^/boot-pub-survey-manage': '/boot-pub-survey-manage'
@@ -26,7 +25,7 @@ module.exports = {
         // target: 'http://liangxing.furui.com',      // 个人服务器
         // target: 'http://luhongguang.furui.com',
         // target: 'http://testmall.aiganyisheng.com', // 测试
-        target: 'https://api.accidentx.zhongchebaolian.com', // 正式
+        // target: 'https://api.accidentx.zhongchebaolian.com', // 正式
 
         changeOrigin: true,
         pathRewrite: {

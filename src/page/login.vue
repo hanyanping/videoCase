@@ -159,6 +159,8 @@
 </template>
 
 <script>
+  // 按下 Enter 键响应事件函数
+
   import axios from 'axios'
   export default {
     data() {
@@ -167,13 +169,36 @@
         imgUrl: '',
         username: "",
         valicode: "",
-        userpwd: ""
+        userpwd: "",
+        loginActive: false
       }
     },
     created(){
+      $(document).keydown(function(event){
+        // 火狐浏览器获取 keyCode 用 event.which
+        var code = event.keyCode?event.which:event.keyCode;
+        if(code == 13){
+          this.loginActive = true;
+          console.log(this.loginActive)
+        }else{
+          this.loginActive = false;
+        }
+      });
       this.getCode()
     },
+
     mounted() {
+
+    },
+    watch: {
+      loginActive: function(){
+        console.log(this.loginActive)
+        if(this.loginActive == true){
+
+          console.log(this.loginActive)
+          this.loginIn()
+        }
+      }
     },
     methods: {
       refreshCode(){
@@ -247,7 +272,6 @@
               console.log(error)
             })
         }
-
       }
     },
 

@@ -17,6 +17,9 @@ const mutation = {
   getcaseListActive(state, obj) {
     state.caseListActive = obj
   },
+  getclickEditorActive(state, obj) {
+    state.clickEditorActive = obj
+  },
 }
 
 export default mutation

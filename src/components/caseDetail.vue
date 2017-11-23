@@ -193,10 +193,10 @@
                     <span>{{item.photoTypeComment}}</span>
                   </li>
                 </ul>
-                <div class="phonesPaging" v-if="totalCountAim < 5">
+                <div class="phonesPaging" v-if="totalCountAim > 5">
                   <el-pagination  @current-change="handleCurrentChangeAim"
                                   :current-page="1"
-                                  :page-size = "1"
+                                  :page-size = "pageSizeAim"
                                   layout="prev,next"
                                   :total="totalCountAim">
                   </el-pagination>
@@ -219,8 +219,8 @@
                     <span>{{itemImg.photoTypeComment}}</span>
                   </li>
                 </ul>
-                <div class="phonesPaging" v-if="item.total > 5 ">
-                  <el-pagination @click="getThirdImg(item.vehicleLicenseNo)" @current-change='handleCurrentChangethird'
+                <div class="phonesPaging" v-if="item.total < 5 ">
+                  <el-pagination  @current-change='handleCurrentChangethird'
                                   :current-page="1"
                                   :page-size = "4"
                                   layout="prev,next"
@@ -230,7 +230,7 @@
               </div>
             </div>
           </div>
-          <div class="thirdCar AimCar " style="display:none;">
+          <div class="thirdCar AimCar " style="">
             <div class="aimheader">查勘现场视频</div>
             <div class="aimInfo videoBox">
               <video controls="controls">
@@ -241,7 +241,7 @@
           <div class="AimCar reporPerson" >
             <div class="aimheader">查勘员信息</div>
             <div class="aimInfo">
-              <table class="table" border="0" cellspacing="0" cellpadding="0">
+              <table class="table" border="0" cellspacing="0" cellpadding="0" v-if="caseDetailData.sceneSurveyorInfo != null">
                 <tr><td>现场查勘员:</td><td @click="mapRouter(coordinates)">{{caseDetailData.sceneSurveyorInfo.sceneSurveyorName}}<img src="../images/adress.png"/></td><td>现场查勘员电话:</td><td>{{caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo}}</td><td>预计到达时间:</td><td>{{caseDetailData.sceneSurveyorInfo.expectArriveTime}}</td>
                   <td>实际到达时间</td><td>{{caseDetailData.sceneSurveyorInfo.actualArriveTime}}</td></tr>
                 <tr v-if="webSurveyorInfoActive"><td> 后台坐席: </td><td>{{caseDetailData.webSurveyorInfo.webSurveyorName}}</td><td>处理开始时间: </td><td>{{caseDetailData.webSurveyorInfo.startProcessTime}}</td><td>处理结束时间:</td><td>{{caseDetailData.webSurveyorInfo.endProcessTime}}</td><td></td><td></td></tr>
@@ -253,7 +253,7 @@
             </div>
           </div>
           <div class="footerBox">
-            <span class="download" @click="downLoadCase" v-if="caseDetailData.accidentInfo.surveyStatus == '06'">下载</span>
+            <span class="download" @click="downLoadCase" v-if="caseDetailData.accidentInfo.surveyStatus == '08'">下载</span>
             <span class="cancel" @click="cancelCase" v-if="caseDetailData.accidentInfo.surveyStatus == '07' || caseDetailData.accidentInfo.surveyStatus == '06'">取消订单</span>
           </div>
         </div>
@@ -270,7 +270,7 @@ export default {
       return{
         currentPageNoAim: 1,//当前页码
         pageSizeAim: 4,//每页记录数
-        totalCountAim: 10,//总条数
+        totalCountAim: 0,//总条数
         recordsImg: [],//标的车图片
         caseDetailData: {},
         surveyNo: "",
@@ -278,8 +278,8 @@ export default {
         siStatusText: '',
         webSurveyorInfoActive: false,
         thirdActive: false,
-        longitude: "116.468453",
-        latitude: "39.899186",
+        longitude: "",
+        latitude: "",
         ViewerAimActive: false,
         coordinates: [],
         mark: '',
@@ -293,139 +293,9 @@ export default {
        this.caseDetailData =  JSON.parse(localStorage.getItem("caseDetailData"));
        this.longitude = this.caseDetailData.accidentInfo.accidentAddrLongitude;
        this.latitude = this.caseDetailData.accidentInfo.accidentAddrLatitude;
-       this.coordinates = this.caseDetailData.accidentInfo.coordinates;
+       this.coordinates = this.caseDetailData.accidentInfo.coordinates;//经纬度轨迹数组
        this.mark = this.caseDetailData.accidentInfo.appSource;
        this.surveyId = this.caseDetailData.id;
-      this.coordinates = [
-         {
-           "longitude": "120.21354539227",
-           "latitude": "30.285018192076"
-         },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           },
-           {
-             "longitude": "120.21354539227",
-             "latitude": "30.285018192076"
-           }
-         ]
        if(this.caseDetailData.accidentVehicleInfos.length == 0){
          this.thirdActive = false;
        }else{
@@ -451,12 +321,10 @@ export default {
             this.siStatusText = "待补拍"
           }
        }
-//       this.surveyNo = this.caseDetailData.accidentInfo.surveyNo;
+       this.surveyNo = this.caseDetailData.accidentInfo.surveyNo;
       this.surveyNo = "dsajd32sljhf49f09368a27ac0df1704";
        if("reportVehicleInfo" in this.caseDetailData){
-
-//        this.getCasePhones(1,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
-         this.getCasePhones(1,4,"京111111",this.surveyNo,"")//测试用
+        this.getCasePhones(1,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
        }
       this.caseDetailData.accidentVehicleInfos=[{ "vehicleLicenseNo": "京111111","contactPhoneNo": "联系电话-002" },
         { "vehicleLicenseNo": "京111111","contactPhoneNo": "联系电话-001"}//测试用
@@ -493,7 +361,7 @@ export default {
           //当前页改变调用接口 currentPage   pageSizeAim
           console.log(currentPage);
           this.currentPageNoAim = currentPage;
-          this.getCasePhones(this.currentPageNoAim,1,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
+          this.getCasePhones(this.currentPageNoAim,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
         },
         getCasePhones(currentPageNo,pageSize,vehicleLicenseNo,surveyNo,source){
           var paramData = {
@@ -526,7 +394,6 @@ export default {
                           this.caseDetailData.accidentVehicleInfos[i].pageNum = response.data.data.pageNum
                         }
                     }
-
                     if(source == thirdLength-1){
                       this.$nextTick(() => {
                         this.thirdCar = this.caseDetailData.accidentVehicleInfos;
@@ -581,11 +448,8 @@ export default {
           $("#detailMap").addClass("hide")
         },
         mapRouter(coordinates){
-
           var data = coordinates;
           $(".mapBox").toggleClass("hide");
-
-
 
           if($('.mapBox').attr('class').indexOf('none') < 0){
             var map = new BMap.Map("mapContent");
@@ -611,30 +475,10 @@ export default {
             })
 
           }
-
-
-
-
-
         },
         downLoadCase(){
-          var  surveyId = parseInt(21)
-          axios.get(this.ajaxUrl+"/survey-detail/v1/download/"+surveyId)
-            .then(response => {
-              if(response.data.rescode == 200){
-//                this.open2(response.data.resdes);
-              }else{
-                if(response.data.rescode == "300"){
-                  this.$router.push({path:"/"})
-                }
-//                this.open4(response.data.resdes);
-              }
-            }, err => {
-              console.log(err);
-            })
-            .catch((error) => {
-              console.log(error)
-            })
+          var  surveyId = parseInt(this.surveyId)
+          window.open(this.downloatUrl+this.ajaxUrl+"/survey-detail/v1/download/"+surveyId)
         },
         cancelCase(){
           var paramData = {

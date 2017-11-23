@@ -166,7 +166,7 @@
                 <div class="InputSeatInfo">
                   <span>坐席手机号:</span>
                   <input type="text" v-model="telephone" maxlength="11" />
-                  <span>坐席账号密码:</span>
+                  <span>坐席密码:</span>
                   <input v-model="password" type="text"  maxlength="80" />
                 </div>
                 <div class="InputSeatInfo">
@@ -314,7 +314,6 @@
         editorActive: false,
         seatsList: [],
         seatInfo: [],
-        paramData: {"orgcode":"started"},
         ajaxUrl: "/boot-pub-survey-manage",
         caseDetailActive: false,
       }
@@ -349,7 +348,11 @@
         this.$message.success(resdes);
       },
       getSeatList(){
-        axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", this.paramData)
+       var orgcode = localStorage.getItem('orgcode')
+        var paramData = {
+         "orgcode": orgcode
+        }
+        axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", paramData)
           .then(response => {
             if(response.data.rescode == 200){
               this.seatsList = response.data.data.list;
@@ -434,7 +437,7 @@
         if(this.username == ''){
           this.open4('请输入坐席账号')
         }else if(this.userpwd == ""){
-          this.open4('请输入坐席账号密码')
+          this.open4('请输入坐席密码')
         }else if(this.userchinaname == ""){
           this.open4('请输入坐席姓名')
         }else if(this.userphone == ""){
@@ -454,6 +457,7 @@
           axios.post(this.ajaxUrl+"/pubsurvey/manage/user/v1/useradd", paramData)
             .then(response => {
               if(response.data.rescode == 200){
+                this.getSeatList()
                 this.open2(response.data.resdes);
                 $(".seatListDialog").addClass("hide");
                 $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")

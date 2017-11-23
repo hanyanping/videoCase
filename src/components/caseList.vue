@@ -13,8 +13,8 @@
           <el-option
             v-for="item in companeyOptions"
             :key="item.insureCompanyName"
-            :label="item.insureCompanyCode"
-            :value="item.insureCompanyName">
+            :label="item.insureCompanyName"
+            :value="item.insureCompanyCode">
           </el-option>
         </el-select>
 
@@ -120,12 +120,14 @@
         </tr>
         </tbody>
       </table>
-      <el-pagination  @current-change="handleCurrentChange"
-                      :current-page="currentPageNo"
-                      :page-size = "pageSize"
-                      layout="prev,pager,next"
-                      :total="totalCount">
-      </el-pagination>
+      <div>
+        <el-pagination  @current-change="handleCurrentChange"
+                        :current-page="currentPageNo"
+                        :page-size = "pageSize"
+                        layout="prev,pager,next"
+                        :total="totalCount">
+        </el-pagination>
+      </div>
     </div>
     <div class="caseListTable" v-else>
       <p style="text-align:center;margin-top: 15px;">暂无数据</p>
@@ -153,7 +155,7 @@
         handleEndTime: "",
         insuranceCompanyCode: '',
         surveyStatus: '',
-        pageSize: 2,
+        pageSize: 10,
         pages: '',
         surveyOption:[
           {"name":"待查堪","code":"06"},
@@ -237,19 +239,25 @@
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
       methods: {
+
         open4(resdes) {
           this.$message.error(resdes);
         },
+        open2(resdes) {
+          this.$message.success(resdes);
+        },
         signSeats(id){
-          console.log(id)
           this.$store.commit('getsurveyOrderId',id);
           axios.get(this.ajaxUrl+'/web-surveyor/v1/list')
             .then(response => {
               if(response.data.rescode == 200){
-                console.log(response.data)
-                localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
-                this.$store.commit('setSignSeatsActive', true);
-                this.signSeatsActive = this.$store.state.signSeatsActive;
+                if(response.data.data.length != 0){
+                  localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
+                  this.$store.commit('setSignSeatsActive', true);
+                  this.signSeatsActive = this.$store.state.signSeatsActive;
+                }else{
+                  this.open2("暂无数据")
+                }
               }else{
                 this.open4(response.data.resdes)
                 if(response.data.rescode == 300){
@@ -268,7 +276,7 @@
             .then(response => {
               console.log(response)
               if(response.data.rescode == 200){
-                this.companeyOptions = response.data.data.insureCompany;
+                this.companeyOptions = response.data.data.insureCompanys;
                 this.organizations = response.data.data.organizations;
               }else{
                 this.open4(response.data.resdes)

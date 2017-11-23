@@ -18,14 +18,6 @@
       }
     },
     created(){
-      axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", this.data)
-        .then(response => {
-        }, err => {
-            console.log(err);
-        })
-        .catch((error) => {
-            console.log(error)
-        })
     },
     components: {
       headTop,

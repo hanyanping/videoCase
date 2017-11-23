@@ -4,7 +4,8 @@ const state = {
   headerActive: false,
   signSeatsActive: false,
   surveyOrderId: "",
-  caseListActive: false
+  caseListActive: false,
+  clickEditorActive: false,
 }
 
 export default state

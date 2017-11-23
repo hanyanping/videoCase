@@ -25,7 +25,7 @@
   .caseMinute .minuterdetail{
     color:#555;
     font-size:15px;
-    text-align: left;
+    text-align: center;
     margin-top: 15px;
     padding: 5px
   }
@@ -96,7 +96,7 @@
     display:inherit;
     color: #2EAB3B;
     text-decoration: underline;
-    margin-top: 5px;
+    margin-top: 15px;
     cursor: pointer;
   }
   .orderDetailFoure{
@@ -367,92 +367,240 @@ import axios from 'axios'
           })
     },
       goCase(item){//进入案件列表
-        $(".caseMontorDialog").removeClass("hide");
+
         var url = '';
         switch(item)
         {
           case "1":
-           this.caseActive.onecase = true;
             url = '/monitor/v1/not-assigned';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.onecase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
           case "2":
-            this.caseActive.twocase = true;
             url = '/monitor/v1/expect-time-nonarrival';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.twocase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
           case "3":
-            this.caseActive.threecase = true;
             url = '/monitor/v1/no-video-request';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.threecase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
           case "4":
-            this.caseActive.fourecase = true;
             url = '/monitor/v1/video-not-connected';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.fourecase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
           case "5":
-            this.caseActive.fivecase = true;
             url = '/monitor/v1/not-answer';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.fivecase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
             case "6":
-              this.caseActive.sixcase = true;
-              url = '/monitor/v1/exception-completed';
+              url = '/monitor/v1/not-completed';
+              axios.get(this.ajaxUrl+url)
+                .then(response => {
+                  if(response.data.rescode == 200){
+                    this.caseMonitor = response.data.data;
+                    if(this.caseMonitor.length == 0){
+                      this.open2("暂无数据")
+                    }else{
+                      $(".caseMontorDialog").removeClass("hide");
+                      this.caseActive.sixcase = true;
+                    }
+                  }else{
+                    this.open4(response.data.resdes)
+                    if(response.data.rescode == 300){
+                      this.$router.push({path:'/'})
+                    }
+                  }
+                }, err => {
+                  console.log(err);
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
               break;
           case "7":
-            this.caseActive.sevencase = true;
             url = '/monitor/v1/exception-completed';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.sevencase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
           case "8":
-            this.caseActive.eightcase = true;
             url = '/monitor/v1/wait-allocat';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
+                  }else{
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.eightcase = true;
+                  }
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
             break;
         }
-        axios.get(this.ajaxUrl+url)
-          .then(response => {
-            if(response.data.rescode == 200){
-              this.caseMonitor = response.data.data;
-              console.log(this.caseMonitor)
-              for(let i in this.caseMonitor){
-                if("todayLoginTime" in this.caseMonitor[i]){
-                  if(this.caseMonitor[i].todayLoginTime !== null){
-                    this.caseMonitor[i].todayLoginTime = this.caseMonitor[i].todayLoginTime.substring(10,(this.caseMonitor[i].todayLoginTime.length+1))
-                  }
-                }
-                if(this.caseMonitor[i].surveyStatus  !== null){
-                  if(this.caseMonitor[i].surveyStatus  == "08"){
-                    this.caseMonitor[i].siStatusText = "已查勘"
-                  }else if(this.caseMonitor[i].surveyStatus  == "07"){
-                    this.caseMonitor[i].siStatusText = "查勘中"
-                  }else if(this.caseMonitor[i].surveyStatus  == "06"){
-                    this.caseMonitor[i].siStatusText = "待查勘"
-                  }else if(this.caseMonitor[i].surveyStatus  == "09"){
-                    this.caseMonitor[i].siStatusText = "查勘完成"
-                  }else if(this.caseMonitor[i].surveyStatus  == "11"){
-                    this.caseMonitor[i].siStatusText = "查勘订单已取消"
-                  }else if(this.caseMonitor[i].surveyStatus  == "10"){
-                    this.caseMonitor[i].siStatusText = "待补拍"
-                  }
-                }
-                console.log(this.caseMonitor)
-//                if(this.caseMonitor[i].currentTimeStatus == 0){
-//                  this.caseMonitor[i].currentTimeStatusText = '空闲'
-//                }else if(this.caseMonitor[i].currentTimeStatus == 1){
-//                  this.caseMonitor[i].currentTimeStatusText = '离线'
-//                }else if(this.caseMonitor[i].currentTimeStatus == 2){
-//                  this.caseMonitor[i].currentTimeStatusText = '繁忙'
-//                }
-              }
-              console.log(this.caseMonitor)
+        if(this.caseMonitor.length!=0){
 
-            }else{
-              this.open4(response.data.resdes)
-              if(response.data.rescode == 300){
-                this.$router.push({path:'/'})
+          for(let i in this.caseMonitor){
+            if("todayLoginTime" in this.caseMonitor[i]){
+              if(this.caseMonitor[i].todayLoginTime !== null){
+                this.caseMonitor[i].todayLoginTime = this.caseMonitor[i].todayLoginTime.substring(10,(this.caseMonitor[i].todayLoginTime.length+1))
               }
             }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+            if(this.caseMonitor[i].surveyStatus  !== null){
+              if(this.caseMonitor[i].surveyStatus  == "08"){
+                this.caseMonitor[i].siStatusText = "已查勘"
+              }else if(this.caseMonitor[i].surveyStatus  == "07"){
+                this.caseMonitor[i].siStatusText = "查勘中"
+              }else if(this.caseMonitor[i].surveyStatus  == "06"){
+                this.caseMonitor[i].siStatusText = "待查勘"
+              }else if(this.caseMonitor[i].surveyStatus  == "09"){
+                this.caseMonitor[i].siStatusText = "查勘完成"
+              }else if(this.caseMonitor[i].surveyStatus  == "11"){
+                this.caseMonitor[i].siStatusText = "查勘订单已取消"
+              }else if(this.caseMonitor[i].surveyStatus  == "10"){
+                this.caseMonitor[i].siStatusText = "待补拍"
+              }
+            }
+          }
+        }
+
+      },
+      open2(resdes) {
+        this.$message.success(resdes);
       },
       closCaseMontor(){//关闭第一层遮盖层
         this.caseActive.onecase = false;
@@ -465,6 +613,7 @@ import axios from 'axios'
         this.caseActive.eightcase = false;
         this.caseActive.nighcase = false;
         $(".caseMontorDialog").addClass("hide");
+        this.getCaseMonitor()
       },
       goCaseDetail(id,surveyStatus){//查看案件详情
          var paramData = {
@@ -491,10 +640,13 @@ import axios from 'axios'
         axios.get(this.ajaxUrl+'/web-surveyor/v1/list')
           .then(response => {
             if(response.data.rescode == 200){
-              console.log(response.data)
-              localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
-              this.$store.commit('setSignSeatsActive', true);
-              this.signSeatsActive = this.$store.state.signSeatsActive;
+              if(response.data.data.length != 0){
+                localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
+                this.$store.commit('setSignSeatsActive', true);
+                this.signSeatsActive = this.$store.state.signSeatsActive;
+              }else{
+                this.open2(暂无数据)
+              }
             }else{
               this.open4(response.data.resdes)
               if(response.data.rescode == 300){

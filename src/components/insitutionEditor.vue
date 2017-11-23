@@ -70,7 +70,7 @@
   }
   .infoInsitute{
     padding-left: 40px;
-    padding-bottom: 6px;
+    padding-bottom: 12px;
     display: flex;
     line-height: 30px;
   }
@@ -81,8 +81,8 @@
     height: 35px;
     line-height: 35px;
     padding-left:5px;
-    /*border: 1px solid #f4f4f4;*/
-    /*border-radius: 4px;*/
+    border: 1px solid #bbb;
+    border-radius: 4px;
     width: 23%;
     margin-right: 10%;
     margin-left: 6px;
@@ -101,7 +101,7 @@
       <div class="flex">
         <div class="insittituLeft">
           <p class="infoInsitute">
-            <span class="infoInsituteItem">坐席数: {{seatCount}}</span>
+            <span class="infoInsituteItem" style="width:73px;">坐席数: {{seatCount}}</span>
             <span class="infoInsituteItem">未处理案件:{{insitituData.todaynotprocess}}</span>
           </p>
           <p class="infoInsitute">
@@ -111,13 +111,13 @@
         </div>
         <div class="insitituRight">
           <div class="infoInsitute">
-            <span>机构账号: </span><input type="text" v-model="userName"/>
-            <span>账号密码: </span><input type="text" v-model="password">
+            <span style="width:70px;">机构账号: </span><input type="text" v-model="userName"/>
+            <span style="width:70px;">账号密码: </span><input type="text" v-model="password">
           </div>
-          <div class="infoInsitute"><span>联系人:</span> <input type="text" v-model="chinaName"/>
-          <span>手机号: </span><input type="tel" maxlength="11" v-model="telephone">
+          <div class="infoInsitute"><span style="width:70px;">联系人:</span> <input type="text" v-model="chinaName"/>
+          <span style="width:70px;">手机号: </span><input type="tel" maxlength="11" v-model="telephone">
           </div>
-          <div class="infoInsitute">当前状态:
+          <div class="infoInsitute"><span style="width:70px;">当前状态:</span>
             <select v-model="editorLocked">
                <option value="0">正常</option>
               <option value="1">锁定</option>
@@ -199,9 +199,6 @@
         insitituData: {}
       }
     },
-//    props: {
-//      insititutActive: Boolean
-//    },
     created(){
       this.insitituData = JSON.parse(localStorage.getItem("insitituData"))
       this.insititutEditorData = JSON.parse(localStorage.getItem("insititutEditorData"));
@@ -273,6 +270,7 @@
             .then(response => {
               if(response.data.rescode == 200){
                 this.$store.commit('setInsititutEditorActive', false);
+                this.$store.commit('getclickEditorActive', true);
                 this.open2(response.data.resdes)
               }else{
                 this.open4(response.data.resdes)

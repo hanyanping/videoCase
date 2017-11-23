@@ -196,12 +196,15 @@
         </div>
       </div>
     </div>
-    <el-pagination  @current-change="handleCurrentChange"
-                    :current-page="pageno"
-                    :page-size = "pagesize"
-                    layout="prev,pager,next"
-                    :total="totalcount">
-    </el-pagination>
+    <div>
+      <el-pagination  @current-change="handleCurrentChange"
+                      :current-page="pageno"
+                      :page-size = "pagesize"
+                      layout="prev,pager,next"
+                      :total="totalcount">
+      </el-pagination>
+    </div>
+
   </div>
 </template>
 <script>
@@ -209,10 +212,11 @@
   export default {
     data() {
       return{
+
         provinces: '',
         seatsListActive: false,
         checkAll: false,
-        cities: [{name:'上海',code:"1"}, {name:'北京',code:"2"}, {name:'深圳',code:"3"}, {name:'长沙',code:"4"}],
+        cities: [],
         isIndeterminate: true,
         orgname: "",
         username: "",
@@ -229,7 +233,8 @@
         editorActive: false,
         seatsList: [],
         pageno: 1,
-        pagesize: 5
+        pagesize: 7,
+        clickEditorActive: false
       }
     },
     watch: {
@@ -247,7 +252,13 @@
             .catch((error) => {
               console.log(error)
             })
+        },
+      getUserIcons(val) {
+        this.clickEditorActive = val;
+        if(this.clickEditorActive){
+          this.getInsitituList();
         }
+      }
     },
     props: {
       insititutActive: Boolean
@@ -257,8 +268,8 @@
     },
 
     methods: {
-
       handleCheckedCitiesChange(value) {
+        console.log(value)
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.cities.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
@@ -280,6 +291,7 @@
               this.totalcount = parseInt(response.data.data.totalcount);
               this.seatsList = response.data.data.departs;
               if(response.data.data.departs.length !=0){
+
                 this.seatsListActive = true;
                 for(let i in this.seatsList){
                   if(this.seatsList[i].islocked == '0'){
@@ -293,9 +305,12 @@
                 this.seatsListActive = false;
               }
             }else{
-              this.open4(response.data.resdes)
-              if(response.data.rescode == 300){
+              if(response.data.rescode == 215){
+                this.open2(response.data.resdes)
+              }else if(response.data.rescode == 300){
                 this.$router.push({path:'/'})
+              }else{
+                this.open4(response.data.resdes)
               }
             }
           }, err => {
@@ -307,13 +322,11 @@
       },
       handleCurrentChange(pageno) {//跳转
         //当前页改变调用接口  pageNo  pageSize
-        console.log(pageno)
         this.pageno = pageno;
         this.getInsitituList()
       },
 
       goInsititionEditor(userId,orgcode,todaynotprocess,todayprocess,totalprocess){//打开机构信息编辑
-//        this.userId = userId
         var insitituData = {
           "todaynotprocess":todaynotprocess,
           "todayprocess":todayprocess,
@@ -328,7 +341,6 @@
         axios.post(this.ajaxUrl+"/pub/survey/v1/org/service/list", paramData)
           .then(response => {
             if(response.data.rescode == 200){
-                console.log(response.data)
                 this.$store.commit('setInsititutEditorActive', true);
                 localStorage.setItem("insititutEditorData",JSON.stringify(response.data.data))
                 localStorage.setItem("insitituData",JSON.stringify(insitituData))
@@ -366,7 +378,7 @@
             console.log(error)
           })
       },
-      addInsititution(){//添加坐席
+      addInsititution(){//添加机构
         if(this.orgname == ''){
           this.open4("请输入机构名称")
         }else if(this.username == ''){
@@ -386,6 +398,18 @@
         }else if(this.islocked == ''){
           this.open4("请选择账号状态")
         }else{
+          var cityData = new Array();
+          for(let j in this.cl){
+            var obj = {}
+            for(let i in this.cities){
+              if(this.cl[j] == this.cities[i].id){
+                obj.name = this.cities[i].name;
+                obj.id = this.cities[i].id;
+                cityData.push(obj)
+              }
+            }
+          }
+          console.log(cityData)
           var paramData={
             "orgname": this.orgname,
             "username": this.username,
@@ -393,15 +417,17 @@
             "userchinaname": this.userchinaname,
             "userphone": this.userphone,
             "islocked": this.islocked,
-            "cl": this.cl,
+            "cl": cityData,
             "insurecode": this.insurecode,
           }
-          console.log(paramData)
           axios.post(this.ajaxUrl+"/pubsurvey/manage/department/v1/orgadd",paramData)
             .then(response => {
               if(response.data.rescode == 200){
                 this.open2(response.data.resdes)
+                this.cl = [];
+                this.cities = []
                 $(".insititutListDialog").addClass("hide");
+                this.getInsitituList();
               }else{
                 this.open4(response.data.resdes)
                 if(response.data.rescode == 300){
@@ -415,15 +441,20 @@
               console.log(error)
             })
         }
-
-
       },
-      closinsititutMontor(){//关闭遮盖层
+      closinsititutMontor(){//关闭添加机构遮盖层
+        this.cl = [];
+        this.cities = [];
         $(".insititutListDialog ").addClass("hide");
       }
     },
     components: {
     },
+    computed: {
+      getUserIcons(){
+        return this.$store.state.clickEditorActive;
+      }
+    }
   }
 
 </script>

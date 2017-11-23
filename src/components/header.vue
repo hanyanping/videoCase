@@ -300,7 +300,7 @@
               </div>
               <div class="addinsitituteInput">
                 <span class="radio__inner" @click="checkRadio"></span>
-                <span style="margin-left:6px;">指派坐席</span>
+                <span style="margin-left:6px;">只派坐席</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
@@ -387,10 +387,9 @@
         orgCode: "",
         surveyType: "",
         mark: "0",
-        surveynoOption: {},
-        cityOption: {},
-        companeyOption: {},
-        orgOption: {},
+        cityOption: [],
+        companeyOption: [],
+        orgOption: [],
         reportno: "",
         person: "",
         licensenoTwo: "",
@@ -455,6 +454,14 @@
         axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout")
           .then(response => {
               if(response.data.rescode == 200){
+                this.$store.commit('setCaseDetailActive', false);
+                this.$store.commit('setInsititutEditorActive', false);
+                this.$store.commit('setHeaderActive', false);
+                this.$store.commit('setSignSeatsActive', false);
+                this.$store.commit('getsurveyOrderId', "");
+                this.$store.commit('getcaseListActive', false);
+                this.$store.commit('getclickEditorActive', false);
+
                 localStorage.removeItem('insititutEditorData');//机构编辑
                 localStorage.removeItem('caseDetailData');//详情信息
                 localStorage.removeItem("setHeaderActive");
@@ -498,6 +505,7 @@
                 if(response.data.rescode == 200){
                   this.cityOption = response.data.data.city;
                   this.companeyOption = response.data.data.company ;
+                  console.log(this.companeyOption)
                   this.orgOption= response.data.data.org;
                 }else{
                   if(response.data.rescode == "300"){
@@ -547,7 +555,7 @@
               "companyName": this.companyName,
               "city": this.city,
               "cityName": this.cityName,
-              "orgCode": this.orgCode,
+              "groupid": this.orgCode,
               "surveyType": this.surveyType,
               "accidentaddress": this.accidentaddress,
               "lng": this.lng,
@@ -558,8 +566,6 @@
             axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
               .then(response => {
                   if(response.data.rescode == 200){
-                     this.open2(response.resdes);
-                    $(".creatCaseDialog").addClass('hide');
                     this.phoneno = '';
                     this.licensenoTwo = "",
                     this.cityOption = [];
@@ -572,17 +578,26 @@
                     this.lat = "";
                     this.lng = "";
                     this.adressValue = "";
+                    this.accidentaddress = "";
                     this.mark = "0";
+                    this.surveyType = '';
                     this.getCity = "京";
                     this.lng = "";
                     this.lat = "";
                     this.cityName = "";
+//                    this.cityOption = {};
+//                    this.companeyOption = {};
+//                    this.orgOption = {};
+                    console.log(this.orgOption)
+                    this.open2("创建成功");
                     $(".creatCaseDialog").addClass('hide');
+                    this.$store.commit('getcaseListActive', true)//调用case列表接口
                  }else{
+                    console.log()
                     if(response.data.rescode == "300"){
                       this.$router.push({path:"/"})
                     }
-                    this.open4(responseata.resdes);
+                    this.open4(response.data.resdes);
                   }
               }, err => {
                 console.log(err);
