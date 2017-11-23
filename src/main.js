@@ -6,9 +6,9 @@ import router from './router'
 import ElementUI from 'element-ui'
 import axios from 'axios'
 import store from './vuex/index'
-// import 'element-ui/lib/theme-chalk/index.css'
-// import '@/style/reset.css'
-// import 'viewerjs/dist/viewer.css'
+import 'element-ui/lib/theme-chalk/index.css'
+import '@/style/reset.css'
+import 'viewerjs/dist/viewer.css'
 Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
 
 
