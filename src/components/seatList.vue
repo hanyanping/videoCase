@@ -247,18 +247,7 @@
     </div>
     <div class="seatList">
       <div class="seatListBox clear">
-        <div class="seatListMinute left bordercolorRed" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 2">
-          <div class="imgBox">
-            <img src="../images/kefuBlue.png">
-            <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
-          </div>
-          <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙</p>
-          <p class="minuterdetail" style="padding-left: 8%;">未处理订单:  {{item.waitingCaseCount}}</p>
-          <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: {{item.handleCaseCount}}</p>
-          <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
-          <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
-        </div>
-        <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 0">
+        <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="(item.sysUserStatus == 0 && item.userStatus == 0)">
           <div class="imgBox">
             <img src="../images/kefuBlue.png">
             <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
@@ -269,7 +258,18 @@
           <p class="minuterdetail" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 1 || item.sysUserStatus == null">
+        <div class="seatListMinute left bordercolorRed" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="(item.sysUserStatus == 2 || item.userStatus == 2)">
+          <div class="imgBox">
+            <img src="../images/kefuBlue.png">
+            <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
+          </div>
+          <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙</p>
+          <p class="minuterdetail" style="padding-left: 8%;">未处理订单:  {{item.waitingCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: {{item.handleCaseCount}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
+        </div>
+        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="((item.sysUserStatus == 1 || item.sysUserStatus == null)&&(item.userStatus == 1 || item.userStatus == null)) ">
           <div class="imgBox">
             <img src="../images/kefuhui.png">
             <h3 class="minuteNuber" style="color:#999">{{item.chinaName}}</h3>

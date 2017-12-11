@@ -83,7 +83,20 @@
         <p class="titleInfo">请选择要指派的坐席</p>
         <div class="clear scrollBox">
           <div v-for="item in signSeatData">
-            <div  class="left bordercolorRed carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="item.currentStatus == 2">
+            <div  class="left carInfoBoxTwo bordercolorGreen carInfoBox" @click="assignThis(item.userId)" v-if="item.currentStatusAuto == 0 && item.currentStatusManual == 0">
+              <div class="flex">
+                <div class="imgBox">
+                  <img src="../images/kefuBlue.png">
+                </div>
+                <div class="seatInfo">
+                  <h3 class="kefuName">张扬</h3>
+                  <p class="carInfoOne" >当前状态：空闲
+                  </p>
+                  <p class="carInfoOne">待处理案件：{{item.waitForProcessOrderCount}}单</p>
+                </div>
+              </div>
+            </div>
+            <div  class="left bordercolorRed carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="item.currentStatusAuto == 2 || item.currentStatusManual  == 2">
                 <div class="flex">
                   <div class="imgBox">
                     <img src="../images/kefuBlue.png">
@@ -96,20 +109,7 @@
                   </div>
                 </div>
               </div>
-            <div  class="left carInfoBoxTwo bordercolorGreen carInfoBox" @click="assignThis(item.userId)" v-if="item.currentStatus  == 1">
-                <div class="flex">
-                  <div class="imgBox">
-                    <img src="../images/kefuBlue.png">
-                  </div>
-                  <div class="seatInfo">
-                    <h3 class="kefuName">张扬</h3>
-                    <p class="carInfoOne" >当前状态：空闲
-                    </p>
-                    <p class="carInfoOne">待处理案件：{{item.waitForProcessOrderCount}}单</p>
-                  </div>
-                </div>
-            </div>
-            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="item.currentStatus  == 0">
+            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="(item.currentStatusAuto == null || item.currentStatusAuto  == 1) && (item.currentStatusManual == null || item.currentStatusManual == 1)">
               <div class="flex">
                 <div class="imgBox">
                   <img src="../images/kefuBlue.png">
