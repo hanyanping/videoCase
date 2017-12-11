@@ -252,7 +252,7 @@
             <img src="../images/kefuBlue.png">
             <h3 class="minuteNuber" style="color:#46A0FC">{{item.chinaName}}</h3>
           </div>
-          <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
+          <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙</p>
           <p class="minuterdetail" style="padding-left: 8%;">未处理订单:  {{item.waitingCaseCount}}</p>
           <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: {{item.handleCaseCount}}</p>
           <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
