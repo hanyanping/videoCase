@@ -53,7 +53,7 @@
     background: rgba(0,0,0,0.3);
     width:100%;
     position: fixed;
-    height: 100vh;
+    min-height: 100vh;
     top: 0;
     left: 0;
     z-index: 100;
@@ -61,11 +61,14 @@
 
   .creatCaseDialogBox, .cityDialogBox,.AdressDialogBox{
     width: 38%;
-    margin: 10vh auto;
+    margin: 6vh auto;
     background: #fff;
     padding: 20px;
-    max-height: 70vh;
+
     position: relative;
+  }
+  .creatCaseDialogBox{
+    min-height: 620px;
   }
   .AdressDialogBox{
     width: 45%;
@@ -80,7 +83,7 @@
   }
 
   .creatCaseDialog .scrollBox{
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
     max-height: 60vh;
   }
   .imgBox img{
@@ -254,7 +257,7 @@
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人车牌号</span>
                 <input type="text" @click="openCityDialog" class="creatInputNo"  readonly :value="getCity" />
-                <input class="creatInput" type="text" v-model="licensenoTwo" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
+                <input class="creatInput" type="text" v-model="licensenoTwo" @keyup="upcase()" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人姓名</span>
@@ -267,7 +270,7 @@
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan" >保险公司</span>
                 <select class="creatInput" v-model="company" id="companyName">
-                  <option value="">请选择保险公司</option>
+                  <!--<option value="">请选择保险公司</option>-->
                   <option v-for="item in companeyOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
@@ -281,15 +284,15 @@
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">处理机构</span>
                 <select class="creatInput" v-model="orgCode">
-                  <option value="">请选择机构</option>
                   <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
+                  <!--<option value="">请选择机构</option>-->
+
                 </select>
               </div>
               <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">查堪类型</span>
+                <span class="addinsitituteSpan">查勘类型</span>
                 <select class="creatInput" v-model="surveyType">
-                  <option value="">请选择查堪类型</option>
-                  <option value="1">视频</option>
+                  <option value="1" >视频</option>
                   <option value="0">照片</option>
                 </select>
               </div>
@@ -350,10 +353,12 @@
               </el-tab-pane>
            </el-tabs>
         </div>
-        <div class="menu" v-else>
+        <div class="menu" v-else @click="goInsitituList">
           <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
             <el-tab-pane  label="机构管理" name="third">
             </el-tab-pane>
+            <!--<el-tab-pane  label="查勘员管理" name="four">-->
+            <!--</el-tab-pane>-->
           </el-tabs>
         </div>
       </div>
@@ -367,6 +372,7 @@
     <case-manage v-if="caseActive"></case-manage>
     <seat-manage v-if="seatActive"></seat-manage>
     <institution-manage v-if="insitituteActive"></institution-manage>
+    <survey-manage v-if="surveyActive"></survey-manage>
   </div>
 
 </template>
@@ -375,6 +381,7 @@
   import caseManage from '@/components/caseManage'
   import seatManage from '@/components/seatManage'
   import institutionManage from '@/components/institutionManage'
+  import surveyManage from '@/components/surveyManage'
   import axios from 'axios'
 //  import BMap from 'BMap'
 
@@ -385,8 +392,8 @@
         userName: '',
         headerActiveOne: false,
         orgCode: "",
-        surveyType: "",
-        mark: "0",
+        surveyType: "1",
+        mark: "1",
         cityOption: [],
         companeyOption: [],
         orgOption: [],
@@ -409,6 +416,7 @@
         caseActive: true,
         seatActive: false,
         insitituteActive: true,
+        surveyActive: false,
         cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
       }
     },
@@ -420,10 +428,12 @@
       this.headerActiveOne = localStorage.getItem('setHeaderActive');
       if(this.headerActiveOne == 'true'){
         this.insitituteActive = false;
+        this.surveyActive = false;
         this.caseActive = true;
         this.seatActive = false;
       }else{
         this.insitituteActive = true;
+        this.surveyActive = false;
         this.caseActive = false;
         this.seatActive = false;
       }
@@ -434,10 +444,12 @@
           this.caseActive = true;
           this.seatActive = false;
           this.insitituteActive = false;
+          this.surveyActive = false;
         }else if(this.activeName == "second"){
           this.caseActive = false;
           this.seatActive = true;
           this.insitituteActive = false;
+          this.surveyActive = false;
         }
       },
       "activeNameTwo"(){
@@ -445,10 +457,23 @@
           this.caseActive = false;
           this.seatActive = false;
           this.insitituteActive = true;
+          this.surveyActive = false;
+        }else  if(this.activeNameTwo == 'four'){
+          this.caseActive = false;
+          this.seatActive = false;
+          this.insitituteActive = false;
+          this.surveyActive = true;
         }
       }
   },
     methods: {
+      upcase(){
+        this.licensenoTwo = this.licensenoTwo.toUpperCase();
+        console.log(this.licensenoTwo)
+      },
+      goInsitituList() {
+        this.$store.commit('setInsititutEditorActive', false);
+      },
       //退出
       clickSignOut() {
         axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout")
@@ -461,6 +486,7 @@
                 this.$store.commit('getsurveyOrderId', "");
                 this.$store.commit('getcaseListActive', false);
                 this.$store.commit('getclickEditorActive', false);
+                this.$store.commit('getinsitituPageno', 1);
 
                 localStorage.removeItem('insititutEditorData');//机构编辑
                 localStorage.removeItem('caseDetailData');//详情信息
@@ -496,6 +522,11 @@
         handleClick(tab, event) {
         },
         openCreatCase(){//打开创建案件
+          document.getElementsByClassName('scrollBox')[0].scrollTop = '100px';
+          console.log( document.getElementsByClassName('scrollBox')[0].scrollTop)
+          $(".radio__inner").addClass("isChecked");
+          this.mark = "1";
+          this.surveyType = "1";
           $(".creatCaseDialog").removeClass('hide');
           var paramData = {
             "action": "detail"
@@ -505,8 +536,17 @@
                 if(response.data.rescode == 200){
                   this.cityOption = response.data.data.city;
                   this.companeyOption = response.data.data.company ;
-                  console.log(this.companeyOption)
+                  for(let i in this.companeyOption){
+                    if(i == 0){
+                      this.company = this.companeyOption[0].code
+                    }
+                  }
                   this.orgOption= response.data.data.org;
+                  for(let i in this.orgOption){
+                    if(i== 0){
+                      this.orgCode = this.orgOption[i].code;
+                    }
+                  }
                 }else{
                   if(response.data.rescode == "300"){
                     this.$router.push({path:"/login"})
@@ -562,7 +602,6 @@
               "lat": this.lat,
               "mark": this.mark,
             }
-            console.log(paramData)
             axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
               .then(response => {
                   if(response.data.rescode == 200){
@@ -574,26 +613,21 @@
                     this.reportno = "";
                     this.person = "";
                     this.city = "";
+                    this.orgCode = "";
                     this.company = "";
                     this.lat = "";
                     this.lng = "";
                     this.adressValue = "";
                     this.accidentaddress = "";
-                    this.mark = "0";
+                    $(".radio__inner").addClass("isChecked");
+                    this.mark = "1";
                     this.surveyType = '';
                     this.getCity = "京";
-                    this.lng = "";
-                    this.lat = "";
                     this.cityName = "";
-//                    this.cityOption = {};
-//                    this.companeyOption = {};
-//                    this.orgOption = {};
-                    console.log(this.orgOption)
                     this.open2("创建成功");
                     $(".creatCaseDialog").addClass('hide');
                     this.$store.commit('getcaseListActive', true)//调用case列表接口
                  }else{
-                    console.log()
                     if(response.data.rescode == "300"){
                       this.$router.push({path:"/"})
                     }
@@ -606,7 +640,6 @@
                 console.log(error)
               })
           }
-
 
         },
         openCityDialog(){//打开城市
@@ -687,6 +720,7 @@
             this.lng = document.getElementById("result_Lng").value;
             this.lat = document.getElementById("result_Lat").value;
             $(".AdressDialog").addClass("hide")
+            $(".sureAdress").addClass('hide')
             document.getElementById("result_Lng").value = "";
             document.getElementById("result_Lat").value = "";
           }
@@ -704,6 +738,7 @@
       caseManage,
       seatManage,
       institutionManage,
+      surveyManage,
     },
   }
 

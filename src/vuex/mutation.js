@@ -20,6 +20,9 @@ const mutation = {
   getclickEditorActive(state, obj) {
     state.clickEditorActive = obj
   },
+  getinsitituPageno(state, obj) {
+    state.insitituPageno = obj
+  },
 }
 
 export default mutation

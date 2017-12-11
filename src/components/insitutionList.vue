@@ -127,12 +127,12 @@
                 <input v-model="orgname" placeholder="请输入机构名称" type="text"/>
               </div>
               <div class="addinsitituteInput">
-                <span>机构账号</span>
-                <input type="text" v-model="username" placeholder="请输入坐席账号"/>
+                <span>机构帐号</span>
+                <input type="text" v-model="username" placeholder="请输入坐席帐号"/>
               </div>
               <div class="addinsitituteInput">
-                <span>账号密码</span>
-                <input type="text" v-model="userpwd" placeholder="请输入坐席账号密码"/>
+                <span>帐号密码</span>
+                <input type="text" v-model="userpwd" placeholder="请输入坐席帐号密码"/>
               </div>
               <div class="addinsitituteInput">
                 <span>联系人</span>
@@ -163,7 +163,7 @@
                 </el-checkbox-group>
               </div>
               <div class="addinsitituteInput">
-                <span>账号状态</span>
+                <span>帐号状态</span>
                 <select v-model="islocked">
                   <option value="0">正常</option>
                   <option value="1">锁定</option>
@@ -258,6 +258,9 @@
         if(this.clickEditorActive){
           this.getInsitituList();
         }
+      },
+      getinsitituPage(val){
+          this.pageno = val;
       }
     },
     props: {
@@ -265,11 +268,10 @@
     },
     created(){
       this.getInsitituList();
+      this.pageno = this.$store.state.insitituPageno
     },
-
     methods: {
       handleCheckedCitiesChange(value) {
-        console.log(value)
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.cities.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
@@ -281,6 +283,7 @@
         this.$message.success(resdes);
       },
       getInsitituList(){
+        console.log(this.pageno)
         var paramData = {
           "pageno": this.pageno,
           "pagesize": this.pagesize,
@@ -291,7 +294,6 @@
               this.totalcount = parseInt(response.data.data.totalcount);
               this.seatsList = response.data.data.departs;
               if(response.data.data.departs.length !=0){
-
                 this.seatsListActive = true;
                 for(let i in this.seatsList){
                   if(this.seatsList[i].islocked == '0'){
@@ -300,7 +302,6 @@
                     this.seatsList[i].islockedText = "锁定"
                   }
                 }
-
               }else{
                 this.seatsListActive = false;
               }
@@ -320,9 +321,10 @@
             console.log(error)
           })
       },
-      handleCurrentChange(pageno) {//跳转
+      handleCurrentChange(pageno) {//
         //当前页改变调用接口  pageNo  pageSize
         this.pageno = pageno;
+        this.$store.commit('getinsitituPageno', this.pageno);
         this.getInsitituList()
       },
 
@@ -382,9 +384,9 @@
         if(this.orgname == ''){
           this.open4("请输入机构名称")
         }else if(this.username == ''){
-          this.open4("请输入机构账号")
+          this.open4("请输入机构帐号")
         }else if(this.userpwd == ''){
-          this.open4("请输入账号密码")
+          this.open4("请输入帐号密码")
         }else if(this.userchinaname == ''){
           this.open4("请输入联系人")
         }else if(this.userphone == ''){
@@ -396,7 +398,7 @@
         }else if(this.cl.length == 0){
           this.open4("请选择开通省份和城市")
         }else if(this.islocked == ''){
-          this.open4("请选择账号状态")
+          this.open4("请选择帐号状态")
         }else{
           var cityData = new Array();
           for(let j in this.cl){
@@ -453,6 +455,9 @@
     computed: {
       getUserIcons(){
         return this.$store.state.clickEditorActive;
+      },
+      getinsitituPage(){
+        return this.$store.state.insitituPageno;
       }
     }
   }

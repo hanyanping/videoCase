@@ -1,15 +1,15 @@
 <style scoped>
   .seatList{
-    width: 90%;
+    width: 86%;
     margin: 0 auto;
   }
   .seatListMinute{
     cursor: pointer;
-    width: 20%;
+    width: 22%;
     text-align:  center;
     border-radius: 6px;
     margin-right: 30px;
-    min-height: 305px;
+    height: 305px;
     overflow: scroll;
     margin-top: 30px;
   }
@@ -158,7 +158,7 @@
             <div class="clear scrollBox">
               <div v-if="editorActive" style="margin-top:20px;" v-for="seatInfo in seatInfo">
                 <div class="InputSeatInfo">
-                  <span>坐席账号:</span>
+                  <span>坐席帐号:</span>
                   <input type="text" disabled id="seatuserName" :value="seatInfo.userName"/>
                   <span>坐席姓名:</span>
                   <input type="text" v-model="chinaName"/>
@@ -170,7 +170,7 @@
                   <input v-model="password" type="text"  maxlength="80" />
                 </div>
                 <div class="InputSeatInfo">
-                  <span>账号状态:</span>
+                  <span>帐号状态:</span>
                   <select v-model="isLocked">
                     <option v-for="item in isLockedOption" :value="item.isLocked"  v-if="item.isLocked == isLocked">{{item.name}}</option>
                     <option :value="item.isLocked" v-else>{{item.name}}</option>
@@ -215,12 +215,12 @@
               </div>
               <div style="margin-top:20px;" v-if="editorActive == false">
                 <div class="addSeatInput">
-                  <span>坐席账号</span>
-                  <input v-model="username" type="text" placeholder="请输入坐席账号"/>
+                  <span>坐席帐号</span>
+                  <input v-model="username" type="text" placeholder="请输入坐席帐号"/>
                 </div>
                 <div class="addSeatInput">
-                  <span>坐席账号密码</span>
-                  <input v-model="userpwd" type="text" placeholder="请输入坐席账号密码"/>
+                  <span>坐席帐号密码</span>
+                  <input v-model="userpwd" type="text" placeholder="请输入坐席帐号密码"/>
                 </div>
                 <div class="addSeatInput">
                   <span>坐席姓名</span>
@@ -231,9 +231,9 @@
                   <input v-model="userphone" type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
                 </div>
                 <div class="addSeatInput">
-                  <span>账号状态</span>
+                  <span>帐号状态</span>
                   <select v-model="addislocked">
-                    <option value="">请选择账号状态</option>
+                    <option value="">请选择帐号状态</option>
                     <option v-for="item in isLockedOption" :value="item.isLocked">{{item.name}}</option>
                   </select>
                 </div>
@@ -255,7 +255,7 @@
           <p class="minuterdetail" style="padding-left: 8%;">当前状态: 繁忙<span class="colorRed">(处理中-未连线)</span></p>
           <p class="minuterdetail" style="padding-left: 8%;">未处理订单:  {{item.waitingCaseCount}}</p>
           <p class="minuterdetail" style="padding-left: 8%;">今日已处理订单: {{item.handleCaseCount}}</p>
-          <p class="minuterdetail" style="padding-left: 8%;">今日登陆时间:{{item.loginTime}}</p>
+          <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
         <div class="seatListMinute left bordercolorGreen" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 0">
@@ -266,7 +266,7 @@
           <p class="minuterdetail">当前状态: 空闲</p>
           <p class="minuterdetail">未处理订单: {{item.waitingCaseCount}}</p>
           <p class="minuterdetail">今日已处理订单: {{item.handleCaseCount}}</p>
-          <p class="minuterdetail">今日登陆时间:{{item.loginTime}}</p>
+          <p class="minuterdetail" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail">累计处理案件:{{item.totalHandleCaseCount}}</p>
         </div>
         <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="item.sysUserStatus == 1 || item.sysUserStatus == null">
@@ -435,7 +435,7 @@
       },
       addSeats(){//添加坐席
         if(this.username == ''){
-          this.open4('请输入坐席账号')
+          this.open4('请输入坐席帐号')
         }else if(this.userpwd == ""){
           this.open4('请输入坐席密码')
         }else if(this.userchinaname == ""){
@@ -445,7 +445,7 @@
         }else if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.userphone))){
           this.open4("请输入合理手机号")
         }else if(this.islocked == ""){
-          this.open4('请选择账号状态')
+          this.open4('请选择帐号状态')
         }else{
           var paramData = {
             "username": this.username,

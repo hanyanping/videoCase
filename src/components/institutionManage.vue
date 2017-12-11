@@ -70,7 +70,6 @@
       this.insititutEditorActive = this.$store.state.insititutEditorActive;
     },
     methods: {
-
     },
     components: {
       insitutionList,

@@ -174,29 +174,24 @@
       }
     },
     created(){
-      $(document).keydown(function(event){
-        // 火狐浏览器获取 keyCode 用 event.which
-        var code = event.keyCode?event.which:event.keyCode;
-        if(code == 13){
-          this.loginActive = true;
-          console.log(this.loginActive)
-        }else{
-          this.loginActive = false;
-        }
-      });
+
       this.getCode()
     },
 
     mounted() {
+      document.onkeydown = (ev) => {
+        if (ev.keyCode == 13) {
+          this.loginIn()
+        }
+      }
 
     },
     watch: {
       loginActive: function(){
-        console.log(this.loginActive)
         if(this.loginActive == true){
 
           console.log(this.loginActive)
-          this.loginIn()
+
         }
       }
     },

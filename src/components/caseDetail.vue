@@ -25,6 +25,7 @@
   .detailContent{
     overflow-y: scroll;
     max-height: 65vh;
+    overflow-x: hidden;
   }
   .dialogTitle{
     color: #232323;
@@ -166,7 +167,10 @@
                 <span>事故时间：</span><i >{{caseDetailData.accidentInfo .accidentTime }}</i>
               </div>
               <div class="caseInfoBox">
-                <span>案件状态：</span><i>{{caseDetailData.accidentInfo .survey}}</i>
+                  <i  v-if="caseDetailData.accidentInfo.surveyStatus == '06'">案件状态：待查勘</i>
+                  <i  v-if="caseDetailData.accidentInfo.surveyStatus == '07'">案件状态：查勘中</i>
+                  <i v-if="caseDetailData.accidentInfo.surveyStatus == '08'">案件状态：已查勘</i>
+                  <i v-if="caseDetailData.accidentInfo.surveyStatus == '11'">案件状态：已取消</i>
                 <div class="caseInfoBoxAdress" >
                   <span class="caseInfoBoxTitle" >事故地点：</span>
                   <div class="caseInfoBoxInfo">
@@ -176,7 +180,8 @@
                   </div>
                 </div>
               </div>
-              <div class="caseInfoBox" v-if="caseDetailData.accidentInfo.exceptionReason!=null"><span>异常原因：</span><i>{{caseDetailData.accidentInfo.exceptionReason}}</i></div>
+
+              <div class="caseInfoBox" v-if="caseDetailData.accidentInfo.exceptionReason != null"><span>异常原因：</span><i>{{caseDetailData.accidentInfo.exceptionReason}}</i></div>
           </div>
           <div class="AimCar">
             <div class="aimheader">标的车</div>
@@ -193,7 +198,7 @@
                     <span>{{item.photoTypeComment}}</span>
                   </li>
                 </ul>
-                <div class="phonesPaging" v-if="totalCountAim > 5">
+                <div class="phonesPaging">
                   <el-pagination  @current-change="handleCurrentChangeAim"
                                   :current-page="1"
                                   :page-size = "pageSizeAim"
@@ -205,21 +210,21 @@
             </div>
           </div>
           <!--<div class="thirdCar AimCar" v-if="thirdActive" v-for="(item,index) in thirdCar">-->
-          <div class="thirdCar AimCar" v-for="(item,index) in thirdCar">
+          <div class="thirdCar AimCar" v-if="thirdActive" v-for="(item,index) in thirdCar">
             <div class="aimheader">三者车({{item.vehicleLicenseNo}})</div>
             <div class="aimInfo">
               <table class="table" border="0" cellspacing="0" cellpadding="0">
                 <tr><td>车牌号:</td><td>{{item.vehicleLicenseNo}}</td><td>车主电话: </td><td>{{item.contactPhoneNo}}</td></tr>
               </table>
-              <div class="aimCarImg">
+              <div class="aimCarImg thirdImg">
                 <ul class="suibian">
                   <li v-for="itemImg in item.thirdCarImg">
-                    <img :data-src="itemImg.photoUri" :src="itemImg.smallPhotoUri">
+                    <img :data-src="itemImg.photoUri" :src="itemImg.smallPhotoUri"/>
                     <br>
                     <span>{{itemImg.photoTypeComment}}</span>
                   </li>
                 </ul>
-                <div class="phonesPaging" v-if="item.total < 5 ">
+                <div class="phonesPaging" @click="getCarNo(item.vehicleLicenseNo)" >
                   <el-pagination  @current-change='handleCurrentChangethird'
                                   :current-page="1"
                                   :page-size = "4"
@@ -230,19 +235,23 @@
               </div>
             </div>
           </div>
-          <div class="thirdCar AimCar " style="">
+          <div class="thirdCar AimCar " v-if="caseDetailData.surveyVideoRooms.length != 0">
             <div class="aimheader">查勘现场视频</div>
+            <!--<div v-if="showFlash">-->
+              <!--<h1>Alternative content</h1>-->
+              <!--<p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>-->
+            <!--</div>-->
             <div class="aimInfo videoBox">
-              <video controls="controls">
-                <source src="../images/movie.mp4" type="video/mp4" />
-              </video>
+              <div id="videoList" class="clear">
+                <div class="left" v-for="(item,index) in surveyVideoRooms" :id='"video"+index' style="width:280px;height:200px;margin:6px 10px;"  :swfobjId='"videourl"+index'></div>
+              </div>
             </div>
           </div>
-          <div class="AimCar reporPerson" >
+          <div class="AimCar reporPerson" v-if="caseDetailData.sceneSurveyorInfo != null">
             <div class="aimheader">查勘员信息</div>
             <div class="aimInfo">
-              <table class="table" border="0" cellspacing="0" cellpadding="0" v-if="caseDetailData.sceneSurveyorInfo != null">
-                <tr><td>现场查勘员:</td><td @click="mapRouter(coordinates)">{{caseDetailData.sceneSurveyorInfo.sceneSurveyorName}}<img src="../images/adress.png"/></td><td>现场查勘员电话:</td><td>{{caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo}}</td><td>预计到达时间:</td><td>{{caseDetailData.sceneSurveyorInfo.expectArriveTime}}</td>
+              <table class="table" border="0" cellspacing="0" cellpadding="0" >
+                <tr><td>现场查勘员:</td><td @click="mapRouter()">{{caseDetailData.sceneSurveyorInfo.sceneSurveyorName}}<img src="../images/adress.png"/></td><td>现场查勘员电话:</td><td>{{caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo}}</td><td>预计到达时间:</td><td>{{caseDetailData.sceneSurveyorInfo.expectArriveTime}}</td>
                   <td>实际到达时间</td><td>{{caseDetailData.sceneSurveyorInfo.actualArriveTime}}</td></tr>
                 <tr v-if="webSurveyorInfoActive"><td> 后台坐席: </td><td>{{caseDetailData.webSurveyorInfo.webSurveyorName}}</td><td>处理开始时间: </td><td>{{caseDetailData.webSurveyorInfo.startProcessTime}}</td><td>处理结束时间:</td><td>{{caseDetailData.webSurveyorInfo.endProcessTime}}</td><td></td><td></td></tr>
               </table>
@@ -263,6 +272,7 @@
   </div>
 </template>
 <script>
+
 import Viewer from 'viewerjs';
 import axios from 'axios'
 export default {
@@ -273,8 +283,10 @@ export default {
         totalCountAim: 0,//总条数
         recordsImg: [],//标的车图片
         caseDetailData: {},
+        recordsThird: [],
         surveyNo: "",
         thirdCar: [],
+        accidentVehicleInfos:[],
         siStatusText: '',
         webSurveyorInfoActive: false,
         thirdActive: false,
@@ -284,6 +296,9 @@ export default {
         coordinates: [],
         mark: '',
         surveyId: '',
+        thirdvehicleLicenseNo: "",
+        surveyVideoRooms: [],
+        showFlash: false
       }
     },
   watch:{
@@ -293,73 +308,107 @@ export default {
        this.caseDetailData =  JSON.parse(localStorage.getItem("caseDetailData"));
        this.longitude = this.caseDetailData.accidentInfo.accidentAddrLongitude;
        this.latitude = this.caseDetailData.accidentInfo.accidentAddrLatitude;
-       this.coordinates = this.caseDetailData.accidentInfo.coordinates;//经纬度轨迹数组
+       if(this.caseDetailData.sceneSurveyorInfo != null){
+         this.coordinates = this.caseDetailData.sceneSurveyorInfo.coordinates;//经纬度轨迹数组
+       }
        this.mark = this.caseDetailData.accidentInfo.appSource;
        this.surveyId = this.caseDetailData.id;
-       if(this.caseDetailData.accidentVehicleInfos.length == 0){
+       this.surveyVideoRooms = this.caseDetailData.surveyVideoRooms;
+       if(this.caseDetailData.sceneSurveyorInfo != null){
+           if(this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo === null){
+             this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo = '暂无'
+           }
+           if(this.caseDetailData.sceneSurveyorInfo.expectArriveTime === null){
+             this.caseDetailData.sceneSurveyorInfo.expectArriveTime = '暂无'
+           }
+           if(this.caseDetailData.sceneSurveyorInfo.expectArriveTime === null){
+             this.caseDetailData.sceneSurveyorInfo.expectArriveTime = '暂无'
+           }
+          if(this.caseDetailData.sceneSurveyorInfo.actualArriveTime === null){
+             this.caseDetailData.sceneSurveyorInfo.actualArriveTime = "暂无"
+          }
+       }
+       if(this.caseDetailData.accidentVehicleInfos === null){
          this.thirdActive = false;
        }else{
          this.thirdActive = true;
        }
-       if(this.caseDetailData.webSurveyorInfo == null){
+       if(this.caseDetailData.webSurveyorInfo === null){
          this.webSurveyorInfoActive = false;
        }else{
          this.webSurveyorInfoActive = true;
-       }
-       if(this.caseDetailData.accidentInfo.surveyStatus  != null){
-          if(this.caseDetailData.accidentInfo.surveyStatus  == "08"){
-            this.siStatusText = "已查勘"
-          }else if(this.caseDetailData.accidentInfo.surveyStatus  == "07"){
-            this.siStatusText = "查勘中"
-          }else if(this.caseDetailData.accidentInfo.surveyStatus  == "06"){
-            this.siStatusText = "待查勘"
-          }else if(this.caseDetailData.accidentInfo.surveyStatus  == "09"){
-            this.siStatusText = "查勘完成"
-          }else if(this.caseDetailData.accidentInfo.surveyStatus  == "11"){
-            this.siStatusText = "查勘订单已取消"
-          }else if(this.caseDetailData.accidentInfo.surveyStatus  == "10"){
-            this.siStatusText = "待补拍"
-          }
+         if(this.caseDetailData.webSurveyorInfo.webSurveyorName === null){
+           this.caseDetailData.webSurveyorInfo.webSurveyorName = "暂无"
+         }
+         if(this.caseDetailData.webSurveyorInfo.startProcessTime === null){
+           this.caseDetailData.webSurveyorInfo.startProcessTime = '暂无'
+         }
+         if(this.caseDetailData.webSurveyorInfo.endProcessTime === null){
+           this.caseDetailData.webSurveyorInfo.endProcessTime = '暂无'
+         }
        }
        this.surveyNo = this.caseDetailData.accidentInfo.surveyNo;
-      this.surveyNo = "dsajd32sljhf49f09368a27ac0df1704";
        if("reportVehicleInfo" in this.caseDetailData){
         this.getCasePhones(1,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
        }
-      this.caseDetailData.accidentVehicleInfos=[{ "vehicleLicenseNo": "京111111","contactPhoneNo": "联系电话-002" },
-        { "vehicleLicenseNo": "京111111","contactPhoneNo": "联系电话-001"}//测试用
-      ];
-       if(this.caseDetailData.accidentVehicleInfos.length != 0){
-         for(let i in this.caseDetailData.accidentVehicleInfos){
-           this.getCasePhones(1,4,this.caseDetailData.accidentVehicleInfos[i].vehicleLicenseNo,this.surveyNo,i)
+        this.accidentVehicleInfos = this.caseDetailData.accidentVehicleInfos;
+       if(this.accidentVehicleInfos !== null){
+         for(let i in this.accidentVehicleInfos){
+           this.accidentVehicleInfos[i].thirdCarImg = [];
+           this.getCasePhones(1,4,this.accidentVehicleInfos[i].vehicleLicenseNo,this.surveyNo,i)
          }
        }
     },
     mounted() {
+      this.$nextTick(() => {
+        this.getvedio()
+      })
     },
     props: {
 //      caseOrder: string
     },
       methods: {
+        getvedio(){
+          if(this.surveyVideoRooms.length!=0){
+           this.$nextTick(() => {
+              for(let i in this.surveyVideoRooms){
+                var swfobj = new SWFObject('https://union.bokecc.com/flash/player.swf', "videourl"+ i, '100%', '200', '8');
+                swfobj.addVariable("userid", "F08A8B432F24065A");	//	partnerID,用户id
+                swfobj.addVariable("videoid", this.surveyVideoRooms[i].videoRoomId);	//	spark_videoid,视频所拥有的 api id
+                swfobj.addVariable("mode", "api");	//	mode, 注意：必须填写，否则无法播放
+                swfobj.addVariable("autostart", "false");	//	开始自动播放，true/false
+                swfobj.addVariable("jscontrol", "true");	//	开启js控制播放器，true/false
+                swfobj.addParam('allowFullscreen', 'true');
+                swfobj.addParam('allowScriptAccess', 'always');
+                swfobj.addParam('wmode', 'transparent');
+                swfobj.write("video" + i);
+              }
+//             for(let i in this.surveyVideoRooms){
+//                console.log($("video"+i).html())
+//                if($("video"+i).html()){
+//                    this.showFlash = false;
+//                }else{
+//                  this.showFlash = true;
+//                }
+//             }
+            })
+          }
+
+        },
         open4(resdes) {
           this.$message.error(resdes);
         },
         open2(resdes) {
           this.$message.success(resdes);
         },
-        getThirdImg(vehicleLicenseNo){
-          console.log(vehicleLicenseNo)
-          console.log(this.handleCurrentChangethird())
-          var currentPage = this.handleCurrentChangethird()
-          console.log(currentPage)
-          this.getCasePhones(currentPage,1,vehicleLicenseNo,this.surveyNo,"")
+        getCarNo(vehicleLicenseNo){
+         this.thirdvehicleLicenseNo =  vehicleLicenseNo
         },
         handleCurrentChangethird(currentPage){
-         return currentPage;
+          this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,"")
         },
         handleCurrentChangeAim(currentPage) {//跳转
           //当前页改变调用接口 currentPage   pageSizeAim
-          console.log(currentPage);
           this.currentPageNoAim = currentPage;
           this.getCasePhones(this.currentPageNoAim,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
         },
@@ -386,18 +435,16 @@ export default {
                       })
                     })
                   }else{
-                    var thirdLength = this.caseDetailData.accidentVehicleInfos.length;
-                    for(let i in this.caseDetailData.accidentVehicleInfos){
+                    var thirdLength = this.accidentVehicleInfos.length;
+                    for(let i in this.accidentVehicleInfos){
                         if(i == source){
-                          this.caseDetailData.accidentVehicleInfos[i].thirdCarImg = response.data.data.records
-                          this.caseDetailData.accidentVehicleInfos[i].total = response.data.data.total;
-                          this.caseDetailData.accidentVehicleInfos[i].pageNum = response.data.data.pageNum
+                          this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records);
+                          this.accidentVehicleInfos[i].total = response.data.data.total;
+                          this.accidentVehicleInfos[i].pageNum = response.data.data.pageNum;
                         }
                     }
-                    if(source == thirdLength-1){
                       this.$nextTick(() => {
-                        this.thirdCar = this.caseDetailData.accidentVehicleInfos;
-                        console.log(this.thirdCar)
+                        this.thirdCar = this.accidentVehicleInfos;
                         for (let i in this.thirdCar) {
                           this.$nextTick(() => {
                             new Viewer(document.getElementsByClassName('suibian')[i], {
@@ -407,12 +454,8 @@ export default {
                               loop: true
                             })
                           })
-
                         }
                       })
-                    }
-
-
                   }
                 }
               }else{
@@ -447,33 +490,37 @@ export default {
         leave(){
           $("#detailMap").addClass("hide")
         },
-        mapRouter(coordinates){
-          var data = coordinates;
-          $(".mapBox").toggleClass("hide");
-
-          if($('.mapBox').attr('class').indexOf('none') < 0){
-            var map = new BMap.Map("mapContent");
-            var length = data.length;
-            map.enableScrollWheelZoom(true);
-            var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
-//                                                          	for(var i =0;i<length;i++){
-//                                                          	    driving.search(new BMap.Point(data.data[0].longitude,data.data[0].latitude),new BMap.Point(data.data[length-1].longitude,data.data[length-1].latitude),{waypoints:[new BMap.Point(data.data[i].longitude,data.data[i].latitude)]});//waypoints表示途经点
-//                                                          	}
-            for(var i =0;i<length;i++){
-              driving.search(new BMap.Point(data[0].longitude,data[0].latitude),new BMap.Point(data[length-1].longitude,data[length-1].latitude));
+        mapRouter(){
+          var data = this.coordinates;
+          var num = 0;
+          for(let i in data){
+            if(data[i].longitude === null){
+              num++
             }
-            driving.setSearchCompleteCallback(function() {
-              //得到路线上的所有point
-              data = driving.getResults().getPlan(0).getRoute(0).getPath();
-              //画面移动到起点和终点的中间
-              var centerPoint;
-              centerPoint = new BMap.Point((data[0].longitude + data[data.length - 1].longitude) / 2, (data[0].latitude + data[data.length - 1].latitude) / 2);
-              map.panTo(centerPoint);
-              //连接所有点
-              map.addOverlay(new BMap.Polyline(data, {strokeColor: "#f00", strokeWeight: 5, strokeOpacity: 1}));
-
-            })
-
+          }
+          if(num == 0){
+            $(".mapBox").toggleClass("hide");
+            if($('.mapBox').attr('class').indexOf('none') < 0){
+              var map = new BMap.Map("mapContent");
+              var length = data.length;
+              map.enableScrollWheelZoom(true);
+              var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+              for(var i =0;i<length;i++){
+                driving.search(new BMap.Point(data[0].longitude,data[0].latitude),new BMap.Point(data[length-1].longitude,data[length-1].latitude));
+              }
+              driving.setSearchCompleteCallback(function() {
+                //得到路线上的所有point
+                data = driving.getResults().getPlan(0).getRoute(0).getPath();
+                //画面移动到起点和终点的中间
+                var centerPoint;
+                centerPoint = new BMap.Point((data[0].longitude + data[data.length - 1].longitude) / 2, (data[0].latitude + data[data.length - 1].latitude) / 2);
+                map.panTo(centerPoint);
+                //连接所有点
+                map.addOverlay(new BMap.Polyline(data, {strokeColor: "#f00", strokeWeight: 5, strokeOpacity: 1}));
+              })
+            }
+          }else{
+            this.open4("暂无查勘员信息")
           }
         },
         downLoadCase(){

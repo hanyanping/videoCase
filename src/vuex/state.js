@@ -6,6 +6,7 @@ const state = {
   surveyOrderId: "",
   caseListActive: false,
   clickEditorActive: false,
+  insitituPageno: 1,
 }
 
 export default state

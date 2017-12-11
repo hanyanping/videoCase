@@ -192,6 +192,13 @@ html,body{
   margin-left: 15px;
   height: 1px;
   width: 100px;
+  border: 6px solid #2EAB3B
+}
+.phonesPaging .el-pagination .disabled{
+  color: #b4bccc;
+  background-color: #fff;
+  border: 6px solid #b4bccc;
+  cursor: not-allowed;
 }
 .el-pagination .btn-next .el-icon, .el-pagination .btn-prev .el-icon{
   display: none;

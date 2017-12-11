@@ -162,8 +162,6 @@
               this.$store.commit('getcaseListActive', true)//调用列表接口
               this.$store.commit('setSignSeatsActive', false);//关闭组件
             }else{
-              console.log(response.data.rescode)
-
               this.open4(response.data.resdes)
               this.$store.commit('getcaseListActive', true)//调用列表接口
               if(response.data.rescode == 300){

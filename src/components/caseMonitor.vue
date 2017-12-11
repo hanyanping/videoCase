@@ -202,7 +202,11 @@
               <p class="carInfo orderTime" v-if="caseActive.twocase">预计到达时间：{{item.expectArriveTime}} </p>
               <p class="carInfo orderTime" v-if="caseActive.threecase || caseActive.fourecase || caseActive.eightcase">实际到达现场时间：{{item.actualArriveTime}} </p>
               <p class="carInfo orderTime" v-if="caseActive.fourecase || caseActive.eightcase"> 请求链接次数：{{item.videoConnectRequestCount}}次</p>
-              <p class="carInfo" >案件状态：{{item.siStatusText}}</p>
+              <p class="carInfo" v-if="item.surveyStatus == '06'">案件状态：待查勘</p>
+              <p class="carInfo" v-if="item.surveyStatus == '07'">案件状态：查勘中</p>
+              <p class="carInfo" v-if="item.surveyStatus == '08'">案件状态：已查勘</p>
+              <p class="carInfo" v-if="item.surveyStatus == '11'">案件状态：已取消</p>
+
               <span class="AssignSeat left" v-if="caseActive.fourecase || caseActive.eightcase" @click="goSignSeat(item.id)">指派坐席</span>
               <span class="orderDetailFoure right" @click="goCaseDetail(item.id,item.surveyStatus)" v-if="caseActive.fourecase">查看详情</span>
               <span class="orderDetail" @click="goCaseDetail(item.id,item.surveyStatus)" v-if="(!caseActive.fourecase  && !caseActive.fivecase)">查看详情</span>
@@ -265,6 +269,7 @@ import axios from 'axios'
   export default {
     data() {
       return{
+        time: '',
         caseMonitor: [],
         caseDetailActive:false,
         signSeatsActive: false,
@@ -312,6 +317,11 @@ import axios from 'axios'
     },
     created(){
       this.getCaseMonitor()
+    },
+    mounted(){
+      this.time = setInterval(() => {
+        this.getCaseMonitor()
+      }, 5000)
     },
     methods: {
       open4(resdes) {
@@ -573,29 +583,14 @@ import axios from 'axios'
             break;
         }
         if(this.caseMonitor.length!=0){
-
           for(let i in this.caseMonitor){
             if("todayLoginTime" in this.caseMonitor[i]){
               if(this.caseMonitor[i].todayLoginTime !== null){
                 this.caseMonitor[i].todayLoginTime = this.caseMonitor[i].todayLoginTime.substring(10,(this.caseMonitor[i].todayLoginTime.length+1))
               }
             }
-            if(this.caseMonitor[i].surveyStatus  !== null){
-              if(this.caseMonitor[i].surveyStatus  == "08"){
-                this.caseMonitor[i].siStatusText = "已查勘"
-              }else if(this.caseMonitor[i].surveyStatus  == "07"){
-                this.caseMonitor[i].siStatusText = "查勘中"
-              }else if(this.caseMonitor[i].surveyStatus  == "06"){
-                this.caseMonitor[i].siStatusText = "待查勘"
-              }else if(this.caseMonitor[i].surveyStatus  == "09"){
-                this.caseMonitor[i].siStatusText = "查勘完成"
-              }else if(this.caseMonitor[i].surveyStatus  == "11"){
-                this.caseMonitor[i].siStatusText = "查勘订单已取消"
-              }else if(this.caseMonitor[i].surveyStatus  == "10"){
-                this.caseMonitor[i].siStatusText = "待补拍"
-              }
-            }
           }
+          console.log(this.caseMonitor)
         }
 
       },
@@ -672,7 +667,10 @@ import axios from 'axios'
       getsignSeatsActive() {
         return this.$store.state.signSeatsActive;
       }
-    }
+    },
+    destroyed () {
+      clearInterval(this.time);
+    },
   }
 
 </script>

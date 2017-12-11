@@ -11,17 +11,23 @@ import '@/style/reset.css'
 import 'viewerjs/dist/viewer.css'
 Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
 Vue.prototype.downloatUrl = "https://chakan.zhongchebaolian.com"//测试
-// Vue.prototype.downloatUrl = "http://192.168.1.69:18081"//
 
 
 // http请求拦截器
 var loadinginstace = ''
 axios.interceptors.request.use(config => {
   // element ui Loading方法
-
-  if(config.url != '/boot-pub-survey-manage/pub/survey/v1/page' || config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page' || config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
-    loadinginstace = ElementUI.Loading.service({ fullscreen: true })
-  }
+if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
+  loadinginstace = "";
+}else if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
+  loadinginstace = "";
+}else if(config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
+  loadinginstace = "";
+}else if(config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
+  loadinginstace = "";
+}else{
+  loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+}
   return config
 }, error => {
   // loadinginstace.close()

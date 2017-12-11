@@ -101,7 +101,7 @@
       <div class="flex">
         <div class="insittituLeft">
           <p class="infoInsitute">
-            <span class="infoInsituteItem" style="width:73px;">坐席数: {{seatCount}}</span>
+            <span class="infoInsituteItem">坐席数: {{seatCount}}</span>
             <span class="infoInsituteItem">未处理案件:{{insitituData.todaynotprocess}}</span>
           </p>
           <p class="infoInsitute">
@@ -111,8 +111,8 @@
         </div>
         <div class="insitituRight">
           <div class="infoInsitute">
-            <span style="width:70px;">机构账号: </span><input type="text" v-model="userName"/>
-            <span style="width:70px;">账号密码: </span><input type="text" v-model="password">
+            <span style="width:70px;">机构帐号: </span><input type="text" v-model="userName"/>
+            <span style="width:70px;">帐号密码: </span><input type="text" v-model="password">
           </div>
           <div class="infoInsitute"><span style="width:70px;">联系人:</span> <input type="text" v-model="chinaName"/>
           <span style="width:70px;">手机号: </span><input type="tel" maxlength="11" v-model="telephone">
@@ -202,8 +202,8 @@
     created(){
       this.insitituData = JSON.parse(localStorage.getItem("insitituData"))
       this.insititutEditorData = JSON.parse(localStorage.getItem("insititutEditorData"));
-      console.log(this.insititutEditorData)
       this.seatCount = this.insititutEditorData.list.length;
+
       if(this.seatCount == 0){
         this.seatListActive = false
       }else{
@@ -229,7 +229,6 @@
       }else{
         this.editorLocked = "1"
       }
-      console.log(this.insititutEditorData)
     },
     watch: {
 
@@ -243,11 +242,11 @@
       },
       goBackInsititionList(){//保存编辑
         if(this.userName == ""){
-          this.open4("请输入机构账号")
+          this.open4("请输入机构帐号")
         }else if(this.userName.length > 80){
-          this.open4("请输入合理机构账号")
+          this.open4("请输入合理机构帐号")
         }else if(this.password == ""){
-          this.open4("请输入账号密码")
+          this.open4("请输入帐号密码")
         }else if(this.telephone == ""){
           this.open4("请输入手机号")
         }else  if(!(/^1[3|4|5|8|7][0-9]\d{4,8}$/.test(this.telephone))){
