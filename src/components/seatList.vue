@@ -269,7 +269,7 @@
           <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="((item.sysUserStatus == 1 || item.sysUserStatus == null)&&(item.userStatus == 1 || item.userStatus == null)) ">
+        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="(item.sysUserStatus == 1 || item.sysUserStatus == null) ">
           <div class="imgBox">
             <img src="../images/kefuhui.png">
             <h3 class="minuteNuber" style="color:#999">{{item.chinaName}}</h3>

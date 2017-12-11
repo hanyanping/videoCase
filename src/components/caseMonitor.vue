@@ -157,7 +157,7 @@
               <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
               <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
             </div>
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="((item.currentStatusAuto  == 1 || item.currentStatusAuto == null) && (item.currentStatusManual  == 1 || item.currentStatusManual == null))">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="(item.currentStatusAuto  == 1 || item.currentStatusAuto == null)">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>

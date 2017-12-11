@@ -109,7 +109,7 @@
                   </div>
                 </div>
               </div>
-            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="(item.currentStatusAuto == null || item.currentStatusAuto  == 1) && (item.currentStatusManual == null || item.currentStatusManual == 1)">
+            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="(item.currentStatusAuto == null || item.currentStatusAuto  == 1)">
               <div class="flex">
                 <div class="imgBox">
                   <img src="../images/kefuBlue.png">
