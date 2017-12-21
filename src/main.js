@@ -9,6 +9,8 @@ import store from './vuex/index'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/style/reset.css'
 import 'viewerjs/dist/viewer.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
 // Vue.prototype.downloatUrl = "https://chakan.zhongchebaolian.com"//生产
 Vue.prototype.downloatUrl = "https://survey.zhongchebaolian.com"//测试
@@ -58,6 +60,7 @@ axios.interceptors.response.use(data => {// 响应成功关闭loading
 
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+Vue.use(VueAwesomeSwiper);
 // Vue.use(axios);
 Vue.prototype.$ajax = axios;
 

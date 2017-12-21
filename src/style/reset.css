@@ -24,7 +24,9 @@ table th, table td{
   text-align: center;
   height: 30px;
 }
-
+.el-tabs__active-bar{
+  width: 90px!important;
+}
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar
 {
