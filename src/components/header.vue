@@ -155,25 +155,8 @@
     border-right: none;
     text-align: center;
   }
-  .cityDialogBox .cityNameBox{
-    width: 85%;
-    text-align: center;
-    clear: both;
-    margin-left: 30px;
-  }
-  .cityDialogBox .cityNameBox .citySimpleName{
-    width: 10%;
-    height: 35px;
-    line-height: 35px;
-    border: 1px solid #bbb;
-    color: #232323;
-    border-radius: 5px;
-    text-align: center;
-    margin-right: 10px;
-    float: left;
-    margin-top: 20px;
-    cursor: pointer;
-  }
+
+
   .inputadressBox{
     margin: 15px;
   }
@@ -243,104 +226,7 @@
 </style>
 <template>
   <div>
-    <div class="creatCaseDialog hide">
-      <div class="creatCaseDialogBox">
-        <span @click="closCreatDiolag" class="closCreatDiolag">×</span>
-        <div class="oneMonitor clear">
-          <h4 class="dialogTitle">创建案件</h4>
-          <div class="clear scrollBox">
-            <div style="margin-top:20px;">
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">报案人手机号</span>
-                <input type="tel" class="creatInput" v-model="phoneno" maxlength="11" placeholder="请输入报案人手机号"/>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">报案人车牌号</span>
-                <input type="text" @click="openCityDialog" class="creatInputNo"  readonly :value="getCity" />
-                <input class="creatInput" type="text" v-model="licensenoTwo" @keyup="upcase()" style="margin-left:-6px;width:165px;" placeholder="请输入报案人车牌号"/>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">报案人姓名</span>
-                <input class="creatInput" v-model="person" type="text" placeholder="请输入报案人姓名"/>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">保险报案号</span>
-                <input class="creatInput"  v-model="reportno" type="text" placeholder="请输入保险报案号"/>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan" >保险公司</span>
-                <select class="creatInput" v-model="company" id="companyName">
-                  <!--<option value="">请选择保险公司</option>-->
-                  <option v-for="item in companeyOption" :value="item.code">{{item.name}}</option>
-                </select>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">城市</span>
-                <select class="creatInput" id="cityName" v-model="city">
-                  <option value="">请选择城市</option>
-                  <option v-for="item in cityOption" :value="item.dcCitycode">{{item.dcCityName}}</option>
-                </select>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">处理机构</span>
-                <select class="creatInput" v-model="orgCode">
-                  <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
-                  <!--<option value="">请选择机构</option>-->
 
-                </select>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">查勘类型</span>
-                <select class="creatInput" v-model="surveyType">
-                  <option value="1" >视频</option>
-                  <option value="0">照片</option>
-                </select>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSpan">事故地点</span>
-                <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
-                <i class="el-icon-location" @click="openAdressDialog"></i>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="radio__inner" @click="checkRadio"></span>
-                <span style="margin-left:6px;">只派坐席</span>
-              </div>
-              <div class="addinsitituteInput">
-                <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
-              </div>
-
-            </div>
-        </div>
-          </div>
-      </div>
-    </div>
-    <div class="cityDialog hide">
-      <div class="cityDialogBox">
-        <span @click="closeCityDiolag" class="closeCityDiolag">×</span>
-        <div class="cityNameBox clear">
-          <span class="citySimpleName" v-for="item in cityData" @click="selectCity(item)">{{item}}</span>
-        </div>
-      </div>
-    </div>
-    <div class="AdressDialog hide">
-      <div class="AdressDialogBox">
-        <span @click="closeAdressDiolag" class="closeAdressDiolag">×</span>
-        <div class="oneMonitor clear">
-          <h4 class="dialogTitle">事故地点</h4>
-          <div class="inputadressBox">
-            <span @click="searchAdress">事故地点</span>
-            <input class="adressInput" v-model="adressValue" id="text_" style="width: 166px;" type="text" placeholder="请输入事故地点"/><i @click="searchAdress" class="el-icon-search"></i>
-            <span>经度</span>
-            <input class="adressInput" :value="lng" id="result_Lng" type="text" readonly placeholder="请输入经度"/>
-            <span>纬度</span>
-            <input class="adressInput" :value="lat" id="result_Lat" type="text" readonly placeholder="请输入纬度"/>
-            <span class="sureAdress backColorGreen hide" @click="sureAdress">确定</span>
-          </div>
-          <div id="allmap">
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
@@ -365,7 +251,7 @@
           <span class="userName">{{chinaName}}</span>
           <span class="userInsitu">({{userName}})</span>
           <span class="signOut" @click="clickSignOut">退出</span>
-          <span class="creatCase" v-if="headerActiveOne == 'true'" @click="openCreatCase">创建案件</span>
+          <span class="creatCase" v-if="headerActiveOne == 'true'" @click="checkState">繁忙</span>
       </div>
     </div>
     <case-manage v-if="caseActive"></case-manage>
@@ -520,127 +406,10 @@
        },
         handleClick(tab, event) {
         },
-        openCreatCase(){//打开创建案件
-          document.getElementsByClassName('scrollBox')[0].scrollTop = '100px';
-          console.log( document.getElementsByClassName('scrollBox')[0].scrollTop)
-          $(".radio__inner").addClass("isChecked");
-          this.mark = "1";
-          this.surveyType = "1";
-          $(".creatCaseDialog").removeClass('hide');
-          var paramData = {
-            "action": "detail"
-          }
-          axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
-            .then(response => {
-                if(response.data.rescode == 200){
-                  this.cityOption = response.data.data.city;
-                  this.companeyOption = response.data.data.company ;
-                  for(let i in this.companeyOption){
-                    if(i == 0){
-                      this.company = this.companeyOption[0].code
-                    }
-                  }
-                  this.orgOption= response.data.data.org;
-                  for(let i in this.orgOption){
-                    if(i== 0){
-                      this.orgCode = this.orgOption[i].code;
-                    }
-                  }
-                }else{
-                  if(response.data.rescode == "300"){
-                    this.$router.push({path:"/login"})
-                  }
-                  this.open4(response.data.resdes);
-                }
-            }, err => {
-              console.log(err);
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        },
-        closCreatDiolag(){
-          $(".creatCaseDialog").addClass('hide')
-        },
-        creatNewCase() {//确定创建案件
-          this.companyName = $("#companyName").find("option:selected").text();
-          this.cityName = $("#cityName").find("option:selected").text();
-          if(this.phoneno == ""){
-            this.open4("请输入手机号")
-          }else if(this.licensenoTwo == ""){
-            this.open4("请输入车牌号")
-          }else if(this.person == ""){
-            this.open4("请输入报案人姓名")
-          }else if(this.reportno == ""){
-            this.open4("请输入保险报案号")
-          }else if(this.company == ""){
-            this.open4("请选择保险公司")
-          }else if(this.city == ""){
-            this.open4("请选择城市")
-          }else if(this.orgCode == ""){
-            this.open4("请选择处理机构")
-          }else if(this.surveyType == ""){
-            this.open4("请选择查勘类型")
-          }else if(this.accidentaddress == ""){
-            this.open4("请输入事故地点")
-          }else {
-            var paramData = {
-              "action": "push",
-              "phoneno": this.phoneno,
-              "licenseno": this.getCity+this.licensenoTwo,
-              "person": this.person,
-              "reportno": this.reportno,
-              "company": this.company,
-              "companyName": this.companyName,
-              "city": this.city,
-              "cityName": this.cityName,
-              "groupid": this.orgCode,
-              "surveyType": this.surveyType,
-              "accidentaddress": this.accidentaddress,
-              "lng": this.lng,
-              "lat": this.lat,
-              "mark": this.mark,
-            }
-            axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
-              .then(response => {
-                  if(response.data.rescode == 200){
-                    this.phoneno = '';
-                    this.licensenoTwo = "",
-                    this.cityOption = [];
-                    this.companeyOption = [];
-                    this.orgOption = [];
-                    this.reportno = "";
-                    this.person = "";
-                    this.city = "";
-                    this.orgCode = "";
-                    this.company = "";
-                    this.lat = "";
-                    this.lng = "";
-                    this.adressValue = "";
-                    this.accidentaddress = "";
-                    $(".radio__inner").addClass("isChecked");
-                    this.mark = "1";
-                    this.surveyType = '';
-                    this.getCity = "京";
-                    this.cityName = "";
-                    this.open2("创建成功");
-                    $(".creatCaseDialog").addClass('hide');
-                    this.$store.commit('getcaseListActive', true)//调用case列表接口
-                 }else{
-                    if(response.data.rescode == "300"){
-                      this.$router.push({path:"/"})
-                    }
-                    this.open4(response.data.resdes);
-                  }
-              }, err => {
-                console.log(err);
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-          }
+      checkState(){//改变状态
 
         },
+
         openCityDialog(){//打开城市
           $(".cityDialog").removeClass("hide")
         },
