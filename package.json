@@ -19,7 +19,11 @@
     "vue": "^2.5.2",
     "vue-awesome-swiper": "^3.0.6",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "wilddog": "^2.5.17",
+    "wilddog-video-base": "^2.1.7",
+    "wilddog-video-room": "^2.2.8",
+    "wildvue": "^1.1.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -1,6 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import Wilddog from 'wilddog'
+import WildVue from 'wildvue'
+
+// 在模块化环境中需要使用 user 安装
+Vue.use(Wilddog)
+Vue.use(WildVue)
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'

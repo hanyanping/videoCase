@@ -12,12 +12,17 @@
     padding-right:10px;
   }
   .header{
-    display: flex;
     background: #fff;
     width:100%;
-    padding:2px 10%;
+
+  }
+  .headBox{
+    background: #fff;
+    padding: 0 14%;
     margin: 0 auto;
-    /*height: 80px;*/
+    overflow: hidden;
+    height: 80px;
+    display: flex;
     justify-content: space-between;
   }
   .header img{
@@ -29,6 +34,7 @@
     color: #555;
     display: flex;
     margin-top: 20px;
+    margin-right: 75px;
   }
   .signOut{
     color: #2EAB3B;
@@ -228,31 +234,34 @@
   <div>
 
     <div class="header" style="font-size: 85%;">
-      <div style="display: flex;">
+      <div class="headBox">
+        <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
           <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
-         <div class="menu" v-if="headerActiveOne == 'true'">
-           <el-tabs v-model="activeName" @tab-click="handleClick" >
+          <div class="menu" v-if="headerActiveOne == 'true'">
+            <el-tabs v-model="activeName" @tab-click="handleClick" >
               <el-tab-pane  label="案件管理" name="first">
               </el-tab-pane>
 
-           </el-tabs>
+            </el-tabs>
+          </div>
+          <div class="menu" v-else @click="goInsitituList">
+            <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
+              <el-tab-pane  label="机构管理" name="third">
+              </el-tab-pane>
+              <!--<el-tab-pane  label="查勘员管理" name="four">-->
+              <!--</el-tab-pane>-->
+            </el-tabs>
+          </div>
         </div>
-        <div class="menu" v-else @click="goInsitituList">
-          <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
-            <el-tab-pane  label="机构管理" name="third">
-            </el-tab-pane>
-            <!--<el-tab-pane  label="查勘员管理" name="four">-->
-            <!--</el-tab-pane>-->
-          </el-tabs>
-        </div>
-      </div>
-      <div class="headerLeft">
+        <div class="headerLeft">
           <span class="userName">{{chinaName}}</span>
           <span class="userInsitu">({{userName}})</span>
           <span class="signOut" @click="clickSignOut">退出</span>
-          <span class="creatCase" v-if="headerActiveOne == 'true'" @click="checkState">繁忙</span>
+
+        </div>
       </div>
+
     </div>
     <case-manage v-if="caseActive"></case-manage>
     <seat-manage v-if="seatActive"></seat-manage>
