@@ -12,14 +12,14 @@ module.exports = {
     proxyTable: {
       '/boot-pub-survey-manage': {
         // target: 'http://192.168.1.69:18081',      // 志猛个人服务器
-        // target: 'http://192.168.1.113:9099',      // 和鹏个人服务器
+        target: 'http://192.168.1.154',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
         // target: 'https://chakan.zhongchebaolian.com', // 生产
-        target: 'https://survey.zhongchebaolian.com', // 测试
+        // target: 'https://survey.zhongchebaolian.com', // 测试
         changeOrigin: true,
 
         pathRewrite: {
-          '^/boot-pub-survey-manage': '/boot-pub-survey-manage'
+          '^/boot-pub-survey-video/': '/boot-pub-survey-video/'
         }
       },
       '/insure_survey_web': {
