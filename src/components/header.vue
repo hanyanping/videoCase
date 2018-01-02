@@ -238,18 +238,11 @@
         <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
           <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
-          <div class="menu" v-if="headerActiveOne == 'true'">
+          <div class="menu" >
             <el-tabs v-model="activeName" @tab-click="handleClick" >
               <el-tab-pane  label="案件管理" name="first">
               </el-tab-pane>
-
-            </el-tabs>
-          </div>
-          <div class="menu" v-else @click="goInsitituList">
-            <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
-              <el-tab-pane  label="机构管理" name="third">
-              </el-tab-pane>
-              <!--<el-tab-pane  label="查勘员管理" name="four">-->
+              <!--<el-tab-pane  label="历史案件" name="second">-->
               <!--</el-tab-pane>-->
             </el-tabs>
           </div>
@@ -258,15 +251,11 @@
           <span class="userName">{{chinaName}}</span>
           <span class="userInsitu">({{userName}})</span>
           <span class="signOut" @click="clickSignOut">退出</span>
-
         </div>
       </div>
-
     </div>
     <case-manage v-if="caseActive"></case-manage>
     <seat-manage v-if="seatActive"></seat-manage>
-    <institution-manage v-if="insitituteActive"></institution-manage>
-    <survey-manage v-if="surveyActive"></survey-manage>
   </div>
 
 </template>
@@ -284,7 +273,6 @@
       return{
         chinaName: '',
         userName: '',
-        headerActiveOne: false,
         orgCode: "",
         surveyType: "1",
         mark: "1",
@@ -302,7 +290,6 @@
         cityName: "",
         adressValue: "",
         accidentaddress: "",
-        ajaxUrl: "/boot-pub-survey-manage",
         radio: '',
         getCity: "京",
         activeName: 'first',
@@ -311,66 +298,49 @@
         seatActive: false,
         insitituteActive: true,
         surveyActive: false,
-        cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
+        userId: ""
       }
     },
     mounted() {
     },
     created(){
-      this.chinaName = localStorage.getItem('chinaName')
-      this.userName = localStorage.getItem('userName')
-      this.headerActiveOne = localStorage.getItem('setHeaderActive');
-      if(this.headerActiveOne == 'true'){
-        this.insitituteActive = false;
-        this.surveyActive = false;
-        this.caseActive = true;
-        this.seatActive = false;
-      }else{
-        this.insitituteActive = true;
-        this.surveyActive = false;
-        this.caseActive = false;
-        this.seatActive = false;
-      }
+      this.orgCode = localStorage.getItem('orgCode');
+      this.chinaName = localStorage.getItem('chinaName');
+      this.userName = localStorage.getItem('userName');
+      this.userId = localStorage.getItem('userId');
+      this.caseActive = true;
+      this.seatActive = false;
     },
     watch:{
       "activeName" (){
         if(this.activeName == "first"){
           this.caseActive = true;
           this.seatActive = false;
-          this.insitituteActive = false;
-          this.surveyActive = false;
+
         }else if(this.activeName == "second"){
           this.caseActive = false;
           this.seatActive = true;
-          this.insitituteActive = false;
-          this.surveyActive = false;
         }
       },
       "activeNameTwo"(){
         if(this.activeNameTwo == 'third'){
           this.caseActive = false;
           this.seatActive = false;
-          this.insitituteActive = true;
-          this.surveyActive = false;
+
         }else  if(this.activeNameTwo == 'four'){
           this.caseActive = false;
           this.seatActive = false;
-          this.insitituteActive = false;
-          this.surveyActive = true;
         }
       }
   },
     methods: {
-      upcase(){
-        this.licensenoTwo = this.licensenoTwo.toUpperCase();
-        console.log(this.licensenoTwo)
-      },
-      goInsitituList() {
-        this.$store.commit('setInsititutEditorActive', false);
-      },
       //退出
       clickSignOut() {
-        axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout")
+        var data = {
+          "userId": this.userId,
+          "orgCode": this.orgCode
+        }
+        axios.post(this.ajaxUrl+"/sync/session/v1/close",data)
           .then(response => {
               if(response.data.rescode == 200){
                 this.$store.commit('setCaseDetailActive', false);
@@ -381,7 +351,6 @@
                 this.$store.commit('getcaseListActive', false);
                 this.$store.commit('getclickEditorActive', false);
                 this.$store.commit('getinsitituPageno', 1);
-
                 localStorage.removeItem('insititutEditorData');//机构编辑
                 localStorage.removeItem('caseDetailData');//详情信息
                 localStorage.removeItem("setHeaderActive");

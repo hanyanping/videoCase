@@ -165,12 +165,12 @@
   export default {
     data() {
       return {
-        ajaxUrl: "/boot-pub-survey-manage",
         imgUrl: '',
         username: "",
         valicode: "",
         userpwd: "",
-        loginActive: false
+        loginActive: false,
+        syncSessionNodePath: ""
       }
     },
     created(){
@@ -243,18 +243,29 @@
             .then(response => {
                 if(response.data.rescode == 200){
                   this.open2();
-                  var setHeaderActive;
-                  localStorage.setItem('chinaName',response.data.data.user.chinaName)
-                  localStorage.setItem('userName',response.data.data.user.userName)
-                  localStorage.setItem('orgcode',response.data.data.user.orgcode)
-                  if(response.data.data.userfunctions.length == 1){
-                    setHeaderActive = false
-                    localStorage.setItem('setHeaderActive',setHeaderActive)
-                  }else{
-                    setHeaderActive = true
-                    localStorage.setItem('setHeaderActive',setHeaderActive)
-                  }
+                  localStorage.setItem('orgCode',response.data.data.organizationCode);
+                  localStorage.setItem('chinaName',response.data.data.organizationName)
+                  localStorage.setItem('userName',response.data.data.username)
+                  localStorage.setItem('userId',response.data.data.userId)
                   this.$router.push({path:'/surveyContant'})
+                  var data = {
+                    'orgCode':response.data.data.organizationCode,
+                    "userId":response.data.data.userId
+                  }
+
+//                  axios.post(this.ajaxUrl+"/sync/session/v1/open",data)
+//                    .then(response => {
+//                      if(response.data.rescode == 200){
+//                        this.syncSessionNodePath = response.data.data.syncSessionNodePath;
+//                        localStorage.setItem('syncSessionNodePath',this.syncSessionNodePath)
+//                      }
+//                    }, err => {
+//                      console.log(err);
+//                    })
+//                    .catch((error) => {
+//                      console.log(error)
+//                    })
+
                 }else {
                   this.open4(response.data.resdes);
                   this.getCode()

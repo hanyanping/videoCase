@@ -17,26 +17,47 @@ import '@/style/reset.css'
 import 'viewerjs/dist/viewer.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 require('swiper/dist/css/swiper.css')
-Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
+Vue.prototype.ajaxUrl = "/boot-pub-survey-video"
 // Vue.prototype.downloatUrl = "https://chakan.zhongchebaolian.com"//生产
 Vue.prototype.downloatUrl = "https://survey.zhongchebaolian.com"//测试
-
 
 // http请求拦截器
 var loadinginstace = ''
 axios.interceptors.request.use(config => {
   // element ui Loading方法
-if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
-  loadinginstace = "";
-}else if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
-  loadinginstace = "";
-}else if(config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
-  loadinginstace = "";
-}else if(config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
-  loadinginstace = "";
-}else{
-  loadinginstace = ElementUI.Loading.service({ fullscreen: true })
-}
+// if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
+//   loadinginstace = "";
+// }else if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
+//   loadinginstace = "";
+// }else if(config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
+//   loadinginstace = "";
+// }else if(config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
+//   loadinginstace = "";
+// }else{
+//   loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+// }
+  console.log(config.url)
+  if(config.url == '/boot-pub-survey-video/web/surveyor/v1/manual/status'){
+    loadinginstace = ""
+ }else if(config.url =="/boot-pub-survey-video/survey/order/v1/wait/order/list"){
+    loadinginstace = ""
+  }else if(config.url =="/boot-pub-survey-video/sync/session/v1/close"){
+    loadinginstace = ""
+  }else if(config.url =="/boot-pub-survey-video/sync/session/v1/open"){
+  loadinginstace = ""
+}else if(config.url == '/boot-pub-survey-video/survey/order/v1/wait/order/list'){
+    loadinginstace = ""
+  }else if(config.url == '/boot-pub-survey-video/survey/video/v1/connect/success'){
+    loadinginstace = ""
+  }else if(config.url == '/boot-pub-survey-video/survey/video/v1/accept/connect'){
+    loadinginstace = ""
+  }else if(config.url == '/boot-pub-survey-video/survey/vehicle/v1/vehicle/list'){
+    loadinginstace = ""
+  }else{
+    loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+  }
+
+
   return config
 }, error => {
   // loadinginstace.close()

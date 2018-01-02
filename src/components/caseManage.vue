@@ -173,18 +173,21 @@
     height: 100vh;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 1020;
   }
   .takePhonetypeBox{
-    z-index: 101;
+    z-index: 1031;
   }
   .scalImgBox .bigImgContent,.takePhoneImgBox .takebigImgContent {
     width: 600px;
     margin: 6vh auto;
     background: #fff;
     padding: 20px;
-    height: 820px;
+    height: 680px;
     position: relative;
+  }
+  .takePhoneImgBox .takebigImgContent{
+    height: 460px;
   }
   .takePhonetypeBox .typeContent{
     width: 660px;
@@ -267,9 +270,11 @@
     margin-right:20px;
     line-height: 35px;
     text-align: center;
+    cursor: pointer;
   }
   .deletImg, .takedeletImg{
     background: #e75b5f;
+    cursor: pointer;
   }
   #doing .item-txt-list {
     border-bottom: 1px dashed #dcdcdc;
@@ -623,13 +628,146 @@
     padding: 9px 16px;
     cursor: pointer;
   }
+  .videoBox{
+    /*position: relative;*/
+  }
+  .video-player .player-control {
+    width: 100%;
+    overflow: hidden;
+    height: 40px;
+    padding: 10px 0;
+    background: #000;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1010;
+  }
+  .video-player .player-control-box {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+  }
+  .video-player .player-control-box .player-recording, .video-player .player-control-box .player-recording.disabled {
+    cursor: pointer;
+    margin-left: 20px;
+    width: 18px;
+    height: 26px;
+  }
+  .video-player .player-control-box .player-sound {
+    cursor: pointer;
+    width: 120px;
+    margin-left: 40px;
+  }
+  .video-player .player-control-box .player-sound-box {
+    overflow: hidden;
+    width: 120px;
+    position: relative;
+    top: 3px;
+    display: flex;
+  }
+  .video-player .player-control-box .player-sound-box .player-sound-min {
+    width: 15px;
+    height: 22px;
+  }
+  .video-player .player-control-box .player-sound-box .player-sound-ctrl {
+    width: 73px;
+    height: 22px;
+    margin: 0 5px;
+    position: relative;
+  }
+  .noUi-target {
+    direction: ltr;
+    position: relative;
+    top: 10px;
+    background: #FAFAFA;
+    border-radius: 4px;
+    border: 1px solid #D3D3D3;
+    box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB;
+  }
+  .noUi-base {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+  }
+  .noUi-connect {
+    background: #fff;
+  }
+  .noUi-origin {
+    position: absolute;
+    height: 0;
+    width: 0;
+  }
+  .noUi-horizontal .noUi-handle {
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 100%;
+    left: -5px;
+    top: -5px;
+  }
+  .video-player .player-control-box .player-sound-box .player-sound-max {
+    width: 22px;
+    height: 22px;
+  }
+  .noUi-handle {
+    position: relative;
+    z-index: 1;
+    border: 1px solid #D9D9D9;
+    border-radius: 3px;
+    background: #FFF;
+    cursor: default;
+  }
+  .noUi-connect {
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+  .noUi-horizontal {
+    height: 2px;
+    width:70px;
+  }
+  .video-player .player-control-box .player-auto-flash {
+    cursor: pointer;
+    width: 19px;
+    height: 25px;
+    margin-left: 140px;
+  }
+  .video-player .player-control-box .player-photo {
+    cursor: pointer;
+    width: 26px;
+    height: 40px;
+    margin-left: 40px;
+  }
+  .saveTakeImg{
+    padding: 10px 30px;
+    color: #fff;
+    margin-top: 30px;
+    cursor: pointer;
+  }
+  .suibian li .circle {
+    position: absolute;
+    right: -12px;
+    top: -12px;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    background: #fff;
+    border-radius: 100%;
+    border: 1px solid #35aa42;
+    color: #35aa42;
+  }
 </style>
 <template>
 
   <div class="caseManage">
-    <span class="creatCase backColorGreen" v-if="headerActiveOne" @click="checkState">繁忙</span>
-    <span class="creatCase backColorGreen" v-if="!headerActiveOne" @click="checkState">空闲</span>
-    <div @click="openTakePhone">打开拍照</div>
+    <span class="creatCase backColorGreen" v-if="manualStatus == 2" @click="checkState">繁忙</span>
+    <span class="creatCase backColorGreen" v-if="manualStatus == 0" @click="checkState">空闲</span>
     <div class="openOrdercompleteDialog hide">
       <div class="openOrdercompleteDialogBox">
         <span @click="closeopenOrderEndxDialog" class="closeCityDiolag">×</span>
@@ -654,12 +792,12 @@
         <span @click="closeOrderDiolag" class="closeCityDiolag">×</span>
         <div class="selectBox">
           <div class="selectType">
-            <select placeholder="请选择订单类型">
-              <option>正常办结</option>
-              <option>异常办结</option>
+            <select placeholder="请选择订单类型" v-model="isExceptionComplete">
+              <option value="1">正常办结</option>
+              <option value="0">异常办结</option>
             </select>
           </div>
-          <textarea class="textareaBox" placeholder="请输入异常办理描述"></textarea>
+          <textarea data-m class="textareaBox" v-model="exceptionComment" placeholder="请输入异常办理描述"></textarea>
           <div class="openOrderEndBox">
             <span class="backColorGreen surebutton" @click="openOrderEndBox">确定</span>
           </div>
@@ -696,9 +834,9 @@
         <h4>{{imgType}}</h4>
         <span @click="closetakeCaleImg" class="right closeCaleImgBox">×</span>
         <div class="imgSize">
-          <img :src="takephotoUrl" />
+          <img :src="originalPhotoUrl" />
           <div style="display: flex;justify-content: center;margin-top:20px;">
-            <div class="takedeletImg">删除</div>
+            <div class="takedeletImg" @click="deletTakeImg">删除</div>
             <div class="takesaveImg backColorGreen" @click="openType">保存</div>
           </div>
         </div>
@@ -710,29 +848,44 @@
         <span @click="closetypebox" class="right closetypeBox">×</span>
         <div class="typeCar">
           <div class="m-selectImgType-tit">
-            <ul style="display: flex;justify-content: center;">
-              <li data-id="c0" data-licenseno="京111115" class="" @click="selectCar($event)">
-                <a href="#" title="#">车牌号：京67115</a>
-                <div class="tag hide"></div>
+            <ul style="display: flex;">
+              <li v-if="aimActive"  class="showTag" @click="selectCar($event,saveonevehicleLicenseNo)">
+                <a href="#" title="#">车牌号：{{saveonevehicleLicenseNo}}</a>
+                <div v-if="aimActive" class="tag"></div>
               </li>
-              <li data-id="c0" data-licenseno="京111115" class="" @click="selectCar($event)" >
-                <a href="#" title="#">车牌号：京88115</a>
-                <div class="tag hide"></div>
+              <li  class="" v-if="!aimActive" @click="selectCar($event,saveonevehicleLicenseNo)">
+                <a href="#" title="#">车牌号：{{saveonevehicleLicenseNo}}</a>
+                <div v-if="aimActive" class="tag"></div>
               </li>
-              <li data-id="c0" data-licenseno="京111115" class="" @click="selectCar($event)">
-                <a href="#" title="#">车牌号：京133115</a>
-                <div class="tag hide"></div>
+              <li  v-if="savetwovehicleLicenseNo != '' && !thirdOneActive" class="" @click="selectCar($event,savetwovehicleLicenseNo)" >
+                <a href="#" title="#">车牌号：{{savetwovehicleLicenseNo}}</a>
+                <div v-if="thirdOneActive" class="tag"></div>
+              </li>
+              <li  v-if="savetwovehicleLicenseNo != '' && thirdOneActive" class="showTag" @click="selectCar($event,savetwovehicleLicenseNo)" >
+                <a href="#" title="#">车牌号：{{savetwovehicleLicenseNo}}</a>
+                <div v-if="thirdOneActive" class="tag"></div>
+              </li>
+              <li v-if="savethreevehicleLicenseNo != '' && thirdTwoActive " data-id="c0"  class="showTag" @click="selectCar($event,savethreevehicleLicenseNo)">
+                <a href="#" title="#">车牌号：{{savethreevehicleLicenseNo}}</a>
+                <div v-if="thirdTwoActive" class="tag"></div>
+              </li>
+              <li v-if="savethreevehicleLicenseNo != '' && !thirdTwoActive " data-id="c0"  class="" @click="selectCar($event,savethreevehicleLicenseNo)">
+                <a href="#" title="#">车牌号：{{savethreevehicleLicenseNo}}</a>
+                <div v-if="thirdTwoActive" class="tag"></div>
               </li>
             </ul>
           </div>
           <div class="m-selectImgType-cont" id="selectImgTypeCont">
               <dl class="clear">
-                <dd data-code="item.code" class="ddClass" @click="selectType($event)" v-for="(item,index) in carTypecarType">
-                  <a href="#" title="#">{{item.type}}</a>
+                <dd data-code="item.code" class="ddClass" @click="selectType($event,item.photoType)" v-for="(item,index) in oneTypeSurveyPhotos">
+                  <a href="#" title="#" data-type="item.photoType">{{item.photoTypeComment}}</a>
                   <div class="tag hide"></div>
                 </dd>
               </dl>
-            </div>
+          </div>
+          <div style="text-align: center;margin-top:30px;">
+            <span class="saveTakeImg backColorGreen" @click="sureTakeImg">确定</span>
+          </div>
         </div>
       </div>
     </div>
@@ -740,7 +893,8 @@
       <div class="bigImgContent">
         <h4>{{imgType}}</h4>
         <span @click="closeScaleImg" class="right closeCaleImgBox">×</span>
-        <div class="prebutton" @click="preScaleImg">
+        <p style="margin: 20px;color: #666;" v-if="surveyPhotos.length>1">images {{scalImgCurrentIndex}} of {{scalImgLength}}</p>
+        <div class="prebutton" @click="preScaleImg" v-if="surveyPhotos.length>1">
           <img src="../images/icon_ctrl_1.png"/>
         </div>
         <div class="imgSize">
@@ -750,7 +904,7 @@
             </li>
           </ul>
         </div>
-        <div class="nextbutton" @click="nextScaleImg">
+        <div class="nextbutton" @click="nextScaleImg" v-if="surveyPhotos.length>1">
           <img src="../images/icon_ctrl_0.png"/>
         </div>
       </div>
@@ -765,31 +919,39 @@
         </div>
         <div id="doing" class="cont" >
           <div class="item-txt-list" v-if="doingActive">
-            <p>车牌号：<span id="bdno">京111115</span> </p>
-            <p>报案人姓名：桂花</p>
-            <p>报案人电话：<span id="bdtel">13500000000<span></span></span></p>
-            <p>保险公司：中国平安财产保险股份有限公司</p>
-            <div class="address">报案地点：双井</div>
+            <p>车牌号：<span id="bdno">{{leftData.reportVehicleLicenseNo}}</span> </p>
+            <p>报案人姓名：{{leftData.reporterName}}</p>
+            <p>报案人电话：<span id="bdtel">{{leftData.reporterPhone}}<span></span></span></p>
+            <p>保险公司：{{leftData.insuranceCompanyName}}</p>
+            <p class="address">报案地点：{{leftData.reportLocation}}</p>
 
             <div class="item-txt-list">
-              <p>查勘员姓名：徐秀芬 </p>
-              <p>查勘员电话：18810331580</p>
-              <p>查勘员状态：已到达现场</p>
+              <p>查勘员姓名：{{leftData.liveSurveyorName}} </p>
+              <p>查勘员电话：{{leftData.liveSurveyorPhone }}</p>
+              <p v-if="leftData.liveSurveyorStatus == '11'">查勘员状态：待指派</p>
+              <p v-if="leftData.liveSurveyorStatus == '12'">查勘员状态：已指派</p>
+              <p v-if="leftData.liveSurveyorStatus == '13'">查勘员状态：已到达</p>
+              <p v-if="leftData.liveSurveyorStatus == '14'">查勘员状态：查勘中</p>
+              <p v-if="leftData.liveSurveyorStatus == '15'">查勘员状态：已查勘</p>
             </div>
             <div class="item-btn-box">
-              <p>订单状态：<span id="showStatus">待连线</span></p>
+              <p>订单状态：<span  v-if="leftData.orderStatus == '06'">待连线</span>
+                <span  v-if="leftData.orderStatus == '07'">查勘中</span>
+                <span  v-if="leftData.orderStatus == '08'">待审核</span>
+                <span  v-if="leftData.orderStatus == '11'">已取消</span>
+              </p>
               <div class="item-btn-mod">
                 <a href="javascript:;" v-if="!OnlineActive && !processOnlineActive && !toOnlineActive"  @click="join"  class="link-btn mr10 disabled" id="online">连线</a>
                 <a href="javascript:;" class="link-btn mr10 disabled " v-if="!OnlineActive && !processOnlineActive && toOnlineActive" id="onlineLoding" >连线中</a>
-                <a href="javascript:;" class="link-btn mr10" v-if="!OnlineActive && processOnlineActive && !toOnlineActive" @click="join" id="onLinking" >连线 <span id="countTime" data-max="30">30</span>s</a>
+                <a href="javascript:;" class="link-btn mr10" v-if="!OnlineActive && processOnlineActive && !toOnlineActive" @click="join" id="onLinking" >连线 <span id="countTime" data-max="30">{{conttime}}</span>s</a>
                 <a href="javascript:;" class="link-btn mr10 warn" @click="disconnect" v-if="OnlineActive && !processOnlineActive && !toOnlineActive" id="onOff" >挂断</a>
-                <a href="javascript:;" class="link-btn" v-if="twoButton" id="hangUp">挂起订单</a>
+                <a href="javascript:;" class="link-btn" v-if="twoButton" id="hangUp" @click="hangUp(roomId)">挂起订单</a>
                 <a href="javascript:;" class="link-btn" v-if="!twoButton" id="nohangUp">挂起订单</a>
               </div>
             </div>
             <div class="item-btn-max">
-              <a href="javascript:;" class="link-btn-max" v-if="twoButton" id="finishOrder" @click="openOrderSelect">查勘完成</a>
-              <a href="javascript:;"  v-if="!twoButton" id="nofinishOrder">查勘完成</a>
+              <a href="javascript:;" class="link-btn-max" v-if="twoButton && surveyActive" id="finishOrder" @click="openOrderSelect">查勘完成</a>
+              <a href="javascript:;"  v-else id="nofinishOrder">查勘完成</a>
             </div>
           </div>
           <div class="m-noContent-mod" v-else>
@@ -803,9 +965,56 @@
       <div class="caseCenter">
         <div class="video-player">
           <div id="video" class="video" style="width: 746px;height: 488px;">
-            <video v-if="steamActive" id="local" width=746px height=488px style="border:1px solid;margin-right:20px;" muted="" autoplay="" controls></video>
-            <video v-if="steamActive" id="remote" width=746px height=488px style="border:1px solid;margin-right:20px;" autoplay="" hidden controls></video>
-            <img v-if="!steamActive" id="video-background" src="../images/video-default.png"/>
+            <!--<video v-if="steamActive" id="local" width=746px height=488px style="border:1px solid;margin-right:20px;" muted="" autoplay="" controls></video>-->
+            <div v-if="steamActive" class="videoBox" @mouseenter="enterVedeo" @mouseleave="leaveVideo">
+              <video  id="remote" width=746px height=488px style="border:1px solid;margin-right:20px;" autoplay=""></video>
+              <div id="bar_46122248740144030" style="width: 748px; height: 100%; position: relative; bottom: 0; right: 0;">
+                <div class="player-control">
+                  <div class="player-control-box">
+                    <div id="playerRecording" class="player-recording" style="display:none">
+                      <img src="../images/video_ico_10.png">
+                    </div>
+                    <div id="closeRecording" class="player-recording">
+                    <img src="../images/video_ico_0.png">
+                    </div>
+                    <div class="player-sound">
+                      <div class="player-sound-box">
+                        <div class="player-sound-min">
+                           <img src="../images/video_ico_5.png">
+                        </div>
+                        <div class="player-sound-ctrl">
+                          <div class="noUiSlider noUi-target noUi-ltr noUi-horizontal" id="noUiSlider">
+                            <div class="noUi-base">
+                              <div class="noUi-connect" style="left: 0%; right: 0%;">
+                              </div>
+                              <div class="noUi-origin" style="left: 100%;">
+                                <div id="voice" class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="100.0" aria-valuetext="100.00" style="z-index: 4;">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="player-sound-max">
+                        <img src="../images/video_ico_4.png">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="player-auto-flash" id="closeflashButton" style="display:none">
+                    <img src="../images/video_ico_11.png">
+                    </div>
+                    <div class="player-auto-flash" id="flashButton" @click="openLight">
+                      <img src="../images/video_ico_1.png">
+                    </div>
+                    <div class="player-photo" id="photoButton" @click="takePic">
+                      <img src="../images/video_ico_2.png">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="videoBox">
+              <img id="video-background" src="../images/video-default.png"/>
+            </div>
           </div>
         </div>
       </div>
@@ -815,21 +1024,9 @@
         </div>
         <div id="wait" class="cont">
           <div class="wait-law-case-mod" id="waitLawCase" v-if="waitActive" >
-            <div @dblclick ="goleftLine" title="双击进行处理" class="wait-law-case" v-for="item in noDealCase">
+            <div @dblclick ="goleftLine(item.surveyNo,item)" title="双击进行处理" class="wait-law-case" v-for="item in noDealCase">
               <ul>
-                <li>车牌号：{{item.vehicleLicenseNo}}</li>
-                <li>报案人电话：{{item.reporterPhone}}</li>
-                <li>查勘员姓名：{{item.liveSurveyorName}}</li>
-                <li>查勘员电话：{{item.liveSurveyorPhone}}</li>
-                <li v-if = "item.orderStatus == '06'">订单状态：待查勘</li>
-                <li v-if = "item.orderStatus == '07'">订单状态：查勘中</li>
-                <li v-if = "item.orderStatus == '08'">订单状态：已查勘</li>
-                <li v-if = "item.orderStatus == '11'">订单状态：已取消</li>
-              </ul>
-            </div>
-            <div @dblclick ="goleftLine" title="双击进行处理" class="wait-law-case" v-for="item in noDealCase">
-              <ul>
-                <li>车牌号：{{item.vehicleLicenseNo}}</li>
+                <li>车牌号：{{item.reportVehicleLicenseNo}}</li>
                 <li>报案人电话：{{item.reporterPhone}}</li>
                 <li>查勘员姓名：{{item.liveSurveyorName}}</li>
                 <li>查勘员电话：{{item.liveSurveyorPhone}}</li>
@@ -854,38 +1051,41 @@
         <div class="gcr-mod m-carNo-imgInfo">
           <div class="gcr-tit" id="carInfo">
             <h4>照片信息</h4>
-            <dl class="m-carNo-list" id="selectImgType" @click="selectCarAim('0',$event)">
-              <dd id="c0" class="data-car-m" data-licenseno="京111115">
-                <span v-if="oneCarActive" style="color: #35aa42;">标的车：{{saveonevehicleLicenseNo}}</span>
-                <span v-else>标的车：{{saveonevehicleLicenseNo}}</span>
-                <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-if="oneCarActive" class="u-edit-icon"></i>
-                <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-else class="u-edit-iconGreay hide"></i>
-              </dd>
-            </dl>
-            <dl v-if="ImgInfo.length>1" class="m-carNo-list" id="selectImgTypeTwo" @click="selectCarAim('1',$event)">
-              <dd id="c1" class="data-car-m" data-licenseno="京111115">
-                <span v-if="TwoCarActive" style="color: #35aa42;">标的车：{{savetwovehicleLicenseNo}}</span>
-                <span v-else>标的车：{{savetwovehicleLicenseNo}}</span>
-                <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-if="TwoCarActive" class="u-edit-icon"></i>
-                <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
-              </dd>
-            </dl>
-            <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event)">
-              <dd id="c2" class="data-car-m" data-licenseno="京111115">
-                <span v-if="threeCarActive" style="color: #35aa42;">标的车：{{savethreevehicleLicenseNo}}</span>
-                <span v-else>标的车：{{savethreevehicleLicenseNo}}</span>
-                <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-if="threeCarActive" class="u-edit-icon"></i>
-                <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
-              </dd>
-            </dl>
-            <div class="m-carNo-add" id="addCarNo" @click="openAddCar"></div>
+            <div v-if="carPhoneActive" style="display:flex;">
+              <dl class="m-carNo-list" id="selectImgType" @click="selectCarAim('0',$event,saveonevehicleLicenseNo)">
+                <dd id="c0" class="data-car-m" >
+                  <span v-if="oneCarActive" style="color: #35aa42;">标的车：{{saveonevehicleLicenseNo}}</span>
+                  <span v-else>标的车：{{saveonevehicleLicenseNo}}</span>
+                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-if="oneCarActive" class="u-edit-icon"></i>
+                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-else class="u-edit-iconGreay hide"></i>
+                </dd>
+              </dl>
+              <dl v-if="ImgInfo.length>1" class="m-carNo-list" id="selectImgTypeTwo" @click="selectCarAim('1',$event,savetwovehicleLicenseNo)">
+                <dd id="c1" class="data-car-m">
+                  <span v-if="TwoCarActive" style="color: #35aa42;">三者车：{{savetwovehicleLicenseNo}}</span>
+                  <span v-else>三者车：{{savetwovehicleLicenseNo}}</span>
+                  <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-if="TwoCarActive" class="u-edit-icon"></i>
+                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
+                </dd>
+              </dl>
+              <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event,savethreevehicleLicenseNo)">
+                <dd id="c2" class="data-car-m">
+                  <span v-if="threeCarActive" style="color: #35aa42;">三者车：{{savethreevehicleLicenseNo}}</span>
+                  <span v-else>三者车：{{savethreevehicleLicenseNo}}</span>
+                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-if="threeCarActive" class="u-edit-icon"></i>
+                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
+                </dd>
+              </dl>
+              <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar"></div>
+            </div>
+
           </div>
           <div class="gcr-cont" style="padding-top: 0">
-            <div class="m-carNo-imgList" id="picListZone">
+            <div class="m-carNo-imgList" id="picListZone" v-if="carPhoneActive">
               <div class="prev" @click="preImginfo"></div>
               <div class="ulBox">
                 <ul v-if="oneCarActive" class="suibian">
-                  <li @click="seletedCarType($event,item.photoType)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in oneTypeSurveyPhotos">
+                  <li @click="seletedCarType($event,saveonevehicleLicenseNo,item.photoType)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in oneTypeSurveyPhotos">
                     <div class="hoverBox hide">
                       <div v-if="item.hasUrl == 'true'" @click.stop="scaleImg(item.surveyPhotos,$event,item.photoType,item.photoTypeComment)" class="openscalImgBox backColorGreen">查看</div>
                     </div>
@@ -896,11 +1096,12 @@
                         <a href="javascript:;">{{item.photoTypeComment}}</a>
                        </span>
                       <div class="tag hide"></div>
+                      <div class="circle" v-if="item.photoCount > 1">{{item.photoCount}}</div>
                     </div>
                   </li>
                 </ul>
                 <ul v-if="TwoCarActive" class="suibian">
-                  <li @click="seletedCarType($event)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in twoTypeSurveyPhotos">
+                  <li @click="seletedCarType($event,savetwovehicleLicenseNo,item.photoType)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in twoTypeSurveyPhotos">
                     <div class="hoverBox hide">
                       <div v-if="item.hasUrl == 'true'" @click.stop="scaleImg(item.surveyPhotos,$event,item.photoType,item.photoTypeComment)" class="openscalImgBox backColorGreen">查看</div>
                     </div>
@@ -911,12 +1112,13 @@
                         <a href="javascript:;">{{item.photoTypeComment}}</a>
                        </span>
                       <div class="tag hide"></div>
+                      <div class="circle" v-if="photoCountActive">{{item.photoCount}}</div>
                     </div>
 
                   </li>
                 </ul>
                 <ul v-if="threeCarActive" class="suibian">
-                  <li @click="seletedCarType($event)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in threeTypeSurveyPhotos">
+                  <li @click="seletedCarType($event,savethreevehicleLicenseNo,item.photoType)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in threeTypeSurveyPhotos">
                     <div class="hoverBox hide">
                       <div v-if="item.hasUrl == 'true'" @click.stop="scaleImg(item.surveyPhotos,$event,item.photoType,item.photoTypeComment)" class="openscalImgBox backColorGreen">查看</div>
                     </div>
@@ -927,8 +1129,8 @@
                         <a href="javascript:;">{{item.photoTypeComment}}</a>
                        </span>
                       <div class="tag hide"></div>
+                      <div class="circle" v-if="photoCountActive">{{item.photoCount}}</div>
                     </div>
-
                   </li>
                 </ul>
               </div>
@@ -941,6 +1143,7 @@
   </div>
 </template>
 <script>
+
   import caseList from '@/components/caseList'
   import caseMonitor from '@/components/caseMonitor'
   import Viewer from 'viewerjs';
@@ -949,20 +1152,32 @@
   var wilddogVideo = require('wilddog-video-base').wilddogVideo;
   var roomFactory = require('wilddog-video-room');
   wilddogVideo.regService('room', roomFactory);
-  var appVideoId = 'wd9409112059rndtfh';
+  var appVideoId = 'wd6476157034byycgg';
   // 初始化 WilddogVideoRoom 之前，要先经过身份认证。这里采用匿名登录的方式。
   var config = {
     authDomain: appVideoId + ".wilddog.com",
-    syncURL: "https://wd4799801019rsiebf.wilddogio.com/"
+    syncURL: "https://wd7055430119ruyynm.wilddogio.com/"
   };
   // 初始化Wilddog auth
   wilddog.initializeApp(config);
+
   export default {
+    ready() {
+      console.log('444');
+    },
     data() {
       return{
+        exceptionCode: "",
+        exceptionComment: "",
+        isExceptionComplete: "1",
+        photoCountActive: false,
+        aimActive: false,
+        thirdOneActive: false,
+        thirdTwoActive: false,
+        carThreeActive: true,
+        carPhoneActive: false,
         steamActive: false,
         manualStatus: 2,
-        headerActiveOne: true,
         noDealCase:[],
         vehicleLicenseNo: "",
         savephotoType: "",
@@ -978,6 +1193,7 @@
         surveyPhotos:[],//同种类型图片
         imglength: 15,//缩略图片个数,
         scalImgLength:"",//同种图片个数
+        scalImgCurrentIndex: "1",
         oneTypeSurveyPhotos: [
           {
             'hasUrl': 'false',
@@ -1503,6 +1719,531 @@
             ]
           }
         ],
+        tooneTypeSurveyPhotos: [
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "0",
+            "photoTypeComment": "45度车辆前景照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "1",
+            "photoTypeComment": "当事人和车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "2",
+            "photoTypeComment": "当事车辆车架号",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "3",
+            "photoTypeComment": "车辆受损细节(1)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "4",
+            "photoTypeComment": "车辆受损细节(2)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "5",
+            "photoTypeComment": " 交强险标志",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "6",
+            "photoTypeComment": "银行卡照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "7",
+            "photoTypeComment": "其它照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "8",
+            "photoTypeComment": "事故认定书",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "9",
+            "photoTypeComment": "行驶本照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "10",
+            "photoTypeComment": "驾驶证照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "11",
+            "photoTypeComment": "当事人签名照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/2.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "12",
+            "photoTypeComment": "身份证正面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "13",
+            "photoTypeComment": "身份证背面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "14",
+            "photoTypeComment": "查勘员与车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/3.png"
+              }
+            ]
+          }
+        ],
+        totwoTypeSurveyPhotos: [
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "0",
+            "photoTypeComment": "45度车辆前景照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "1",
+            "photoTypeComment": "当事人和车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "2",
+            "photoTypeComment": "当事车辆车架号",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "3",
+            "photoTypeComment": "车辆受损细节(1)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "4",
+            "photoTypeComment": "车辆受损细节(2)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "5",
+            "photoTypeComment": " 交强险标志",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "6",
+            "photoTypeComment": "银行卡照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "7",
+            "photoTypeComment": "其它照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "8",
+            "photoTypeComment": "事故认定书",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "9",
+            "photoTypeComment": "行驶本照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "10",
+            "photoTypeComment": "驾驶证照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "11",
+            "photoTypeComment": "当事人签名照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/2.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "12",
+            "photoTypeComment": "身份证正面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "13",
+            "photoTypeComment": "身份证背面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "14",
+            "photoTypeComment": "查勘员与车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/3.png"
+              }
+            ]
+          }
+        ],
+        tothreeTypeSurveyPhotos: [
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "0",
+            "photoTypeComment": "45度车辆前景照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "1",
+            "photoTypeComment": "当事人和车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "2",
+            "photoTypeComment": "当事车辆车架号",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "3",
+            "photoTypeComment": "车辆受损细节(1)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "4",
+            "photoTypeComment": "车辆受损细节(2)",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/1.png"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "5",
+            "photoTypeComment": " 交强险标志",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "6",
+            "photoTypeComment": "银行卡照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "7",
+            "photoTypeComment": "其它照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "8",
+            "photoTypeComment": "事故认定书",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "9",
+            "photoTypeComment": "行驶本照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "10",
+            "photoTypeComment": "驾驶证照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "11",
+            "photoTypeComment": "当事人签名照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/2.png"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "12",
+            "photoTypeComment": "身份证正面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+              }
+            ]
+          },{
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "13",
+            "photoTypeComment": "身份证背面照片",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+              }
+            ]
+          },
+          {
+            'hasUrl': 'false',
+            "photoCount": "",
+            "photoType": "14",
+            "photoTypeComment": "查勘员与车辆合影",
+            "surveyPhotos": [
+              {
+                "photoId": "",
+                "watermarkPhotoUrl": "../static/3.png"
+              }
+            ]
+          }
+        ],
         carTypecarType: [],
         takephotoUrl:'',
         cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
@@ -1511,7 +2252,7 @@
 //        toOnlineActive: false,
 //        processOnlineActive: true,
 //        OnlineActive: false,
-
+//
         //接通过程中
 //        twoButton: false,
 //        toOnlineActive: true,
@@ -1523,16 +2264,16 @@
 //        processOnlineActive: false,
 //        OnlineActive: true,
 //未连接是
+        surveyActive: false,
         twoButton: true,
         toOnlineActive: false,
         processOnlineActive: false,
         OnlineActive: false,
-        waitActive:true,
-        doingActive: true,
+        waitActive: false,
+        doingActive: false,
         jianKongActive: true,
         allCaseActive: false,
-        ImgInfo: [
-        ],
+        ImgInfo: [],
         imgIndex: '',
         imgType: "",
         photoUrl: "",
@@ -1540,289 +2281,145 @@
         left:0,
         scaleImgLeft: 0,
         roomId: "",
-        localStream: "",
         roomInstance: '',
         localEl:"",
         remoteEl:"",
-        videosEl: ""
+        videosEl: "",
+        userId: "",
+        orgCode: "",
+        conttime: '30',
+        leftData:"",
+        node: "",
+        connectNode: "",
+        sessionNode: "",
+        syncSessionNodePath: "",
+        t: '',
+        originalPhotoUrl:"",
+        watermarkPhotoUrl:"",
+        longitude:"",
+        latitude:"",
+        savevehicleLicenseNo: "",
+        photoType: "",
+        errorCode: "",
+        errorMsg: "",
+        remoteStream: "",
+        localStream: "",
+        warning:""
       }
     },
-
     created(){
+      this.userId = localStorage.getItem('userId');
+      this.orgCode = localStorage.getItem('orgCode');
       this.localEl = document.getElementById('local');
-      this.remoteEl = document.getElementById('remote');
       this.videosEl = document.getElementById('video');
+      this.deletNode()
+      this.getNodealCase()
       this.getsyncSessionNodePath()
-      this.noDealCase = [
-        {
-          "surveyNo": "dadashjk4234kjhfs34",
-          "liveSurveyorName": "哆啦A梦",
-          "liveSurveyorPhone": "1234567854",
-          "liveSurveyorStatus": "11",
-          "orderStatus": "08",
-          "reporterPhone": "134421233223",
-          "vehicleLicenseNo": "京3244423",
-          "insuranceCompanyName": "保险公司名称",
-          "reportLocation": "报案地点",
-          "surveyPhotos": [
-            {
-              "allTypeSurveyPhotos": [
-                {
-                  "photoCount": 6,
-                  "photoType": "09",
-                  "photoTypeComment": "45度车辆前景照片",
-                  "surveyPhotos": [
-                    {
-                      "photoId": 23456,
-                      "watermarkPhotoUrl": "https://dadasda/dadasdas.png"
-                    }
-                  ]
-                }
-              ],
-              "vehicleLicenseNo": "京1234424"
-            }
-          ]
-        },
-        {
-          "surveyNo": "dadashjk4234kjhfs34",
-          "liveSurveyorName": "哆啦A梦",
-          "liveSurveyorPhone": "1234567854",
-          "liveSurveyorStatus": "11",
-          "orderStatus": "08",
-          "reporterPhone": "134421233223",
-          "vehicleLicenseNo": "京3244423",
-          "insuranceCompanyName": "保险公司名称",
-          "reportLocation": "报案地点",
-          "surveyPhotos": [
-            {
-              "allTypeSurveyPhotos": [
-                {
-                  "photoCount": 6,
-                  "photoType": "09",
-                  "photoTypeComment": "45度车辆前景照片",
-                  "surveyPhotos": [
-                    {
-                      "photoId": 23456,
-                      "watermarkPhotoUrl": "https://dadasda/dadasdas.png"
-                    }
-                  ]
-                }
-              ],
-              "vehicleLicenseNo": "京1234424"
-            }
-          ]
-        }
-      ];
-      this.ImgInfo= [
-          {
-            "allTypeSurveyPhotos": [
-              {
-                "photoCount": 6,
-                "photoType": "0",
-                "photoTypeComment": "45度车辆前景照片",
-                "surveyPhotos": [
-                  {
-                    "photoId": 23456,
-                    "watermarkPhotoUrl": "http://g.hiphotos.baidu.com/image/pic/item/d000baa1cd11728b21c7efcdc2fcc3cec2fd2c72.jpg"
-                  },
-                  {
-                    "photoId": 23454,
-                    "watermarkPhotoUrl": "http://www.dowebok.com/demo/192/img/tibet-2.jpg"
-                  },
-                  {
-                    "photoId": 23453,
-                    "watermarkPhotoUrl": "http://zcbl.oss-cn-beijing.aliyuncs.com/e1e52a78985c41fda1aa3bd978c0e786.jpg"
-                  },
-                ]
-              },{
-                "photoCount": 6,
-                "photoType": "3",
-                "photoTypeComment": "车辆受损细节(1)",
-                "surveyPhotos": [
-                  {
-                    "photoId": 23454,
-                    "watermarkPhotoUrl": "http://www.dowebok.com/demo/192/img/tibet-2.jpg"
-                  },
-                  {
-                    "photoId": 23453,
-                    "watermarkPhotoUrl": "http://zcbl.oss-cn-beijing.aliyuncs.com/e1e52a78985c41fda1aa3bd978c0e786.jpg"
-                  },
-                ]
-              }
-            ],
-            "vehicleLicenseNo": "京1234424"
-          },
-          {
-            "allTypeSurveyPhotos": [
-              {
-                "photoCount": 2,
-                "photoType": "12",
-                "photoTypeComment": "身份证正面照片",
-                "surveyPhotos": [
-                  {
-                    "photoId": 1111,
-                    "watermarkPhotoUrl": "http://www.dowebok.com/demo/192/img/thumbnails/tibet-2.jpg"
-                  }
-                ]
-              }
-            ],
-            "vehicleLicenseNo": "京1111"
-          }
-        ];
-      this.getPhontos();
     },
-    mounted(){
-      console.log(wilddogVideo)
-//登陆成功后
-      var that = this
-      wilddog.auth().signInAnonymously()
-        .then(function(user){
-          //认证成功后，初始化 WilddogVideoRoom
-          console.log('登录认证成功 , user : ' + user);
-          wilddogVideo.initialize({'appId':appVideoId,'token':user.getToken()});
-          // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
-          wilddogVideo.createLocalStream({
-            // 如果为 true，则媒体流中包含视频。如果为 false，则媒体流中不包含视频。
-            captureVideo: false,
-            // 如果为 true，则媒体流中包含声音。false，则媒体流中不包含声音。
-            captureAudio: true,
-            // 分辨率
-            dimension: '480p',
-            // 自定义传输视频的最大帧率，默认值为15，最大值为30。
-            maxFPS: 15
 
-          }).then(function (screenStream) {
-            that.localStream = screenStream;
-            that.localStream.attach(that.localEl);
-          }).catch(function (err) {
-            console.error('创建本地媒体流异常 , 异常码 : ' + err.code + ' , 异常信息 : ' + err.message);
-          });
-        }).catch(function (error) {
-        // 错误处理
-        console.log('登录认证异常 , 异常码 : ' + error.code + ' , 异常信息 : ' + error.message);
-        // ...
-      });
+    watch:{
+      "warning": function(){
+         alert(this.warning)
+      },
+      "steamActive": function(){
+      if(this.steamActive){
+        console.log(this.steamActive)
+        this.$nextTick(() => {
+          var myVid = document.getElementById("remote");
+          myVid.volume = 1;
+          var oDiv = document.getElementById('voice')
+          oDiv.onmousedown=function(ev){
+            var disX=ev.clientX-oDiv.offsetLeft
+            var disY=ev.clientY-oDiv.offsetTop
+            document.onmousemove=function(ev){
+              console.log(55555)
+              var l=ev.clientX-disX
+              var t=ev.clientY-disY
+              var a = oDiv.style.left;
+              if(l<-70){
+                oDiv.style.left='-70px';
+                myVid.volume=1;
+              }else if(l > 0){
+                oDiv.style.left='-0px';
+                myVid.volume=0;
+              }else{
+                oDiv.style.left=l+'px';
+                var b = oDiv.style.left;
+                myVid.volume = (70+l)/70;
+                console.log( myVid.volume)
+              }
+              oDiv.style.top = -5
+            }
+            document.onmouseup=function(){
+              document.onmousemove=null;
+              document.onmouseup=null
+            }
+          }
+        })
 
+      }
+      }
+    },
+    mounted () {
+     var that = this;
+      window.onbeforeunload = function(){
+       that.forceClose();
+      }
     },
     methods: {
-      disconnect(){
-        this.roomInstance.disconnect();
+      open2(resdes) {
+        this.$message.success(resdes);
       },
-      join(){
-        //拿到房间号
-        console.log('room id : ' + this.roomId);
-
-        //通过wilddogRoom创建WilddogRoom实例
-         this.roomInstance = wilddogVideo.room(this.roomId);
-
-        //进入到room
-        this.roomInstance.connect();
-        //room事件
-        this.roomInstance.on('connected',function () {
-          console.log('connected success');
-          //发布本地流
-          var that = this;
-          this.roomInstance.publish(this.localStream,function(error){
-            if(error == null){
-              console.log('publish local stream successful');
-              that.localStream.attach(localEl);
-            }else{
-              console.log('publish local stream error , error code : '
-                + error.code + ' , error message : ' , error.message);
-            }
-          });
-
-          //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
-          this.roomInstance.on('stream_added',function (roomStream) {
-
-            console.log('remote stream id : ' + roomStream.streamId +
-              ' , remote stream owners : ' + roomStream.streamOwners);
-
-            //订阅远端流
-
-            that.roomInstance.subscribe(roomStream,function (error) {
-              if(error == null){
-                console.log('subscribe success , remote stream id : ' + that.roomStream.streamId +
-                  ' , remote stream owners : ' + that.roomStream.streamOwners);
-              } else {
-                console.log('subscribe error , error code : ' + error.code + ' , error message : ' + error.message);
-
-                // 将远端媒体流绑定到页面中的元素上。
-                roomStream.attach(that.remoteEl);
-
-                // 设置录制布局并且开始服务端录制功能
-                var remoteStream = {};
-                remoteStream.roomStream.streamId = {"left":0,"top":100,"width":100,"height":100,"zOrder":1};
-                var options = {
-                  // 影响画面流畅度，与画面流畅度成正比：帧率越大，画面越流畅；帧率越小，画面越有跳动感.
-                  "fps":15,
-                  "canvasWidth":1000,
-                  "canvasHeight":1000,
-                  "streams":{
-                  }
-                }
-                options.streams[0] = remoteStream;
-
-                console.trace('视屏录制布局 : ' , JSON.stringify(options));
-
-                // 远端流订阅成功开始视频录制
-                that.roomInstance.startRecording(options,function(url,error) {
-                  if (error == null) {
-                    console.log('video recording successful , url : ' + url);
-                  } else {
-                    console.log('video recording error , code ' + error.code + ' , message : ' + error.message);
-                  }
-                }) ;
-              }
-            });
-          });
-
-          //此时接受的了真正的流，可以把获取到的远端流放入远端标签
-          this.roomInstance.on('stream_received',function (roomStream) {
-            var newRemote = that.remoteEl.cloneNode(true);
-            newRemote.id = roomStream.streamId;
-            newRemote.hidden = false;
-            that.videosEl.appendChild(newRemote);
-            roomStream.attach(newRemote);
-          });
-
-          //Room内有流离开，将流从远端移除
-          this.roomInstance.on('stream_removed',function (roomStream) {
-            var removeEl = document.getElementById(roomStream.streamId);
-            roomStream.detach(removeEl);
-            that.videosEl.removeChild(removeEl);
-
-            // 远端流断开 ， 结束视频录制
-            that.roomInstance.stopRecording(function(url,error){
-              if(error == null){
-                console.log('远端流断开 ,停止录制成功，录制的文件地址：'+ url);
-              } else {
-                console.log('远端流断开 ,停止录制失败，录制的文件地址：'+ url +
-                  ' , error code : ' + error.code + ' , error message : ' + error.message);
-              }
-            });
-          });
-
-          this.roomInstance.on('disconnected',function () {
-            console.log('disconnected room')
-          })
-
-        });
+      open4(resdes) {
+        this.$message.error(resdes);
       },
-      getsyncSessionNodePath(){
-        return;
-        var paramData = {
-          "userId": "7777",
+      //保存照片
+      sureTakeImg(){
+        if(this.savevehicleLicenseNo == ''){
+          this.open4("请选择车牌号")
+        }else if(this.photoType == ''){
+          this.open4("请选择照片类型")
+        }else{
+          var data = {
+            'photoType':this.photoType,
+            "photoUrl":this.watermarkPhotoUrl,
+            "surveyNo": this.roomId,
+            "vehicleLicenseNo": this.savevehicleLicenseNo,
+            "longitude":this.longitude,
+            "latitude": this.latitude
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/photo/choice",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                $(".takePhoneImgBox").addClass("hide")
+                $(".takePhonetypeBox").addClass("hide")
+                this.open2(response.data.resdes)
+                this.photoType = '';
+                $("#selectImgTypeCont").find(".tag").addClass("hide");
+                $(".ddClass").removeClass("showTag");
+                this.getPhontos();
+                this.aimActive = false;
+                this.thirdOneActive = false;
+                this.thirdTwoActive=false;
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         }
-        axios.post(this.ajaxUrl+"/sync/session/v1/open",paramData)
+
+      },
+      forceClose(){
+        var data = {
+          "userId":this.userId
+        }
+        axios.post(this.ajaxUrl+"/web/surveyor/v1//force/close",data)
           .then(response => {
             if(response.data.rescode == 200){
-             this.syncSessionNodePath = response.data.data.syncSessionNodePath;
-              wilddog.sync().ref(this.syncSessionNodePath).on('value',function(snapshot){
-                console.log(snapshot.val());
-                console.log("the previous key is",prev)
-              });
-             //绑定监听节点
             }
           }, err => {
             console.log(err);
@@ -1831,13 +2428,582 @@
             console.log(error)
           })
       },
-      checkState(){
-        this.headerActiveOne = !this.headerActiveOne;
-        if(this.headerActiveOne){
-          this.manualStatus = 2;
-        }else{
-          this.manualStatus = 0
+      deletNode(){
+        var data = {
+          'orgCode':this.orgCode,
+          "userId":this.userId
         }
+        axios.post(this.ajaxUrl+"/sync/session/v1/close",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      enterVedeo(){
+        $("#bar_46122248740144030") .removeClass("hide");
+      },
+      leaveVideo(){
+        $("#bar_46122248740144030") .addClass("hide");
+      },
+      openLight(){
+        var node = this.node;
+        wilddog.sync().ref(node).child("video_session").push("WEB$$openLight");
+
+      },
+      //点击拍照
+      takePic(){
+        var node = this.node;
+        wilddog.sync().ref(node).child("video_session").push("WEB$$takePic");
+      },
+      pushErroCode(){
+        if(this.errorCode == '41001'){
+          this.open4(" token 过期")
+        } else if(this.errorCode == '41002'){
+          this.open4("token 无效")
+        }else if(this.errorCode == '41004'){
+          this.open4("视频会议建联失败")
+        }else if(this.errorCode == '41005'){
+          this.open4("音视频设备获取失败")
+        }else if(this.errorCode == '41006'){
+          this.open4("操作超时")
+        }
+        if(this.roomId == ""){
+          this.roomId = "noSurveyNo"
+        }
+        var data = {
+          'surveyNo':this.roomId,
+          "videoRoomId":this.roomId,
+          "errorCode": this.errorCode,
+          "errorMsg":this.errorMsg
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/photo/choice",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              $(".takePhoneImgBox").addClass("hide")
+              $(".takePhonetypeBox").addClass("hide")
+              this.open2(response.data.resdes)
+              this.photoType = '';
+              $("#selectImgTypeCont").find(".tag").addClass("hide");
+              $(".ddClass").removeClass("showTag");
+              this.getPhontos();
+              this.aimActive = false;
+              this.thirdOneActive = false;
+              this.thirdTwoActive=false;
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      //改变坐席自动状态
+      releaseStatius(){
+        var data = {
+          "surveyNo":this.roomId
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/release",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+     //挂断视频
+      disconnect(){
+        this.node = '';
+        this.releaseStatius()
+        //取消订阅远程流
+        var remoteStream = this.remoteStream;
+        this.roomInstance.unsubscribe(remoteStream,function (error) {
+          if(error == null){
+            console.log('unsubscribe success');
+          }else{
+            this.errorCode = error.code;
+            this.errorMsg = error.message;
+            this.pushErroCode()
+          }
+        })
+        //取消发布;
+        var localStream = this.localStream
+        this.roomInstance.unpublish(localStream,function(error){
+          if(error == null){
+            console.log('unpublish success');
+          }else{
+            this.errorCode = error.code;
+            this.errorMsg = error.message;
+            this.pushErroCode()
+          }
+        });
+        this.roomInstance.disconnect();
+        this.localStream.close();
+        this.surveyActive = true;
+
+      },
+      //忽略订单
+      ignoreCase(){
+        var data = {
+          'surveyNo':this.roomId,
+          "userId":this.userId
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/ignore",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              $(".takePhoneImgBox").addClass("hide")
+              $(".takePhonetypeBox").addClass("hide")
+              this.open2(response.data.resdes)
+              this.photoType = '';
+              $("#selectImgTypeCont").find(".tag").addClass("hide");
+              $(".ddClass").removeClass("showTag");
+              this.getPhontos();
+              this.aimActive = false;
+              this.thirdOneActive = false;
+              this.thirdTwoActive=false;
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      //视频接连失败请求
+      connectFail(){
+        var data = {
+          "surveyNo": this.roomId,
+        }
+        axios.post(this.ajaxUrl+"/survey/video/v1/connect/fail",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      join(){
+        $(".takePhoneImgBox").addClass("hide");
+         this.twoButton= false
+          this.toOnlineActive= true;
+          this.processOnlineActive= false;
+          this.OnlineActive=false;
+          this.surveyActive = false;
+          this.conttime = 30;
+        clearInterval(this.t);
+        var localStream = '';
+        // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
+        wilddogVideo.createLocalStream({
+          captureVideo: false,
+          captureAudio: true,
+          dimension: '480p',
+          maxFPS: 15
+        }).then(function (screenStream) {
+          localStream = screenStream;
+          that.localStream = localStream;
+          console.log(localStream)
+//            localStream.attach(that.localEl);
+        }).catch(function (err) {
+          that.errorCode = err.code;
+          that.errorMsg = err.message;
+          that.pushErroCode()
+
+        });
+        var roomInstance = this.roomInstance;
+        //进入到room
+        roomInstance.connect();
+        //room事件
+        var that = this;
+       roomInstance.on('connected',function () {
+
+          if(localStream!=''){
+         //向远程端送连接指令
+            var node = that.node;
+            console.log(localStream)
+            wilddog.sync().ref(node).child("video_connection").push("WEB$$goToConnection");
+            //发布本地流
+            console.log(roomInstance)
+            roomInstance.publish(localStream,function(error){
+              if(error == null){
+                console.log('publish success');
+              }else{
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode();
+                that.connectFail();
+              }
+            });
+          }
+          var setIntervalTime = '',t = '';
+         //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
+         roomInstance.on('stream_added',function (roomStream) {
+           if(roomStream){
+             clearInterval(t);       //停止计时器
+             t = setInterval(function () {
+               setIntervalTime ++ ;
+             }, 1000)
+           }
+           $(".takePhoneImgBox").addClass("hide")
+           //订阅远端流
+           roomInstance.subscribe(roomStream,function (error) {
+             if(error == null){
+               that.remoteStream = roomStream;
+               console.log('subscribe success');
+             }else{
+               var localStream = that.localStream;
+               roomInstance.unpublish(localStream,function(error){
+                 if(error == null){
+                   console.log('unpublish success');
+                 }else{
+                   that.errorCode = error.code;
+                   that.errorMsg = error.message;
+                   that.pushErroCode()
+                 }
+               });
+               that.errorCode = err.code;
+               that.errorMsg = err.message;
+               that.pushErroCode();
+               that.connectFail();
+             }
+           });
+         });
+          var streamId = '';
+         //此时接受的了真正的流，可以把获取到的远端流放入远端标签
+         roomInstance.on('stream_received',function (roomStream) {
+           if(roomStream){
+             if(setIntervalTime > 10){_
+               clearInterval(t);
+             that.open4("连接视频失败")
+             }
+           }
+           if(setIntervalTime < 10 && roomStream){
+             clearInterval(t);
+             $(".takePhoneImgBox").addClass('hide');
+             that.getNodealCase();
+             that.steamActive = true;
+             that.$nextTick(() => {
+               var remoteEl = document.getElementById('remote');
+               roomStream.attach(remoteEl);
+               that.twoButton = false;
+               that.surveyActive = false;
+               that.toOnlineActive = false;
+               that.processOnlineActive =  false;
+               that.OnlineActive = true;
+               streamId = roomStream.streamId;
+               console.log(node)
+               //接受照片
+               wilddog.sync().ref(node+'/video_session').on('child_added', function(snapshot) {
+                 //获取抽帧图片的路径
+                 var snapshot = snapshot.val();
+                 console.log(snapshot)
+                 if(snapshot.indexOf("APP$$PHOTO$$")> -1 ){
+                   var lastIndex = snapshot.lastIndexOf('$')+1;
+                   if(lastIndex > -1){
+                     snapshot = snapshot.substring(lastIndex)
+                     snapshot = snapshot.replace(/&/g,",");
+                     snapshot = snapshot.split(",")
+                     for(let i in snapshot){
+                       if(i == 0){
+                         snapshot[i] = snapshot[i].replace(/%/g,"/")
+                         that.originalPhotoUrl = snapshot[i];
+                         console.log(that.originalPhotoUrl)
+                       }else if(i == 1){
+                         snapshot[i] = snapshot[i].replace(/%/g,"/")
+                         that.watermarkPhotoUrl = snapshot[i];
+                       }else if(i == 2){
+                         that.longitude = snapshot[i]
+                       }else if(i == 3){
+                         that.latitude = snapshot[i]
+                       }
+                     }
+                     that.$nextTick(() => {
+                       that.openTakePhone();
+                     })
+                   }
+                 }else if(snapshot.indexOf("APP$$PHOTO$$ERROR")>-1){
+                   that.open4("请重新拍照")
+                 }
+               },function(err){
+                 that.errorCode = err.code;
+                 that.errorMsg = err.message;
+                 that.pushErroCode()
+               })
+               //录制视频
+               var s = roomStream.streamId;
+               var a = {"left":0,"top":100,"width":100,"height":100,"zOrder":2},  map={};
+               map[s] = a;
+               var options = {
+                 "fps":10,
+                 "canvasWidth":1000,
+                 "canvasHeight":1000,
+               }
+               options.streams = map;
+               console.log(options)
+               roomInstance.startRecording(options,function(url,error){
+                 if(error == null){
+                   console.log('开始录制，录制的文件地址：'+ url);
+                   var data = {
+                     "surveyNo": that.roomId,
+                     "videoRecordUrl": url,
+                   }
+                   axios.post(that.ajaxUrl+"/survey/video/v1/connect/success",data)
+                     .then(response => {
+                       if(response.data.rescode == 200){
+                       }else{
+                         this.open4(response.data.resdes)
+                       }
+                     }, err => {
+                       console.log(err);
+                     })
+                     .catch((error) => {
+                       console.log(error)
+                     })
+                 }else{
+                   that.errorCode = error.code;
+                   that.errorMsg = error.message;
+                   that.pushErroCode();
+                   that.connectFail();
+                 }
+               });
+             })
+
+           }
+//           if(roomStream){
+//             clearInterval(t);
+//           }
+
+         });
+
+     //Room内有流离开，将流从远端移除
+         roomInstance.on('stream_removed',function (roomStream) {
+           console.log("远端移除");
+           that.node = '';
+           that.releaseStatius()
+            if(that.steamActive){
+              roomStream.detach(document.getElementById('remote'));
+            }
+           that.$nextTick(() => {
+             that.steamActive = false;
+             that.twoButton =  true;
+             that.toOnlineActive = false;
+             that.processOnlineActive = false;
+             that.OnlineActive  = false;
+             that.surveyActive = false;
+           })
+           //停止录制视频
+           roomInstance.stopRecording(function(url,err){
+             if(err == null){
+               console.log(url)
+             }else{
+               that.errorCode = err.code;
+               that.errorMsg = err.message;
+               that.pushErroCode()
+             }
+
+           });
+         });
+
+
+//         //停止发布本地流
+//         roomInstance.unpublish(localStream,function(error){
+//           if(error == null){
+//             console.log('unpublish success');
+//           }else{
+//             that.errorCode = error.code;
+//             that.errorMsg = error.message;
+//             that.pushErroCode()
+//           }
+//         });
+           roomInstance.on('disconnected',function () {
+             that.node = '';
+               that.steamActive = false;
+               that.twoButton =  true;
+               that.toOnlineActive = false;
+               that.processOnlineActive = false;
+               that.OnlineActive  = false;
+             console.log('disconnected room')
+           })
+        });
+      },
+      //监听是否有视频发起
+      getsyncSessionNodePath(){
+        var data = {
+          'orgCode':this.orgCode,
+          "userId":this.userId
+        }
+        axios.post(this.ajaxUrl+"/sync/session/v1/open",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.syncSessionNodePath = response.data.data.syncSessionNodePath;
+              var that = this;
+              wilddog.sync().ref(this.syncSessionNodePath).on('child_added', function(data) {
+                var dataNode = data.val();
+                if(dataNode != 'ping'){
+                  var index = dataNode.lastIndexOf('$');
+                  var node = dataNode.substring(index+1).replace(/%/g,"/");
+                  that.node = node;
+                  wilddog.sync().ref(node).on('value', function(snapshot) {
+                    if(snapshot.val()){
+                      console.log(snapshot.val())
+
+                      wilddog.sync().ref(node).off("value");
+                      that.connectNode ='video_connection';
+                      that.sessionNode = 'video_session';
+                      that.leftData = snapshot.val();
+                      that.savevehicleLicenseNo = that.leftData.reportVehicleLicenseNo;
+                      that.doingActive = true;
+                      that.twoButton = true;
+                      that.toOnlineActive = false;
+                      that.processOnlineActive = true;
+                      that.OnlineActive = false;
+                      that.surveyActive = false;
+                      clearInterval(that.t);       //停止计时器
+                      that.t = setInterval(function () {
+                        if (that.conttime >= 0) {
+                          that.conttime = that.conttime-1;
+                        }
+                        if (that.conttime === 0) {
+                          wilddog.sync().ref(node).child("video_connection").push("WEB$$refuseConnection");
+                          if(that.leftData.isNew == '0'){//新订单发起视频未连接
+                            that.ignoreCase();
+                            that.ImgInfo = [];
+                            that.carPhoneActive = false;
+                            that.saveonevehicleLicenseNo ='';
+                            that.savetwovehicleLicenseNo = '';
+                            that.savethreevehicleLicenseNo = '';
+                            that.leftData = '';
+                            that.savevehicleLicenseNo = '';
+                            that.doingActive = false;//显示左边无案件图标
+                          }else if(that.leftData.isNew == '1'){
+                            that.twoButton=true;
+                            that.surveyActive = false;
+                            that.toOnlineActive=false;
+                            that.processOnlineActive=false;
+                            that.OnlineActive=false;
+                          }
+                          that.conttime = 30;
+                          clearInterval(that.t);       //停止计时器
+                        }
+                      }, 1000)
+                      wilddog.auth().signInAnonymously().then(function(user){
+//                      //认证成功后，初始化 WilddogVideoRoom
+                        wilddogVideo.initialize({'appId':appVideoId,'token':user.getToken()});
+                        //获取WilddogVideoRoom实例
+                        that.roomId = snapshot.val().surveyNo;
+                        that.acceptStatus(that.roomId);
+                        that.getPhontos();
+//                      that.roomId = "3869dc3e14c14e3eb12590200ed437a9"
+                        that.roomInstance = wilddogVideo.room(that.roomId);
+                      }).catch(function (error) {
+                        // Handle Errors here.
+                        console.log(error.code);
+
+                      });
+                    }
+
+                  },function(err){
+                    that.errorCode = err.code;
+                    that.errorMsg = err.message;
+                    that.pushErroCode()
+                  });
+                }
+              },function(err){
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode()
+              })
+
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      //后台修改状态
+      acceptStatus(surveyNo){
+        var data = {
+          "surveyNo": surveyNo
+        }
+        axios.post(this.ajaxUrl+"/survey/video/v1/accept/connect",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+     //点击挂起
+      hangUp(surveyNo){
+        var data = {
+          "surveyNo": surveyNo
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/suspend",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+                this.ImgInfo = [];
+                this.carPhoneActive = false;
+                this.saveonevehicleLicenseNo ='';
+                this.savetwovehicleLicenseNo = '';
+                this.savethreevehicleLicenseNo = '';
+                this.leftData = '';
+                this.savevehicleLicenseNo = '';
+                this.doingActive = false;//显示左边无案件图标
+                this.getNodealCase();
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      //获取挂起订单列表
+      getNodealCase(){
+        var data = {
+          "userId":parseInt(this.userId)
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/wait/order/list",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.noDealCase = response.data.data;
+              if(this.noDealCase.length!=0){
+                this.waitActive = true;
+              }
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       editorCar(vehicleLicenseNo){
         $(".editorCarInfo").removeClass("hide")
@@ -1846,53 +3012,100 @@
         console.log(vehicleLicenseNo)
       },
       savevehicle(){
-        $(".editorCarInfo").addClass('hide');
-        this.getCity = '';
-        this.vehicleLicenseNo = '';
+      if(this.vehicleLicenseNo == ''){
+        this.open4("请输入车牌号")
+      }else{
+        var data = {
+          'surveyNo':this.roomId,
+          "vehicleLicenseNo":this.getCity+this.vehicleLicenseNo
+        }
+        axios.post(this.ajaxUrl+"/survey/vehicle/v1/vehicle",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              $(".editorCarInfo").addClass("hide")
+              this.vehicleLicenseNo = "";
+              this.getCity = "京";
+              this.open2(response.data.resdes);
+              this.getPhontos()
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+
+
       },
       closeEditorCar(){
         $(".editorCarInfo").addClass('hide');
-        this.getCity = '';
+        this.getCity = '京';
         this.vehicleLicenseNo = '';
       },
       getPhontos(){
-        for(let k in this.ImgInfo){
-          if(k == 0){
-            for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
-              this.saveonevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
-              for(let j  in this.oneTypeSurveyPhotos){
-                if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.oneTypeSurveyPhotos[j].photoType){
-                  this.oneTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
-                  this.oneTypeSurveyPhotos[j].hasUrl = 'true';
-                }
-              }
-            }
-          }else if(k == 1){
-            for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
-              this.savetwovehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
-              for(let j  in this.twoTypeSurveyPhotos){
-                if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.twoTypeSurveyPhotos[j].photoType){
-                  this.twoTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
-                  this.twoTypeSurveyPhotos[j].hasUrl = 'true';
-                }
-              }
-            }
-          }else if(k == 2){
-            for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
-              this.savethreevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
-              for(let j  in this.threeTypeSurveyPhotos){
-                if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.threeTypeSurveyPhotos[j].photoType){
-                  this.threeTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
-                  this.threeTypeSurveyPhotos[j].hasUrl = 'true';
-                }
-              }
-            }
-          }
-
+        var data = {
+          'surveyNo':this.roomId,
         }
+        axios.post(this.ajaxUrl+"/survey/vehicle/v1/vehicle/list",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.carPhoneActive = true;
+              this.ImgInfo = response.data.data;
+              this.oneTypeSurveyPhotos = this.tooneTypeSurveyPhotos;
+              this.twoTypeSurveyPhotos = this.totwoTypeSurveyPhotos;
+              this.threeTypeSurveyPhotos = this.tothreeTypeSurveyPhotos
+              if(this.ImgInfo.length == 3){
+                 this.carThreeActive = false;
+              }
+              for(let k in this.ImgInfo){
+                if(k == 0){
+                  for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
+                    this.saveonevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    for(let j  in this.oneTypeSurveyPhotos){
+                      if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.oneTypeSurveyPhotos[j].photoType){
+                        this.oneTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
+                        this.oneTypeSurveyPhotos[j].hasUrl = 'true';
+                      }
+                    }
+                  }
+                }else if(k == 1){
+                  for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
+                    this.savetwovehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    for(let j  in this.twoTypeSurveyPhotos){
+                      if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.twoTypeSurveyPhotos[j].photoType){
+                        this.twoTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
+                        this.twoTypeSurveyPhotos[j].hasUrl = 'true';
+                      }
+                    }
+                  }
+                }else if(k == 2){
+                  for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
+                    this.savethreevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    for(let j  in this.threeTypeSurveyPhotos){
+                      if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.threeTypeSurveyPhotos[j].photoType){
+                        this.threeTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
+                        this.threeTypeSurveyPhotos[j].hasUrl = 'true';
+                      }
+                    }
+                  }
+                }
+              }
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
+
       },
-      selectCarAim(order){
+      selectCarAim(order,ele,savevehicleLicenseNo){
         this.left = 0;
+        this.savevehicleLicenseNo = savevehicleLicenseNo;
         $(".suibian").css("left",this.left);
         switch (order) {
           case "0":
@@ -1916,8 +3129,35 @@
         }
 
       },
+    //查勘完成
       openOrderEndBox(){
-        $(".openOrdercompleteDialog").removeClass("hide");
+        var data = {
+          "surveyNo":this.roomId,
+          "isExceptionComplete":this.isExceptionComplete,
+          "exceptionCode":this.exceptionCode,
+          "exceptionComment": this.exceptionComment
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/complete",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+//              $(".openOrdercompleteDialog").removeClass("hide");
+              this.steamActive = false;
+              this.twoButton =  true;
+              this.toOnlineActive = false;
+              this.processOnlineActive = false;
+              this.OnlineActive  = false;
+              this.doingActive = false;
+              $(".orderSelectDialog").addClass("hide");
+              this.open2(response.data.resdes)
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       closeopenOrderEndxDialog(){
         $(".openOrdercompleteDialog").addClass("hide");
@@ -1928,12 +3168,73 @@
       closeOrderDiolag(){
         $(".orderSelectDialog").addClass("hide");
       },
-      goleftLine(){
+      //双击挂起订单
+      goleftLine(surveyNo,itemdata){
+        if(!this.doingActive){
+          var data = {
+            "surveyNo":surveyNo
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/wait/handle",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.leftData = itemdata;
+                this.savevehicleLicenseNo = this.leftData.reportVehicleLicenseNo;
+                this.twoButton = true;
+                this.toOnlineActive = false;
+                this.processOnlineActive = false;
+                this.OnlineActive = false;
+                this.doingActive = true;
+                this.roomId = surveyNo;
+                  this.getNodealCase();
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
       },
-      seletedCarType(ele){
+      //选择车辆
+      selectCar(ele,vehicleLicenseNo){
+        console.log(vehicleLicenseNo)
+        this.savevehicleLicenseNo = vehicleLicenseNo;
+        if(vehicleLicenseNo == this.saveonevehicleLicenseNo){
+          this.aimActive = true;
+          this.thirdOneActive = false;
+          this.thirdTwoActive=false;
+        }else if(vehicleLicenseNo == this.savetwovehicleLicenseNo){
+          this.aimActive = false;
+          this.thirdOneActive = true;
+          this.thirdTwoActive=false;
+        }else if(vehicleLicenseNo == this.savethreevehicleLicenseNo){
+          this.aimActive = false;
+          this.thirdOneActive = false;
+          this.thirdTwoActive = true;
+        }
+
+      },
+      //选择车辆类型
+      selectType(ele,photoType){
+        if(($(ele.target).parent().attr("class")).indexOf("ddClass") > -1){
+          $(ele.target).parent().siblings().removeClass("showTag")
+          $(ele.target).parent().siblings().children(".tag").addClass("hide");
+          $(ele.target).siblings().removeClass("hide")
+          $(ele.target).parent().addClass("showTag")
+          this.photoType = photoType
+        }
+      },
+      //选择缩略图车辆类型
+      seletedCarType(ele,vehicleLicenseNo,photoType){
         if($(ele.target).attr("class").indexOf("hoverBox")>-1){
           $(ele.target).parent().siblings().find(".tag").addClass("hide");
           $(ele.target).parent().find(".tag").removeClass("hide");
+          this.photoType = photoType;
+          this.savevehicleLicenseNo = vehicleLicenseNo;
+          var node = this.node;
+          wilddog.sync().ref(node).child("video_session").push("WEB$$takePic");
         }
       },
       enterBox(ele){
@@ -1942,25 +3243,92 @@
       leaveBox(ele){
         $(ele.target).find(".hoverBox").addClass("hide")
       },
-      selectCar(ele){
-        $(ele.target).parent().siblings().removeClass("showTag")
-        $(ele.target).parent().siblings().children(".tag").addClass("hide");
-        $(ele.target).siblings().removeClass("hide")
-        $(ele.target).parent().addClass("showTag")
-      },
-      selectType(ele){
-        if(($(ele.target).parent().attr("class")).indexOf("ddClass") > -1){
-          $(ele.target).parent().siblings().removeClass("showTag")
-          $(ele.target).parent().siblings().children(".tag").addClass("hide");
-          $(ele.target).siblings().removeClass("hide")
-          $(ele.target).parent().addClass("showTag")
+
+      checkState(){
+        if(this.manualStatus == 2){
+          var data = {
+            "userId":parseInt(this.userId),
+            "manualStatus":'0'
+          }
+          axios.post(this.ajaxUrl+"/web/surveyor/v1/manual/status",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(response.data.data.code == 0){
+                  this.manualStatus = response.data.data.manualStatus;
+                }else{
+                  this.open4("暂时无法改变状态")
+                }
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }else{
+          var data = {
+            "userId":parseInt(this.userId),
+            "manualStatus":'2'
+          }
+          axios.post(this.ajaxUrl+"/web/surveyor/v1/manual/status",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(response.data.data.code == 0){
+                  this.manualStatus = response.data.data.manualStatus;
+                }else{
+                  this.open4("暂时无法改变状态")
+                }
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         }
       },
+
       openType(){
-        $(".takePhonetypeBox").removeClass("hide");
+        if(this.photoType != '' && this.savevehicleLicenseNo != '' && this.watermarkPhotoUrl != '' && this.roomId != '' && this.longitude != '' && this.latitude != ''){
+          this.sureTakeImg()
+        }else{
+          this.photoType = '';
+          if(this.watermarkPhotoUrl != ''){
+            $(".takePhonetypeBox").removeClass("hide");
+            this.selectCar("",this.savevehicleLicenseNo)
+          }else{
+            this.open4("图片保存失败,请重新上传")
+          }
+
+        }
+      },
+      deletTakeImg(){
+        var data = {
+          'originalPhotoUrl':this.originalPhotoUrl,
+          "watermarkPhotoUrl":this.watermarkPhotoUrl,
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/photo/remove",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              $(".takePhoneImgBox").addClass("hide")
+              this.open2(response.data.resdes)
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       closetypebox(){
         $(".takePhonetypeBox").addClass("hide");
+        this.photoType = ''
       },
       preImginfo(){
         if(this.left < '-1'){
@@ -1994,6 +3362,7 @@
       preScaleImg(){
         if(this.scaleImgLeft < '-1'){
           this.scaleImgLeft = this.scaleImgLeft + 500;
+          this.scalImgCurrentIndex --;
           $(".scaleUlBox").animate({left: this.scaleImgLeft},500)
         }
       },
@@ -2001,6 +3370,7 @@
         var length = -(((this.scalImgLength-2)*500)+1)
 
         if(this.scaleImgLeft > length){
+          this.scalImgCurrentIndex ++;
           this.scaleImgLeft = this.scaleImgLeft - 500;
           $(".scaleUlBox").animate({left: this.scaleImgLeft},500)
         }
@@ -2012,14 +3382,19 @@
       closeScaleImg(){
         $(".scalImgBox").addClass('hide');
         this.scaleImgLeft = 0;
+        this.scalImgCurrentIndex = '1';
         $(".scaleUlBox").css("left",this.scaleImgLeft)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             this.surveyPhotos = [];
+        this.surveyPhotos = [];
         this.imgType = "";
       },
       closetakeCaleImg(){
         $(".takePhoneImgBox").addClass('hide');
+          this.originalPhotoUrl = '';
+          this.watermarkPhotoUrl = '';
+          this.longitude = '';
+          this.latitude = '';
       },
-
+//查看放大图片
       scaleImg(surveyPhotos,ele,code,photoTypeComment){
         $(".scaleUlBox").css("left",'0')
         this.scaleImgLeft = 0;
