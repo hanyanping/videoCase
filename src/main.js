@@ -24,19 +24,8 @@ Vue.prototype.downloatUrl = "https://survey.zhongchebaolian.com"//测试
 // http请求拦截器
 var loadinginstace = ''
 axios.interceptors.request.use(config => {
-  // element ui Loading方法
-// if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
-//   loadinginstace = "";
-// }else if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
-//   loadinginstace = "";
-// }else if(config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
-//   loadinginstace = "";
-// }else if(config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
-//   loadinginstace = "";
-// }else{
-//   loadinginstace = ElementUI.Loading.service({ fullscreen: true })
-// }
   console.log(config.url)
+  // element ui Loading方法
   if(config.url == '/boot-pub-survey-video/web/surveyor/v1/manual/status'){
     loadinginstace = ""
  }else if(config.url =="/boot-pub-survey-video/survey/order/v1/wait/order/list"){
@@ -53,8 +42,13 @@ axios.interceptors.request.use(config => {
     loadinginstace = ""
   }else if(config.url == '/boot-pub-survey-video/survey/vehicle/v1/vehicle/list'){
     loadinginstace = ""
+  }else if(config.url == '/boot-pub-survey-video/survey/order/v1/timeout/rollback'){
+    loadinginstace = ""
+  }else if(config.url == '/boot-pub-survey-video/heartbeat/v1/beat'){
+    loadinginstace = ""
   }else{
-    loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+    // loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+    loadinginstace = ""
   }
 
 

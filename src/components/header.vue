@@ -43,50 +43,6 @@
     display: inline-block;
     width: 40px;
   }
-  .creatCase{
-    height: 35px;
-    line-height: 35px;
-    width: 80px;
-    text-align: center;
-    display: inline-block;
-    color: #fff;
-    background: #2EAB3B;
-    cursor: pointer;
-    margin-top: -6px;
-  }
-
-  .creatCaseDialog,.cityDialog,.AdressDialog{
-    background: rgba(0,0,0,0.3);
-    width:100%;
-    position: fixed;
-    min-height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 100;
-  }
-
-  .creatCaseDialogBox, .cityDialogBox,.AdressDialogBox{
-    width: 38%;
-    margin: 6vh auto;
-    background: #fff;
-    padding: 20px;
-
-    position: relative;
-  }
-  .creatCaseDialogBox{
-    min-height: 620px;
-  }
-  .AdressDialogBox{
-    width: 45%;
-  }
-  .cityDialogBox{
-    margin-top: 20vh;
-  }
-  .dialogTitle{
-    color: #232323;
-    font-size:16px;
-    font-weight: 600;
-  }
 
   .creatCaseDialog .scrollBox{
     /*overflow-y: scroll;*/
@@ -103,131 +59,24 @@
     font-weight: normal;
     font-style: normal;
   }
-  .closCreatDiolag, .closeCityDiolag, .closeAdressDiolag{
-    font-size: 42px;
-    right: 15px;
-    top: 0;
-    position: absolute;
-  }
-  .creatCaseDialog{
-    font-size: 42px;
-    right: 15px;
-    top: 0;
-    position: absolute;
-  }
-  .creatCaseDialog .addinsitituteSure{
-    color: #fff;
-    font-size: 15px;
-    display: inline-block;
-    line-height: 35px;
-    height: 35px;
-    width: 100px;
-    text-align: center;
-    border-radius: 5px;
-    margin-left: 18%;
-    cursor: pointer;
-  }
-  .sureAdress{
-    color: #fff;
-    font-size: 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 15px;
-    padding: 6px 12px;
-  }
-  .addinsitituteInput{
-    padding: 10px 0 5px 10%;
-  }
-  .addinsitituteInput .addinsitituteSpan{
-    display: inline-block;
-    min-width: 20%;
-    font-size: 15px;
-  }
-  .addinsitituteInput .creatInput{
-    height:35px;
-    line-height:35px;
-    padding-left: 6px;
-    border: 1px solid #bbb;
-    border-radius:4px;
-    width: 200px;
-  }
-  .addinsitituteInput .creatInputNo{
-    height:35px;
-    line-height: 35px;
-    border: 1px solid #bbb;
-    border-radius:4px;
-    width: 35px;
-    background: #fff;
-    border-right: none;
-    text-align: center;
-  }
 
-
-  .inputadressBox{
-    margin: 15px;
-  }
   .inputadressBox span{
    margin-left: 15px;
   }
-  .adressInput{
-    border: 1px solid #bbb;
-    height: 35px;
-    border-radius: 5px;
-    padding-left: 5px;
-    margin-bottom: 15px;
-  }
-  .oneMonitor{
-     font-size: 15px;
-  }
-    .el-icon-search{
-      font-size:20px;
-      margin-left: -25px;
-      cursor: pointer;
-    }
-  #allmap{
-    width: 100%;
-    height:38vh;
-  }
-  .el-icon-location{
-    font-size: 20px;
-    color: #666;
-    margin-left: -26px;
-  }
-  .radio__inner {
-    position: relative;
-    display: inline-block;
-    border: 1px solid #d8dce5;
-    border-radius: 100%;
-    width: 14px;
-    height: 14px;
-    background-color: #fff;
-    cursor: pointer;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    margin-left: 20%;
-  }
-  .radio__inner::after {
-    width: 4px;
-    height: 4px;
-    border-radius: 100%;
-    background-color: #fff;
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%,-50%) scale(0);
-    transform: translate(-50%,-50%) scale(0);
-    -webkit-transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
-    transition: -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6);
-    transition: transform .15s cubic-bezier(.71,-.46,.88,.6), -webkit-transform .15s cubic-bezier(.71,-.46,.88,.6);
-  }
+
   .isChecked{
     border-color: #2EAB3B;
     background: #2EAB3B;
   }
   .isChecked::after{
     transform: translate(-50%,-50%) scale(1);
+  }
+ .historyText {
+    line-height: 65px;
+    margin-left: 45px;
+    font-weight: 600;
+    font-size: 16px;
+   cursor: pointer;
   }
 </style>
 <template>
@@ -238,13 +87,14 @@
         <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
           <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
-          <div class="menu" >
+          <div class="menu" style="display: flex;">
             <el-tabs v-model="activeName" @tab-click="handleClick" >
               <el-tab-pane  label="案件管理" name="first">
               </el-tab-pane>
               <!--<el-tab-pane  label="历史案件" name="second">-->
               <!--</el-tab-pane>-->
             </el-tabs>
+            <div class="historyText" @click="goHistory">历史案件</div>
           </div>
         </div>
         <div class="headerLeft">
@@ -255,18 +105,14 @@
       </div>
     </div>
     <case-manage v-if="caseActive"></case-manage>
-    <seat-manage v-if="seatActive"></seat-manage>
+
   </div>
 
 </template>
 <script>
-//  import baiduAdress from '@/components/baiduAdress'
   import caseManage from '@/components/caseManage'
   import seatManage from '@/components/seatManage'
-  import institutionManage from '@/components/institutionManage'
-  import surveyManage from '@/components/surveyManage'
   import axios from 'axios'
-//  import BMap from 'BMap'
 
   export default {
     data(){
@@ -298,7 +144,7 @@
         seatActive: false,
         insitituteActive: true,
         surveyActive: false,
-        userId: ""
+        userId: "",
       }
     },
     mounted() {
@@ -318,31 +164,37 @@
           this.seatActive = false;
 
         }else if(this.activeName == "second"){
-          this.caseActive = false;
-          this.seatActive = true;
-        }
-      },
-      "activeNameTwo"(){
-        if(this.activeNameTwo == 'third'){
-          this.caseActive = false;
-          this.seatActive = false;
 
-        }else  if(this.activeNameTwo == 'four'){
           this.caseActive = false;
-          this.seatActive = false;
+          var url = window.location.href.substring(0,(window.location.href.indexOf("#")+2));
+          console.log(url)
+          window.open(url+"historyCase")
         }
       }
   },
     methods: {
+      goHistory(){
+        var url = window.location.href.substring(0,(window.location.href.indexOf("#")+2));
+        console.log(url+"historyCase")
+        window.open(url+"historyCase")
+      },
+      goNewRouter(){
+        console.log(window.location.href )
+//        window.open('http://localhost:8081/')
+      },
       //退出
       clickSignOut() {
-        var data = {
-          "userId": this.userId,
-          "orgCode": this.orgCode
-        }
-        axios.post(this.ajaxUrl+"/sync/session/v1/close",data)
-          .then(response => {
+        if(this.userId && this.orgCode){
+          var data = {
+            "userid": this.userId,
+          }
+          axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout",data)
+            .then(response => {
               if(response.data.rescode == 200){
+                localStorage.removeItem('orgCode');
+                localStorage.removeItem('chinaName')
+                localStorage.removeItem('userName')
+                localStorage.removeItem('userId')
                 this.$store.commit('setCaseDetailActive', false);
                 this.$store.commit('setInsititutEditorActive', false);
                 this.$store.commit('setHeaderActive', false);
@@ -365,12 +217,16 @@
                 }
                 this.open4(response.data.resdes);
               }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }else{
+          this.$router.push({path:"/"})
+        }
+
       },
       open4(resdes) {
         this.$message.error(resdes);
@@ -483,8 +339,6 @@
     components: {
       caseManage,
       seatManage,
-      institutionManage,
-      surveyManage,
     },
   }
 

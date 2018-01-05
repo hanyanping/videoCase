@@ -170,11 +170,11 @@
         valicode: "",
         userpwd: "",
         loginActive: false,
-        syncSessionNodePath: ""
+        syncSessionNodePath: "",
+        userId: ""
       }
     },
     created(){
-
       this.getCode()
     },
 
@@ -242,6 +242,7 @@
           axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/login",paramData)
             .then(response => {
                 if(response.data.rescode == 200){
+                  localStorage.setItem('A',"2")
                   this.open2();
                   localStorage.setItem('orgCode',response.data.data.organizationCode);
                   localStorage.setItem('chinaName',response.data.data.organizationName)
@@ -253,18 +254,6 @@
                     "userId":response.data.data.userId
                   }
 
-//                  axios.post(this.ajaxUrl+"/sync/session/v1/open",data)
-//                    .then(response => {
-//                      if(response.data.rescode == 200){
-//                        this.syncSessionNodePath = response.data.data.syncSessionNodePath;
-//                        localStorage.setItem('syncSessionNodePath',this.syncSessionNodePath)
-//                      }
-//                    }, err => {
-//                      console.log(err);
-//                    })
-//                    .catch((error) => {
-//                      console.log(error)
-//                    })
 
                 }else {
                   this.open4(response.data.resdes);

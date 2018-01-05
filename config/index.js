@@ -12,10 +12,10 @@ module.exports = {
     proxyTable: {
       '/boot-pub-survey-video': {
         // target: 'http://192.168.1.69:18081',      // 志猛个人服务器
-        target: 'http://192.168.1.154:80',      // 和鹏个人服务器
+        // target: 'http://192.168.1.154:80',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
         // target: 'https://chakan.zhongchebaolian.com', // 生产
-        // target: 'https://survey.zhongchebaolian.com', // 测试
+        target: 'https://survey.zhongchebaolian.com', // 测试
         changeOrigin: true,
 
         pathRewrite: {
@@ -79,7 +79,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'video/static/',
     assetsPublicPath: '/',
 
     /**
@@ -90,8 +90,8 @@ module.exports = {
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 
-    // Gzip off by default as many popular static hosts such as
-    // Surge or Netlify already gzip all static images for you.
+    // Gzip off by default as many popular video hosts such as
+    // Surge or Netlify already gzip all video images for you.
     // Before setting to `true`, make sure to:
     // npm install --save-dev compression-webpack-plugin
     productionGzip: false,

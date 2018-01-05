@@ -21,6 +21,7 @@
     position: absolute;
     right: 15px;
     top: 0;
+    cursor: pointer;
   }
   .detailContent{
     overflow-y: scroll;
@@ -150,8 +151,12 @@
     background: #2EAB3B;
     line-height: 35px;
     text-align: center;
-
+    cursor: pointer;
   }
+  #videoBox video{
+    object-fit:fill
+  }
+
 </style>
 <template>
   <div class="caseDetail">
@@ -242,8 +247,15 @@
               <!--<p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>-->
             <!--</div>-->
             <div class="aimInfo videoBox">
-              <div id="videoList" class="clear">
+              <div id="videoList" class="clear" v-if="showOldActive">
                 <div class="left" v-for="(item,index) in surveyVideoRooms" :id='"video"+index' style="width:280px;height:200px;margin:6px 10px;"  :swfobjId='"videourl"+index'></div>
+              </div>
+              <div class="videoList clear" v-else>
+
+                <div class="left vid-wrapper" id="videoBox" v-for="(item,index) in surveyVideoRooms"   >
+                  <video  controls="controls" :src="item.videoSource" type="video/mp4"  autoplay="autoplay" style="width:280px;height:200px;margin:6px 10px;">
+                  </video>
+                </div>
               </div>
             </div>
           </div>
@@ -278,6 +290,7 @@ import axios from 'axios'
 export default {
   data() {
       return{
+        showOldActive: false,
         currentPageNoAim: 1,//当前页码
         pageSizeAim: 4,//每页记录数
         totalCountAim: 0,//总条数
@@ -314,6 +327,15 @@ export default {
        this.mark = this.caseDetailData.accidentInfo.appSource;
        this.surveyId = this.caseDetailData.id;
        this.surveyVideoRooms = this.caseDetailData.surveyVideoRooms;
+       for(let i in this.surveyVideoRooms){
+         var indexof = this.surveyVideoRooms[i].videoSource.indexOf("http:");
+         console.log(indexof)
+         if(indexof > -1){//新数据
+           this.showOldActive = false;
+         }else{//老数据
+           this.showOldActive = true;
+         }
+      }
        if(this.caseDetailData.sceneSurveyorInfo != null){
            if(this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo === null){
              this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo = '暂无'
@@ -360,9 +382,11 @@ export default {
        }
     },
     mounted() {
-      this.$nextTick(() => {
-        this.getvedio()
-      })
+      if(this.showOldActive){
+        this.$nextTick(() => {
+          this.getvedio()
+        })
+      }
     },
     props: {
 //      caseOrder: string
@@ -414,12 +438,12 @@ export default {
         },
         getCasePhones(currentPageNo,pageSize,vehicleLicenseNo,surveyNo,source){
           var paramData = {
-            "currentPageNo": currentPageNo,
+            "pageNo": currentPageNo,
             "pageSize": pageSize,
             "vehicleLicenseNo": vehicleLicenseNo,
             "surveyNo": surveyNo
           }
-          axios.post(this.ajaxUrl+"/survey-detail/v1/photo/page",paramData)
+          axios.post(this.ajaxUrl+"/survey/order/history/v1/photo/list",paramData)
             .then(response => {
               if(response.data.rescode == 200){
                 if(response.data.data.records.length != 0){
@@ -437,25 +461,34 @@ export default {
                   }else{
                     var thirdLength = this.accidentVehicleInfos.length;
                     for(let i in this.accidentVehicleInfos){
-                        if(i == source){
-                          this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records);
-                          this.accidentVehicleInfos[i].total = response.data.data.total;
-                          this.accidentVehicleInfos[i].pageNum = response.data.data.pageNum;
+                      if(i == source){
+                        for(let j in response.data.data.records){
+                          this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records[j])
                         }
+                        this.accidentVehicleInfos[i].total = response.data.data.total;
+                        this.accidentVehicleInfos[i].pageNum = response.data.data.pageNum;
+                      }
                     }
-                      this.$nextTick(() => {
-                        this.thirdCar = this.accidentVehicleInfos;
-                        for (let i in this.thirdCar) {
-                          this.$nextTick(() => {
-                            new Viewer(document.getElementsByClassName('suibian')[i], {
-                              url: 'data-src',
-                              navbar: false,
-                              toolbar: true,
-                              loop: true
-                            })
-                          })
+                    this.$nextTick(() => {
+                      this.thirdCar = this.accidentVehicleInfos;
+                      console.log(this.thirdCar)
+                      for(let i in this.thirdCar){
+                        for(let j in this.thirdCar[i].thirdCarImg){
+                          console.log(this.thirdCar[i].thirdCarImg[j])
+                          console.log(this.thirdCar[i].thirdCarImg[j].photoTypeComment)
                         }
-                      })
+                      }
+                      for (let i in this.thirdCar) {
+                        this.$nextTick(() => {
+                          new Viewer(document.getElementsByClassName('suibian')[i], {
+                            url: 'data-src',
+                            navbar: false,
+                            toolbar: true,
+                            loop: true
+                          })
+                        })
+                      }
+                    })
                   }
                 }
               }else{
@@ -525,7 +558,7 @@ export default {
         },
         downLoadCase(){
           var  surveyId = parseInt(this.surveyId)
-          window.open(this.downloatUrl+this.ajaxUrl+"/survey-detail/v1/download/"+surveyId)
+          window.open(this.ajaxUrl+"/survey/order/history/v1/details/download/"+surveyId)
         },
         cancelCase(){
           var paramData = {

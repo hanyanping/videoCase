@@ -283,6 +283,8 @@
             })
         },
         getCaseList() {
+          console.log(this.value6)
+          console.log(this.value7)
           if(this.value6){
             for(let i in this.value6){
               if(i == 0){
@@ -296,19 +298,19 @@
             this.accidentEndTime = this.accidentEndTime.getFullYear() + '-' + (this.accidentEndTime.getMonth() + 1) + '-' + this.accidentEndTime.getDate()+" "+ this.accidentEndTime.getHours() + ":" + this.accidentEndTime.getMinutes() + ":" + this.accidentEndTime.getSeconds();
           }else{
             this.accidentStartTime = "";
-              this.accidentEndTime = "";
+            this.accidentEndTime = "";
           }
           if(this.value7){
             for(let i in this.value7){
               if(i == 0){
-                this.handleStartTime = new Date(this.value6[0]);
+                this.handleStartTime = new Date(this.value7[0]);
               }else if(i == 1){
-                this.handleEndTime = new Date(this.value6[1])
+                this.handleEndTime = new Date(this.value7[1])
                 this.handleEndTime =  new Date(this.handleEndTime.getTime()+24*60*60*1000-1)
               }
             }
             this.handleStartTime = this.handleStartTime.getFullYear() + '-' + (this.handleStartTime.getMonth() + 1) + '-' + this.handleStartTime.getDate()+ " " + this.handleStartTime.getHours() + ":" + this.handleStartTime.getMinutes() + ":" + this.handleStartTime.getSeconds();
-            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ "" + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
+            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ " " + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
           }else{
             this.handleStartTime = "";
             this.handleEndTime = "";
@@ -327,7 +329,7 @@
             "handleStartTime":this.handleStartTime,
             "handleEndTime":this.handleEndTime,
           }
-          axios.post(this.ajaxUrl+"/pub/survey/v1/page",paramData)
+          axios.post(this.ajaxUrl+"/survey/order/history/v1/handled/list",paramData)
             .then(response => {
               if(response.data.rescode == 200){
                 this.tableData = response.data.data.records;

@@ -109,10 +109,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       minChunks: 3,
     }),
 
-    // copy custom static images
+    // copy custom video images
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, '../static'),
+        from: path.resolve(__dirname, '../video'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }

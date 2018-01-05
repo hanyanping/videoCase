@@ -179,7 +179,7 @@
     z-index: 1031;
   }
   .scalImgBox .bigImgContent,.takePhoneImgBox .takebigImgContent {
-    width: 600px;
+    width: 810px;
     margin: 6vh auto;
     background: #fff;
     padding: 20px;
@@ -187,7 +187,7 @@
     position: relative;
   }
   .takePhoneImgBox .takebigImgContent{
-    height: 460px;
+    min-height: 460px;
   }
   .takePhonetypeBox .typeContent{
     width: 660px;
@@ -235,14 +235,15 @@
     top: 5px;
   }
   .imgSize{
-    width: 500px;
-    height: 680px;
+    width: 715px;
+    height: 578px;
     margin:15px auto;
     vertical-align: middle;
+    overflow-y: scroll;
   }
   .imgSize img{
     max-width:100%;
-    max-height: 100%;
+    height: 100%;
   }
   .prebutton{
     position: absolute;
@@ -250,8 +251,6 @@
     left:10px;
     color:#2EAB3B;
     font-size:30px;
-
-
   }
   .nextbutton{
     cursor: pointer;
@@ -585,10 +584,11 @@
     left: 0;
   }
   .bigImgContent .imgSize ul li{
-    width: 500px;
-    height: 680px;
+    width: 715px;
+    height: 578px;
     text-align: center;
     line-height:680px;
+    overflow-y: scroll;
   }
 .openOrderEndBox{
   text-align: center;
@@ -598,6 +598,7 @@
   .openOrderEndBox .surebutton{
     color: #fff;
     padding: 10px 30px;
+    cursor: pointer;
 
   }
   .dealCaseButton{
@@ -835,10 +836,10 @@
         <span @click="closetakeCaleImg" class="right closeCaleImgBox">×</span>
         <div class="imgSize">
           <img :src="originalPhotoUrl" />
-          <div style="display: flex;justify-content: center;margin-top:20px;">
-            <div class="takedeletImg" @click="deletTakeImg">删除</div>
-            <div class="takesaveImg backColorGreen" @click="openType">保存</div>
-          </div>
+        </div>
+        <div style="display: flex;justify-content: center;margin-top:20px;">
+          <div class="takedeletImg" @click="deletTakeImg">删除</div>
+          <div class="takesaveImg backColorGreen" @click="openType">保存</div>
         </div>
       </div>
     </div>
@@ -941,7 +942,7 @@
                 <span  v-if="leftData.orderStatus == '11'">已取消</span>
               </p>
               <div class="item-btn-mod">
-                <a href="javascript:;" v-if="!OnlineActive && !processOnlineActive && !toOnlineActive"  @click="join"  class="link-btn mr10 disabled" id="online">连线</a>
+                <a href="javascript:;" v-if="!OnlineActive && !processOnlineActive && !toOnlineActive"  class="link-btn mr10 disabled" id="online">连线</a>
                 <a href="javascript:;" class="link-btn mr10 disabled " v-if="!OnlineActive && !processOnlineActive && toOnlineActive" id="onlineLoding" >连线中</a>
                 <a href="javascript:;" class="link-btn mr10" v-if="!OnlineActive && processOnlineActive && !toOnlineActive" @click="join" id="onLinking" >连线 <span id="countTime" data-max="30">{{conttime}}</span>s</a>
                 <a href="javascript:;" class="link-btn mr10 warn" @click="disconnect" v-if="OnlineActive && !processOnlineActive && !toOnlineActive" id="onOff" >挂断</a>
@@ -1013,7 +1014,7 @@
               </div>
             </div>
             <div v-else class="videoBox">
-              <img id="video-background" src="../images/video-default.png"/>
+              <img id="video-background" src="../../video/static/video-default.png"/>
             </div>
           </div>
         </div>
@@ -1203,7 +1204,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1214,7 +1215,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1226,7 +1227,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1237,7 +1238,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../video/1.png"
               }
             ]
           },
@@ -1249,7 +1250,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../video/1.png"
               }
             ]
           },{
@@ -1260,7 +1261,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1272,7 +1273,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1283,7 +1284,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1295,7 +1296,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1306,7 +1307,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1318,7 +1319,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1329,7 +1330,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
+                "watermarkPhotoUrl": "../video/2.png"
               }
             ]
           },
@@ -1341,7 +1342,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1352,7 +1353,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1364,7 +1365,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
+                "watermarkPhotoUrl": "../video/3.png"
               }
             ]
           }
@@ -1378,7 +1379,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1389,7 +1390,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1401,7 +1402,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1412,7 +1413,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../video/1.png"
               }
             ]
           },
@@ -1424,7 +1425,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../video/1.png"
               }
             ]
           },{
@@ -1435,7 +1436,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1447,7 +1448,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1458,7 +1459,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1470,7 +1471,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1481,7 +1482,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1493,7 +1494,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1504,7 +1505,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
+                "watermarkPhotoUrl": "../video/2.png"
               }
             ]
           },
@@ -1516,7 +1517,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1527,7 +1528,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../video/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1539,7 +1540,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
+                "watermarkPhotoUrl": "../video/3.png"
               }
             ]
           }
@@ -1553,7 +1554,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": " ../../video/static/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1564,7 +1565,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1576,7 +1577,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1587,7 +1588,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },
@@ -1599,7 +1600,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },{
@@ -1610,7 +1611,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1622,7 +1623,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1633,7 +1634,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1645,7 +1646,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1656,7 +1657,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1668,7 +1669,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1679,7 +1680,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
+                "watermarkPhotoUrl": "../../video/static/2.png"
               }
             ]
           },
@@ -1691,7 +1692,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1702,7 +1703,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1714,7 +1715,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
+                "watermarkPhotoUrl": "../../video/static/3.png"
               }
             ]
           }
@@ -1728,7 +1729,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1739,7 +1740,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1751,7 +1752,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1762,7 +1763,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },
@@ -1774,7 +1775,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },{
@@ -1785,7 +1786,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1797,7 +1798,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1808,7 +1809,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1820,7 +1821,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1831,7 +1832,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1843,7 +1844,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1854,7 +1855,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
+                "watermarkPhotoUrl": "../../video/static/2.png"
               }
             ]
           },
@@ -1866,7 +1867,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1877,7 +1878,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1889,361 +1890,12 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
+                "watermarkPhotoUrl": "../../video/static/3.png"
               }
             ]
           }
         ],
-        totwoTypeSurveyPhotos: [
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "0",
-            "photoTypeComment": "45度车辆前景照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "1",
-            "photoTypeComment": "当事人和车辆合影",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "2",
-            "photoTypeComment": "当事车辆车架号",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "3",
-            "photoTypeComment": "车辆受损细节(1)",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "4",
-            "photoTypeComment": "车辆受损细节(2)",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "5",
-            "photoTypeComment": " 交强险标志",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "6",
-            "photoTypeComment": "银行卡照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "7",
-            "photoTypeComment": "其它照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "8",
-            "photoTypeComment": "事故认定书",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "9",
-            "photoTypeComment": "行驶本照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "10",
-            "photoTypeComment": "驾驶证照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "11",
-            "photoTypeComment": "当事人签名照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "12",
-            "photoTypeComment": "身份证正面照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "13",
-            "photoTypeComment": "身份证背面照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "14",
-            "photoTypeComment": "查勘员与车辆合影",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
-              }
-            ]
-          }
-        ],
-        tothreeTypeSurveyPhotos: [
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "0",
-            "photoTypeComment": "45度车辆前景照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_1.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "1",
-            "photoTypeComment": "当事人和车辆合影",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_2.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "2",
-            "photoTypeComment": "当事车辆车架号",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_3.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "3",
-            "photoTypeComment": "车辆受损细节(1)",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "4",
-            "photoTypeComment": "车辆受损细节(2)",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/1.png"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "5",
-            "photoTypeComment": " 交强险标志",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_4.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "6",
-            "photoTypeComment": "银行卡照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_5.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "7",
-            "photoTypeComment": "其它照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_6.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "8",
-            "photoTypeComment": "事故认定书",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_7.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "9",
-            "photoTypeComment": "行驶本照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_8.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "10",
-            "photoTypeComment": "驾驶证照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_9.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "11",
-            "photoTypeComment": "当事人签名照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/2.png"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "12",
-            "photoTypeComment": "身份证正面照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_10.jpg"
-              }
-            ]
-          },{
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "13",
-            "photoTypeComment": "身份证背面照片",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/icon_noImg_11.jpg"
-              }
-            ]
-          },
-          {
-            'hasUrl': 'false',
-            "photoCount": "",
-            "photoType": "14",
-            "photoTypeComment": "查勘员与车辆合影",
-            "surveyPhotos": [
-              {
-                "photoId": "",
-                "watermarkPhotoUrl": "../static/3.png"
-              }
-            ]
-          }
-        ],
+
         carTypecarType: [],
         takephotoUrl:'',
         cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
@@ -2269,6 +1921,7 @@
         toOnlineActive: false,
         processOnlineActive: false,
         OnlineActive: false,
+
         waitActive: false,
         doingActive: false,
         jianKongActive: true,
@@ -2304,7 +1957,10 @@
         errorMsg: "",
         remoteStream: "",
         localStream: "",
-        warning:""
+        warning:"",
+        handleSurvey: "",
+        beatTime: "",
+        freshActive: false
       }
     },
     created(){
@@ -2312,9 +1968,22 @@
       this.orgCode = localStorage.getItem('orgCode');
       this.localEl = document.getElementById('local');
       this.videosEl = document.getElementById('video');
-      this.deletNode()
+      this.getbeatTime()
+      var m1 = localStorage.getItem('m'+this.userId);
+      if(!this.freshActive){
+        m1++;
+      }
+      localStorage.setItem('m'+this.userId,m1);
+      if(this.userId&& this.orgCode){
+
+      }else{
+        this.$router.push({path:"/"})
+      }
+
       this.getNodealCase()
-      this.getsyncSessionNodePath()
+      this.getsyncSessionNodePath();
+      this.checkStateOne();
+      this.getLeftData()
     },
 
     watch:{
@@ -2361,12 +2030,29 @@
       }
     },
     mounted () {
-     var that = this;
       window.onbeforeunload = function(){
-       that.forceClose();
-      }
+        localStorage.setItem('A',"2")
+      };
+      this.deletNode();
+      this.beatTime = setInterval(() => {
+        this.getbeatTime()
+      }, 15000)
     },
     methods: {
+      getbeatTime(){
+        var data = {
+          'userid':this.userId,
+
+        }
+        axios.post(this.ajaxUrl+"/heartbeat/v1/beat",data)
+          .then(response => {
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
       open2(resdes) {
         this.$message.success(resdes);
       },
@@ -2429,14 +2115,23 @@
           })
       },
       deletNode(){
+        var m1 = localStorage.getItem('A')
+        if(m1){
+
+        }else{
+          m1 = "1";
+        }
+        localStorage.removeItem('A');
         var data = {
           'orgCode':this.orgCode,
-          "userId":this.userId
+          "userId":this.userId,
+          "fresh": m1
         }
+        console.log(m1)
         axios.post(this.ajaxUrl+"/sync/session/v1/close",data)
           .then(response => {
-            if(response.data.rescode == 200){
-
+            if(response.data.rescode == 211){
+              this.$router.push({path:"/"})
             }
           }, err => {
             console.log(err);
@@ -2459,6 +2154,7 @@
       //点击拍照
       takePic(){
         var node = this.node;
+        console.log(node)
         wilddog.sync().ref(node).child("video_session").push("WEB$$takePic");
       },
       pushErroCode(){
@@ -2482,19 +2178,13 @@
           "errorCode": this.errorCode,
           "errorMsg":this.errorMsg
         }
-        axios.post(this.ajaxUrl+"/survey/order/v1/photo/choice",data)
+        axios.post(this.ajaxUrl+"/survey/video/v1//error/trace",data)
           .then(response => {
             if(response.data.rescode == 200){
-              $(".takePhoneImgBox").addClass("hide")
-              $(".takePhonetypeBox").addClass("hide")
-              this.open2(response.data.resdes)
-              this.photoType = '';
-              $("#selectImgTypeCont").find(".tag").addClass("hide");
-              $(".ddClass").removeClass("showTag");
-              this.getPhontos();
-              this.aimActive = false;
-              this.thirdOneActive = false;
-              this.thirdTwoActive=false;
+              this.twoButton = true;
+              this.toOnlineActive = false;
+              this.processOnlineActive=false;
+              this.OnlineActive=false;
             }else{
               this.open4(response.data.resdes)
             }
@@ -2513,6 +2203,23 @@
         axios.post(this.ajaxUrl+"/survey/order/v1/release",data)
           .then(response => {
             if(response.data.rescode == 200){
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      //
+      rollback(){
+        var data = {
+          "surveyNo":this.roomId
+        }
+        axios.post(this.ajaxUrl+"/survey/order/v1/timeout/rollback",data)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.getNodealCase();
             }
           }, err => {
             console.log(err);
@@ -2567,7 +2274,6 @@
               this.photoType = '';
               $("#selectImgTypeCont").find(".tag").addClass("hide");
               $(".ddClass").removeClass("showTag");
-              this.getPhontos();
               this.aimActive = false;
               this.thirdOneActive = false;
               this.thirdTwoActive=false;
@@ -2600,6 +2306,8 @@
           })
       },
       join(){
+        this.handleSurvey = '';
+        this.acceptStatus(this.roomId);
         $(".takePhoneImgBox").addClass("hide");
          this.twoButton= false
           this.toOnlineActive= true;
@@ -2631,11 +2339,12 @@
         roomInstance.connect();
         //room事件
         var that = this;
-       roomInstance.on('connected',function () {
 
+       roomInstance.on('connected',function () {
           if(localStream!=''){
          //向远程端送连接指令
             var node = that.node;
+            console.log(node)
             console.log(localStream)
             wilddog.sync().ref(node).child("video_connection").push("WEB$$goToConnection");
             //发布本地流
@@ -2651,12 +2360,12 @@
               }
             });
           }
-          var setIntervalTime = '',t = '';
+          var setIntervalTime = '',settime = '';
          //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
          roomInstance.on('stream_added',function (roomStream) {
            if(roomStream){
-             clearInterval(t);       //停止计时器
-             t = setInterval(function () {
+             clearInterval(settime);       //停止计时器
+             settime = setInterval(function () {
                setIntervalTime ++ ;
              }, 1000)
            }
@@ -2689,12 +2398,12 @@
          roomInstance.on('stream_received',function (roomStream) {
            if(roomStream){
              if(setIntervalTime > 10){_
-               clearInterval(t);
+               clearInterval(settime);
              that.open4("连接视频失败")
              }
            }
            if(setIntervalTime < 10 && roomStream){
-             clearInterval(t);
+             clearInterval(settime);
              $(".takePhoneImgBox").addClass('hide');
              that.getNodealCase();
              that.steamActive = true;
@@ -2707,11 +2416,12 @@
                that.processOnlineActive =  false;
                that.OnlineActive = true;
                streamId = roomStream.streamId;
-               console.log(node)
+
                //接受照片
-               wilddog.sync().ref(node+'/video_session').on('child_added', function(snapshot) {
+               wilddog.sync().ref(that.node+'/video_session').on('child_added', function(snapshot) {
                  //获取抽帧图片的路径
                  var snapshot = snapshot.val();
+                 console.log(that.node+'/video_session')
                  console.log(snapshot)
                  if(snapshot.indexOf("APP$$PHOTO$$")> -1 ){
                    var lastIndex = snapshot.lastIndexOf('$')+1;
@@ -2723,7 +2433,6 @@
                        if(i == 0){
                          snapshot[i] = snapshot[i].replace(/%/g,"/")
                          that.originalPhotoUrl = snapshot[i];
-                         console.log(that.originalPhotoUrl)
                        }else if(i == 1){
                          snapshot[i] = snapshot[i].replace(/%/g,"/")
                          that.watermarkPhotoUrl = snapshot[i];
@@ -2747,7 +2456,7 @@
                })
                //录制视频
                var s = roomStream.streamId;
-               var a = {"left":0,"top":100,"width":100,"height":100,"zOrder":2},  map={};
+               var a = {"left":0,"top":100,"width":900,"height":800,"zOrder":2},  map={};
                map[s] = a;
                var options = {
                  "fps":10,
@@ -2755,7 +2464,6 @@
                  "canvasHeight":1000,
                }
                options.streams = map;
-               console.log(options)
                roomInstance.startRecording(options,function(url,error){
                  if(error == null){
                    console.log('开始录制，录制的文件地址：'+ url);
@@ -2785,15 +2493,13 @@
              })
 
            }
-//           if(roomStream){
-//             clearInterval(t);
-//           }
-
          });
 
-     //Room内有流离开，将流从远端移除
+         //Room内有流离开，将流从远端移除
          roomInstance.on('stream_removed',function (roomStream) {
            console.log("远端移除");
+           console.log(node);
+           wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
            that.node = '';
            that.releaseStatius()
             if(that.steamActive){
@@ -2805,7 +2511,7 @@
              that.toOnlineActive = false;
              that.processOnlineActive = false;
              that.OnlineActive  = false;
-             that.surveyActive = false;
+             that.surveyActive = true;
            })
            //停止录制视频
            roomInstance.stopRecording(function(url,err){
@@ -2819,20 +2525,11 @@
 
            });
          });
-
-
-//         //停止发布本地流
-//         roomInstance.unpublish(localStream,function(error){
-//           if(error == null){
-//             console.log('unpublish success');
-//           }else{
-//             that.errorCode = error.code;
-//             that.errorMsg = error.message;
-//             that.pushErroCode()
-//           }
-//         });
-           roomInstance.on('disconnected',function () {
-             that.node = '';
+         //pc断开视频
+         roomInstance.on('disconnected',function () {
+           console.log(node);
+               wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
+               that.node = '';
                that.steamActive = false;
                that.twoButton =  true;
                that.toOnlineActive = false;
@@ -2850,26 +2547,34 @@
         }
         axios.post(this.ajaxUrl+"/sync/session/v1/open",data)
           .then(response => {
+            console.log(response.data)
             if(response.data.rescode == 200){
               this.syncSessionNodePath = response.data.data.syncSessionNodePath;
               var that = this;
+              console.log(this.syncSessionNodePath)
               wilddog.sync().ref(this.syncSessionNodePath).on('child_added', function(data) {
                 var dataNode = data.val();
                 if(dataNode != 'ping'){
                   var index = dataNode.lastIndexOf('$');
                   var node = dataNode.substring(index+1).replace(/%/g,"/");
                   that.node = node;
+                  console.log(that.node)
                   wilddog.sync().ref(node).on('value', function(snapshot) {
                     if(snapshot.val()){
                       console.log(snapshot.val())
-
+                     that.getNodealCase()
                       wilddog.sync().ref(node).off("value");
                       that.connectNode ='video_connection';
                       that.sessionNode = 'video_session';
                       that.leftData = snapshot.val();
                       that.savevehicleLicenseNo = that.leftData.reportVehicleLicenseNo;
+                      if(that.leftData.isNew == '0'){
+                        that.twoButton = false;
+                      }else{
+                        that.twoButton = true;
+                      }
                       that.doingActive = true;
-                      that.twoButton = true;
+
                       that.toOnlineActive = false;
                       that.processOnlineActive = true;
                       that.OnlineActive = false;
@@ -2891,12 +2596,26 @@
                             that.leftData = '';
                             that.savevehicleLicenseNo = '';
                             that.doingActive = false;//显示左边无案件图标
-                          }else if(that.leftData.isNew == '1'){
-                            that.twoButton=true;
-                            that.surveyActive = false;
-                            that.toOnlineActive=false;
-                            that.processOnlineActive=false;
-                            that.OnlineActive=false;
+                          }else if(that.leftData.isNew == '1'){//旧案件发起视频未连接
+                            if(snapshot.val().isWait  == "1"){// 不是待处理订单需要停留在左边
+                              that.twoButton = true;
+                              that.surveyActive = true;
+                              that.toOnlineActive=false;
+                              that.processOnlineActive=false;
+                              that.OnlineActive=false;
+                              that.handleSurvey = '';
+                            }else if(snapshot.val().isWait  == "0"){//待处理订单需要停留在右边
+                              that.ImgInfo = [];
+                              that.carPhoneActive = false;
+                              that.saveonevehicleLicenseNo ='';
+                              that.savetwovehicleLicenseNo = '';
+                              that.savethreevehicleLicenseNo = '';
+                              that.leftData = '';
+                              that.savevehicleLicenseNo = '';
+                              that.doingActive = false;//显示左边无案件图标
+                              that.rollback();
+
+                            }
                           }
                           that.conttime = 30;
                           clearInterval(that.t);       //停止计时器
@@ -2907,7 +2626,7 @@
                         wilddogVideo.initialize({'appId':appVideoId,'token':user.getToken()});
                         //获取WilddogVideoRoom实例
                         that.roomId = snapshot.val().surveyNo;
-                        that.acceptStatus(that.roomId);
+
                         that.getPhontos();
 //                      that.roomId = "3869dc3e14c14e3eb12590200ed437a9"
                         that.roomInstance = wilddogVideo.room(that.roomId);
@@ -3052,9 +2771,531 @@
             if(response.data.rescode == 200){
               this.carPhoneActive = true;
               this.ImgInfo = response.data.data;
-              this.oneTypeSurveyPhotos = this.tooneTypeSurveyPhotos;
-              this.twoTypeSurveyPhotos = this.totwoTypeSurveyPhotos;
-              this.threeTypeSurveyPhotos = this.tothreeTypeSurveyPhotos
+              this.oneTypeSurveyPhotos = [
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "0",
+                  "photoTypeComment": "45度车辆前景照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "1",
+                  "photoTypeComment": "当事人和车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "2",
+                  "photoTypeComment": "当事车辆车架号",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "3",
+                  "photoTypeComment": "车辆受损细节(1)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "4",
+                  "photoTypeComment": "车辆受损细节(2)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "5",
+                  "photoTypeComment": " 交强险标志",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "6",
+                  "photoTypeComment": "银行卡照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "7",
+                  "photoTypeComment": "其它照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "8",
+                  "photoTypeComment": "事故认定书",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "9",
+                  "photoTypeComment": "行驶本照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "10",
+                  "photoTypeComment": "驾驶证照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "11",
+                  "photoTypeComment": "当事人签名照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/2.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "12",
+                  "photoTypeComment": "身份证正面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "13",
+                  "photoTypeComment": "身份证背面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "14",
+                  "photoTypeComment": "查勘员与车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/3.png"
+                    }
+                  ]
+                }
+              ];
+              this.twoTypeSurveyPhotos = [
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "0",
+                  "photoTypeComment": "45度车辆前景照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "1",
+                  "photoTypeComment": "当事人和车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "2",
+                  "photoTypeComment": "当事车辆车架号",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "3",
+                  "photoTypeComment": "车辆受损细节(1)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "4",
+                  "photoTypeComment": "车辆受损细节(2)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "5",
+                  "photoTypeComment": " 交强险标志",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "6",
+                  "photoTypeComment": "银行卡照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "7",
+                  "photoTypeComment": "其它照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "8",
+                  "photoTypeComment": "事故认定书",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "9",
+                  "photoTypeComment": "行驶本照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "10",
+                  "photoTypeComment": "驾驶证照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "11",
+                  "photoTypeComment": "当事人签名照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/2.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "12",
+                  "photoTypeComment": "身份证正面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "13",
+                  "photoTypeComment": "身份证背面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "14",
+                  "photoTypeComment": "查勘员与车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/3.png"
+                    }
+                  ]
+                }
+              ];
+              this.threeTypeSurveyPhotos = [
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "0",
+                  "photoTypeComment": "45度车辆前景照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "1",
+                  "photoTypeComment": "当事人和车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "2",
+                  "photoTypeComment": "当事车辆车架号",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "3",
+                  "photoTypeComment": "车辆受损细节(1)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "4",
+                  "photoTypeComment": "车辆受损细节(2)",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/1.png"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "5",
+                  "photoTypeComment": " 交强险标志",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "6",
+                  "photoTypeComment": "银行卡照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "7",
+                  "photoTypeComment": "其它照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "8",
+                  "photoTypeComment": "事故认定书",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "9",
+                  "photoTypeComment": "行驶本照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "10",
+                  "photoTypeComment": "驾驶证照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "11",
+                  "photoTypeComment": "当事人签名照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/2.png"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "12",
+                  "photoTypeComment": "身份证正面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
+                    }
+                  ]
+                },{
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "13",
+                  "photoTypeComment": "身份证背面照片",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
+                    }
+                  ]
+                },
+                {
+                  'hasUrl': 'false',
+                  "photoCount": "",
+                  "photoType": "14",
+                  "photoTypeComment": "查勘员与车辆合影",
+                  "surveyPhotos": [
+                    {
+                      "photoId": "",
+                      "watermarkPhotoUrl": "../../video/static/3.png"
+                    }
+                  ]
+                }
+              ];
               if(this.ImgInfo.length == 3){
                  this.carThreeActive = false;
               }
@@ -3062,7 +3303,7 @@
                 if(k == 0){
                   for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
                     this.saveonevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
-                    for(let j  in this.oneTypeSurveyPhotos){
+                    for(let j in this.oneTypeSurveyPhotos){
                       if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.oneTypeSurveyPhotos[j].photoType){
                         this.oneTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
                         this.oneTypeSurveyPhotos[j].hasUrl = 'true';
@@ -3140,7 +3381,13 @@
         axios.post(this.ajaxUrl+"/survey/order/v1/complete",data)
           .then(response => {
             if(response.data.rescode == 200){
-//              $(".openOrdercompleteDialog").removeClass("hide");
+              this.ImgInfo = [];
+              this.carPhoneActive = false;
+              this.saveonevehicleLicenseNo ='';
+              this.savetwovehicleLicenseNo = '';
+              this.savethreevehicleLicenseNo = '';
+              this.leftData = '';
+              this.savevehicleLicenseNo = '';
               this.steamActive = false;
               this.twoButton =  true;
               this.toOnlineActive = false;
@@ -3168,8 +3415,38 @@
       closeOrderDiolag(){
         $(".orderSelectDialog").addClass("hide");
       },
+      getLeftData(){
+          var data = {
+            "userId": this.userId
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/processing",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(response.data.data){
+                  this.doingActive = true;
+                  this.leftData = response.data.data;
+                  this.roomId = response.data.data.surveyNo;
+                  this.savevehicleLicenseNo = response.data.data.reportVehicleLicenseNo;
+                  this.twoButton = true;
+                  this.surveyActive = true;
+                  this.toOnlineActive = false;
+                  this.processOnlineActive = false;
+                  this.OnlineActive = false;
+                  this.getPhontos()
+                }
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+      },
       //双击挂起订单
       goleftLine(surveyNo,itemdata){
+        this.roomId = surveyNo;
         if(!this.doingActive){
           var data = {
             "surveyNo":surveyNo
@@ -3179,13 +3456,16 @@
               if(response.data.rescode == 200){
                 this.leftData = itemdata;
                 this.savevehicleLicenseNo = this.leftData.reportVehicleLicenseNo;
+                this.handleSurvey = response.data.data.surveyNo;
                 this.twoButton = true;
+                this.surveyActive = true;
                 this.toOnlineActive = false;
                 this.processOnlineActive = false;
                 this.OnlineActive = false;
                 this.doingActive = true;
                 this.roomId = surveyNo;
-                  this.getNodealCase();
+                this.getNodealCase();
+                this.getPhontos();
               }else{
                 this.open4(response.data.resdes)
               }
@@ -3234,7 +3514,6 @@
           this.photoType = photoType;
           this.savevehicleLicenseNo = vehicleLicenseNo;
           var node = this.node;
-          wilddog.sync().ref(node).child("video_session").push("WEB$$takePic");
         }
       },
       enterBox(ele){
@@ -3243,7 +3522,21 @@
       leaveBox(ele){
         $(ele.target).find(".hoverBox").addClass("hide")
       },
+      checkStateOne(){
+        axios.get(this.ajaxUrl+"/web/surveyor/v1/webstatus/"+this.userId)
+          .then(response => {
+            if(response.status == 200){
+              this.manualStatus = response.data.data.manualstatus;
 
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+
+      },
       checkState(){
         if(this.manualStatus == 2){
           var data = {
@@ -3361,17 +3654,17 @@
       },
       preScaleImg(){
         if(this.scaleImgLeft < '-1'){
-          this.scaleImgLeft = this.scaleImgLeft + 500;
+          this.scaleImgLeft = this.scaleImgLeft + 715;
           this.scalImgCurrentIndex --;
           $(".scaleUlBox").animate({left: this.scaleImgLeft},500)
         }
       },
       nextScaleImg(){
-        var length = -(((this.scalImgLength-2)*500)+1)
+        var length = -(((this.scalImgLength-2)*715)+1)
 
         if(this.scaleImgLeft > length){
           this.scalImgCurrentIndex ++;
-          this.scaleImgLeft = this.scaleImgLeft - 500;
+          this.scaleImgLeft = this.scaleImgLeft - 715;
           $(".scaleUlBox").animate({left: this.scaleImgLeft},500)
         }
 
@@ -3428,6 +3721,10 @@
       }
     },
     components: {
+
+    },
+    destroyed () {
+      clearInterval(this.beatTime);
     },
   }
 

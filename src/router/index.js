@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import surveyContant from  '@/page/surveyContant'
 import login from '@/page/login'
-
+import historyCase from '@/page/historyCase'
 Vue.use(Router);
 
 export default new Router({
@@ -28,6 +28,10 @@ export default new Router({
     {
       path: '/',
       component: login
+    },
+    {
+      path: '/historyCase',
+      component: historyCase
     }
   ]
 })

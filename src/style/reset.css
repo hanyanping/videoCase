@@ -251,6 +251,7 @@ html,body{
   width: 42%;
   padding: 0 5px;
   height: 35px;
+  margin-top: 15px;
 }
 .el-select{
   margin-right: 45px;
@@ -259,7 +260,7 @@ html,body{
 .el-input--suffix .el-input__inner {
   padding-right: 14px;
   border: 1px solid #bbb;
-  margin-top: 10px;
+  margin-top: 15px;
   height: 35px;
   color: #232323;
 }
