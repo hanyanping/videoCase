@@ -210,7 +210,9 @@
                 localStorage.removeItem("insitituData");//机构信息
                 localStorage.removeItem("signSeatData");//坐席信息
                 //清除缓存
-                this.$router.push({path:"/"})
+                var url = window.location.href.substring(0,(window.location.href.indexOf("#")+2));
+                console.log(url)
+               window.location.href = url
               }else{
                 if(response.data.rescode == "300"){
                   this.$router.push({path:"/"})

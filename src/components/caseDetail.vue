@@ -253,7 +253,7 @@
               <div class="videoList clear" v-else>
 
                 <div class="left vid-wrapper" id="videoBox" v-for="(item,index) in surveyVideoRooms"   >
-                  <video  controls="controls" :src="item.videoSource" type="video/mp4"  autoplay="autoplay" style="width:280px;height:200px;margin:6px 10px;">
+                  <video  controls="controls" :src="item.videoSource" type="video/mp4"  style="width:280px;height:200px;margin:6px 10px;">
                   </video>
                 </div>
               </div>

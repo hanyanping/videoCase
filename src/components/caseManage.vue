@@ -183,7 +183,7 @@
     margin: 6vh auto;
     background: #fff;
     padding: 20px;
-    height: 680px;
+    height: 85vh;
     position: relative;
   }
   .takePhoneImgBox .takebigImgContent{
@@ -236,7 +236,7 @@
   }
   .imgSize{
     width: 715px;
-    height: 578px;
+    height: 70vh;
     margin:15px auto;
     vertical-align: middle;
     overflow-y: scroll;
@@ -585,7 +585,7 @@
   }
   .bigImgContent .imgSize ul li{
     width: 715px;
-    height: 578px;
+    height: 66vh;
     text-align: center;
     line-height:680px;
     overflow-y: scroll;
@@ -641,7 +641,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 0px;
     z-index: 1010;
   }
   .video-player .player-control-box {
@@ -911,6 +911,7 @@
       </div>
     </div>
     <div class="caseContent">
+      <video v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
       <div class="caseLeft">
         <div class="tit">
           <h4>正在处理案件</h4>
@@ -980,24 +981,24 @@
                     </div>
                     <div class="player-sound">
                       <div class="player-sound-box">
-                        <div class="player-sound-min">
-                           <img src="../images/video_ico_5.png">
-                        </div>
-                        <div class="player-sound-ctrl">
-                          <div class="noUiSlider noUi-target noUi-ltr noUi-horizontal" id="noUiSlider">
-                            <div class="noUi-base">
-                              <div class="noUi-connect" style="left: 0%; right: 0%;">
-                              </div>
-                              <div class="noUi-origin" style="left: 100%;">
-                                <div id="voice" class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="100.0" aria-valuetext="100.00" style="z-index: 4;">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="player-sound-max">
-                        <img src="../images/video_ico_4.png">
-                        </div>
+                        <!--<div class="player-sound-min">-->
+                           <!--<img src="../images/video_ico_5.png">-->
+                        <!--</div>-->
+                        <!--<div class="player-sound-ctrl">-->
+                          <!--<div class="noUiSlider noUi-target noUi-ltr noUi-horizontal" id="noUiSlider">-->
+                            <!--<div class="noUi-base">-->
+                              <!--<div class="noUi-connect" style="left: 0%; right: 0%;">-->
+                              <!--</div>-->
+                              <!--<div class="noUi-origin" style="left: 100%;">-->
+                                <!--<div id="voice" class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="100.0" aria-valuetext="100.00" style="z-index: 4;">-->
+                                <!--</div>-->
+                              <!--</div>-->
+                            <!--</div>-->
+                          <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="player-sound-max" @click="showFull">-->
+                        <!--<img src="../images/video_ico_4.png">-->
+                        <!--</div>-->
                       </div>
                     </div>
                     <div class="player-auto-flash" id="closeflashButton" style="display:none">
@@ -1168,6 +1169,7 @@
     },
     data() {
       return{
+        haveVideoActive: false,
         exceptionCode: "",
         exceptionComment: "",
         isExceptionComplete: "1",
@@ -1981,7 +1983,7 @@
       }
 
       this.getNodealCase()
-      this.getsyncSessionNodePath();
+
       this.checkStateOne();
       this.getLeftData()
     },
@@ -2001,7 +2003,6 @@
             var disX=ev.clientX-oDiv.offsetLeft
             var disY=ev.clientY-oDiv.offsetTop
             document.onmousemove=function(ev){
-              console.log(55555)
               var l=ev.clientX-disX
               var t=ev.clientY-disY
               var a = oDiv.style.left;
@@ -2030,15 +2031,23 @@
       }
     },
     mounted () {
+      var that = this;
       window.onbeforeunload = function(){
         localStorage.setItem('A',"2")
       };
+      window.onunload = function(){
+        that.roomInstance.disconnect();
+      }
       this.deletNode();
       this.beatTime = setInterval(() => {
         this.getbeatTime()
       }, 15000)
     },
     methods: {
+      showFull(){
+        var myvideo=document.getElementById("remote");
+        myvideo.webkitrequestFullscreen();
+      },
       getbeatTime(){
         var data = {
           'userid':this.userId,
@@ -2052,6 +2061,13 @@
           .catch((error) => {
             console.log(error)
           })
+      },
+      open6() {
+        this.$message({
+          showClose: true,
+          message: '操作成功',
+          type: 'success'
+        });
       },
       open2(resdes) {
         this.$message.success(resdes);
@@ -2133,6 +2149,9 @@
             if(response.data.rescode == 211){
               this.$router.push({path:"/"})
             }
+            if(response.data.rescode == 200){
+              this.getsyncSessionNodePath();
+            }
           }, err => {
             console.log(err);
           })
@@ -2167,7 +2186,7 @@
         }else if(this.errorCode == '41005'){
           this.open4("音视频设备获取失败")
         }else if(this.errorCode == '41006'){
-          this.open4("操作超时")
+//          this.open4("操作超时")
         }
         if(this.roomId == ""){
           this.roomId = "noSurveyNo"
@@ -2181,10 +2200,7 @@
         axios.post(this.ajaxUrl+"/survey/video/v1//error/trace",data)
           .then(response => {
             if(response.data.rescode == 200){
-              this.twoButton = true;
-              this.toOnlineActive = false;
-              this.processOnlineActive=false;
-              this.OnlineActive=false;
+
             }else{
               this.open4(response.data.resdes)
             }
@@ -2254,6 +2270,20 @@
             this.pushErroCode()
           }
         });
+        //停止录制视频
+//        this.roomInstance.stopRecording(function(url,err){
+//          if(err == null){
+//            console.log('停止录制，录制的文件地址：'+ url);
+//          }else{
+//            that.errorCode = err.code;
+//            that.errorMsg = err.message;
+//            that.pushErroCode()
+//          }
+//        });
+        var that = this;
+        window.onunload = function(){
+          that.roomInstance.disconnect();
+        }
         this.roomInstance.disconnect();
         this.localStream.close();
         this.surveyActive = true;
@@ -2306,10 +2336,11 @@
           })
       },
       join(){
+        this.haveVideoActive = false;
         this.handleSurvey = '';
         this.acceptStatus(this.roomId);
         $(".takePhoneImgBox").addClass("hide");
-         this.twoButton= false
+         this.twoButton= false;
           this.toOnlineActive= true;
           this.processOnlineActive= false;
           this.OnlineActive=false;
@@ -2317,6 +2348,7 @@
           this.conttime = 30;
         clearInterval(this.t);
         var localStream = '';
+        var that = this;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
           captureVideo: false,
@@ -2326,19 +2358,19 @@
         }).then(function (screenStream) {
           localStream = screenStream;
           that.localStream = localStream;
-          console.log(localStream)
-//            localStream.attach(that.localEl);
         }).catch(function (err) {
           that.errorCode = err.code;
           that.errorMsg = err.message;
+          if(that.errorCode == '41005'){
+            wilddog.sync().ref(that.node).child("video_connection").push("WEB$$refuseConnection");
+          }
           that.pushErroCode()
-
         });
         var roomInstance = this.roomInstance;
         //进入到room
         roomInstance.connect();
         //room事件
-        var that = this;
+
 
        roomInstance.on('connected',function () {
           if(localStream!=''){
@@ -2498,7 +2530,6 @@
          //Room内有流离开，将流从远端移除
          roomInstance.on('stream_removed',function (roomStream) {
            console.log("远端移除");
-           console.log(node);
            wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
            that.node = '';
            that.releaseStatius()
@@ -2516,17 +2547,26 @@
            //停止录制视频
            roomInstance.stopRecording(function(url,err){
              if(err == null){
-               console.log(url)
+               console.log('停止录制，录制的文件地址：'+ url);
              }else{
                that.errorCode = err.code;
                that.errorMsg = err.message;
                that.pushErroCode()
              }
-
            });
          });
          //pc断开视频
          roomInstance.on('disconnected',function () {
+           //停止录制视频
+           roomInstance.stopRecording(function(url,err){
+             if(err == null){
+               console.log('停止录制，录制的文件地址：'+ url);
+             }else{
+               that.errorCode = err.code;
+               that.errorMsg = err.message;
+               that.pushErroCode()
+             }
+           });
            console.log(node);
                wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
                that.node = '';
@@ -2561,6 +2601,7 @@
                   console.log(that.node)
                   wilddog.sync().ref(node).on('value', function(snapshot) {
                     if(snapshot.val()){
+                      that.haveVideoActive = true;
                       console.log(snapshot.val())
                      that.getNodealCase()
                       wilddog.sync().ref(node).off("value");
@@ -2585,6 +2626,7 @@
                           that.conttime = that.conttime-1;
                         }
                         if (that.conttime === 0) {
+                          that.haveVideoActive = false;
                           wilddog.sync().ref(node).child("video_connection").push("WEB$$refuseConnection");
                           if(that.leftData.isNew == '0'){//新订单发起视频未连接
                             that.ignoreCase();
@@ -3395,7 +3437,7 @@
               this.OnlineActive  = false;
               this.doingActive = false;
               $(".orderSelectDialog").addClass("hide");
-              this.open2(response.data.resdes)
+              this.open6()
             }else{
               this.open4(response.data.resdes)
             }

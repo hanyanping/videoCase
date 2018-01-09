@@ -175,7 +175,7 @@
       }
     },
     created(){
-      this.getCode()
+      this.getCode();
     },
 
     mounted() {
@@ -214,17 +214,18 @@
       },
       getCode(){
         var number = Math.round(Math.random()*9+1);
-        axios.get(this.ajaxUrl+"/pubsurvey/manage/login/v1/imgcode")
-          .then(response => {
-            if(response.status == 200){
-              this.imgUrl = this.ajaxUrl+"/pubsurvey/manage/login/v1/imgcode?"+number;
-            }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        this.imgUrl = this.ajaxUrl+"/pubsurvey/manage/login/v1/imgcode?"+number;
+//        axios.get(this.ajaxUrl+"/pubsurvey/manage/login/v1/imgcode")
+//          .then(response => {
+//            if(response.status == 200){
+//              this.imgUrl = this.ajaxUrl+"/pubsurvey/manage/login/v1/imgcode?"+number;
+//            }
+//          }, err => {
+//            console.log(err);
+//          })
+//          .catch((error) => {
+//            console.log(error)
+//          })
       },
       loginIn() {
         var paramData = {
