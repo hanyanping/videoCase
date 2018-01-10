@@ -428,6 +428,9 @@
   .openOrdercompleteDialog{
     z-index: 201;
   }
+  .cityDialog{
+    z-index: 1201;
+  }
   .orderSelectDialog .selectBox select{
     border: 1px solid #bbb;
     height: 30px;
@@ -1058,27 +1061,27 @@
                 <dd id="c0" class="data-car-m" >
                   <span v-if="oneCarActive" style="color: #35aa42;">标的车：{{saveonevehicleLicenseNo}}</span>
                   <span v-else>标的车：{{saveonevehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-if="oneCarActive" class="u-edit-icon"></i>
-                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo)" v-else class="u-edit-iconGreay hide"></i>
+                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0' )" v-if="oneCarActive" class="u-edit-icon"></i>
+                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0')" v-else class="u-edit-iconGreay hide"></i>
                 </dd>
               </dl>
               <dl v-if="ImgInfo.length>1" class="m-carNo-list" id="selectImgTypeTwo" @click="selectCarAim('1',$event,savetwovehicleLicenseNo)">
                 <dd id="c1" class="data-car-m">
                   <span v-if="TwoCarActive" style="color: #35aa42;">三者车：{{savetwovehicleLicenseNo}}</span>
                   <span v-else>三者车：{{savetwovehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-if="TwoCarActive" class="u-edit-icon"></i>
-                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
+                  <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-if="TwoCarActive" class="u-edit-icon"></i>
+                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-else class="u-edit-iconGreay "></i>
                 </dd>
               </dl>
               <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event,savethreevehicleLicenseNo)">
                 <dd id="c2" class="data-car-m">
                   <span v-if="threeCarActive" style="color: #35aa42;">三者车：{{savethreevehicleLicenseNo}}</span>
                   <span v-else>三者车：{{savethreevehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-if="threeCarActive" class="u-edit-icon"></i>
-                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo)" v-else class="u-edit-iconGreay "></i>
+                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-if="threeCarActive" class="u-edit-icon"></i>
+                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-else class="u-edit-iconGreay "></i>
                 </dd>
               </dl>
-              <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar"></div>
+              <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar('3')"></div>
             </div>
 
           </div>
@@ -1169,6 +1172,14 @@
     },
     data() {
       return{
+        editorcar: "",
+        opsType: "1",
+        isOrderVehicleone: "",
+        isOrderVehicletwo:"",
+        isOrderVehiclethree: "",
+        saveoneoriginalVehicleLicenseNo: "",
+        savetwooriginalVehicleLicenseNo: "",
+        savethreeoriginalVehicleLicenseNo: "",
         haveVideoActive: false,
         exceptionCode: "",
         exceptionComment: "",
@@ -1962,7 +1973,9 @@
         warning:"",
         handleSurvey: "",
         beatTime: "",
-        freshActive: false
+        freshActive: false,
+        originalVehicleLicenseNo: "",
+        isOrderVehicle: ""
       }
     },
     created(){
@@ -2766,28 +2779,43 @@
             console.log(error)
           })
       },
-      editorCar(vehicleLicenseNo){
-        $(".editorCarInfo").removeClass("hide")
-        this.getCity = vehicleLicenseNo.substring(0,1)
-        this.vehicleLicenseNo = vehicleLicenseNo.substring(1)
+      editorCar(vehicleLicenseNo,originalVehicleLicenseNo,isOrderVehicle,editorcar){
+        $(".editorCarInfo").removeClass("hide");
+        this.originalVehicleLicenseNo  = originalVehicleLicenseNo;
+        this.isOrderVehicle = isOrderVehicle;
+        this.opsType = "0";
+        console.log(this.originalVehicleLicenseNo);
+        this.getCity = vehicleLicenseNo.substring(0,1);
+        this.vehicleLicenseNo = vehicleLicenseNo.substring(1);
         console.log(vehicleLicenseNo)
       },
       savevehicle(){
       if(this.vehicleLicenseNo == ''){
         this.open4("请输入车牌号")
       }else{
+        if(this.originalVehicleLicenseNo == ''){
+          this.originalVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
+        }
         var data = {
           'surveyNo':this.roomId,
-          "vehicleLicenseNo":this.getCity+this.vehicleLicenseNo
+          "vehicleLicenseNo":this.getCity+this.vehicleLicenseNo,
+          "originalVehicleLicenseNo": this.originalVehicleLicenseNo,
+          "isOrderVehicle": this.isOrderVehicle,
+          "opsType": this.opsType
         }
         axios.post(this.ajaxUrl+"/survey/vehicle/v1/vehicle",data)
           .then(response => {
             if(response.data.rescode == 200){
+              if(this.isOrderVehicle == "1"){
+                this.leftData.reportVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
+              }
               $(".editorCarInfo").addClass("hide")
               this.vehicleLicenseNo = "";
               this.getCity = "京";
               this.open2(response.data.resdes);
               this.getPhontos()
+            }else{
+              this.open4(response.data.resdes)
             }
           }, err => {
             console.log(err);
@@ -3345,6 +3373,8 @@
                 if(k == 0){
                   for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
                     this.saveonevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    this.saveoneoriginalVehicleLicenseNo = this.ImgInfo[k].originalVehicleLicenseNo;
+                    this.isOrderVehicleone = this.ImgInfo[k].isOrderVehicle;
                     for(let j in this.oneTypeSurveyPhotos){
                       if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.oneTypeSurveyPhotos[j].photoType){
                         this.oneTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
@@ -3355,6 +3385,8 @@
                 }else if(k == 1){
                   for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
                     this.savetwovehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    this.savetwooriginalVehicleLicenseNo = this.ImgInfo[k].originalVehicleLicenseNo;
+                    this.isOrderVehicletwo = this.ImgInfo[k].isOrderVehicle;
                     for(let j  in this.twoTypeSurveyPhotos){
                       if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.twoTypeSurveyPhotos[j].photoType){
                         this.twoTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
@@ -3365,6 +3397,8 @@
                 }else if(k == 2){
                   for(let i in this.ImgInfo[k].allTypeSurveyPhotos){
                     this.savethreevehicleLicenseNo = this.ImgInfo[k].vehicleLicenseNo;
+                    this.savethreeoriginalVehicleLicenseNo = this.ImgInfo[k].originalVehicleLicenseNo;
+                    this.isOrderVehiclethree = this.ImgInfo[k].isOrderVehicle;
                     for(let j  in this.threeTypeSurveyPhotos){
                       if(this.ImgInfo[k].allTypeSurveyPhotos[i].photoType == this.threeTypeSurveyPhotos[j].photoType){
                         this.threeTypeSurveyPhotos[j] = this.ImgInfo[k].allTypeSurveyPhotos[i];
@@ -3691,8 +3725,11 @@
         $(".cityDialog").removeClass("hide")
       },
       openAddCar(){
-        $(".editorCarInfo").removeClass("hide")
-        this.getCity = '京'
+        $(".editorCarInfo").removeClass("hide");
+        this.originalVehicleLicenseNo = '';
+        this.isOrderVehicle = '0';
+        this.getCity = '京';
+        this.opsType = "1"
       },
       preScaleImg(){
         if(this.scaleImgLeft < '-1'){
