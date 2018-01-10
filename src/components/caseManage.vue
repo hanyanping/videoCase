@@ -644,7 +644,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0px;
+    bottom: 30px;
     z-index: 1010;
   }
   .video-player .player-control-box {
@@ -972,7 +972,7 @@
           <div id="video" class="video" style="width: 746px;height: 488px;">
             <!--<video v-if="steamActive" id="local" width=746px height=488px style="border:1px solid;margin-right:20px;" muted="" autoplay="" controls></video>-->
             <div v-if="steamActive" class="videoBox" @mouseenter="enterVedeo" @mouseleave="leaveVideo">
-              <video  id="remote" width=746px height=488px style="border:1px solid;margin-right:20px;" autoplay=""></video>
+              <video controls="controls" id="remote" width=746px height=488px style="border:1px solid;margin-right:20px;" autoplay=""></video>
               <div id="bar_46122248740144030" style="width: 748px; height: 100%; position: relative; bottom: 0; right: 0;">
                 <div class="player-control">
                   <div class="player-control-box">
@@ -1168,7 +1168,7 @@
 
   export default {
     ready() {
-      console.log('111');
+      console.log('20180110');
     },
     data() {
       return{
