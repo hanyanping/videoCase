@@ -1168,7 +1168,7 @@
 
   export default {
     ready() {
-      console.log('444');
+      console.log('111');
     },
     data() {
       return{
