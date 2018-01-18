@@ -123,7 +123,7 @@
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;border-bottom:1px solid #bbb;padding-bottom:15px;">
         <img style="margin-top:10px;" src="../images/logo.png"/>
-        <span class="headerText">  <span>|</span>事故e处理-视频查勘定损平台</span>
+        <span class="headerText">  <span>|</span>事故e处理-视频查勘定损坐席平台</span>
       </div>
 
     </div>
@@ -245,6 +245,7 @@
                 if(response.data.rescode == 200){
                   localStorage.setItem('A',"2")
                   this.open2();
+                  localStorage.setItem('insurecode',response.data.data.insurecode);
                   localStorage.setItem('orgCode',response.data.data.organizationCode);
                   localStorage.setItem('chinaName',response.data.data.organizationName)
                   localStorage.setItem('userName',response.data.data.username)

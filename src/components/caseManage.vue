@@ -175,6 +175,9 @@
     left: 0;
     z-index: 1020;
   }
+  .editorCarInfo{
+    background: rgba(0,0,0,0.2);
+     }
   .takePhonetypeBox{
     z-index: 1031;
   }
@@ -199,7 +202,8 @@
   }
   .editorCarInfo .editorContent{
     width: 350px;
-    margin: 15vh auto;
+    margin-top: 16vh;
+    margin-left: 72%;
     background: #fff;
     padding: 20px;
     height: 280px;
@@ -2096,6 +2100,7 @@
           this.open4("请选择照片类型")
         }else{
           var data = {
+            "originalPhotoUrl":this.originalPhotoUrl,
             'photoType':this.photoType,
             "photoUrl":this.watermarkPhotoUrl,
             "surveyNo": this.roomId,
@@ -3662,7 +3667,7 @@
       },
 
       openType(){
-        if(this.photoType != '' && this.savevehicleLicenseNo != '' && this.watermarkPhotoUrl != '' && this.roomId != '' && this.longitude != '' && this.latitude != ''){
+        if(this.photoType != '' && this.savevehicleLicenseNo != '' && this.watermarkPhotoUrl != '' && this.roomId != '' && this.longitude != '' && this.latitude != ''&&this.originalPhotoUrl !=''){
           this.sureTakeImg()
         }else{
           this.photoType = '';

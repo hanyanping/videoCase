@@ -149,8 +149,8 @@
           <input type="tel" v-model="reporterPhoneNo" placeholder="请输入手机号" maxlength="11"/>
           <span>保险报案号:</span>
           <input type="text" v-model="reportInsuranceNo" placeholder="请输入保险报案号"/>
-          <span>保险公司:</span>
-          <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
+          <span  v-if="companeyActive">保险公司:</span>
+          <el-select  v-if="companeyActive" v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
             <el-option
               v-for="item in companeyOptions"
               :key="item.fullName"
@@ -264,6 +264,8 @@
   export default {
     data() {
       return {
+        insurecode: "",
+        companeyActive: false,
         activeName: 'second',
         tableActive: false,
         reporterPhoneNo: "",
@@ -339,6 +341,13 @@
       },
     },
     created() {
+      this.insurecode = localStorage.getItem('insurecode');
+      console.log(this.companeyActive)
+      console.log(this.insurecode)
+      if(this.insurecode == 111111111111){
+        console.log(this.companeyActive)
+        this.companeyActive = true;
+      }
       this.webSurveyorId = localStorage.getItem('userId');
       if(this.webSurveyorId){
 

@@ -5,7 +5,7 @@
     margin-left: 15px;
     display: inline-block;
     margin-top: 25px;
-    width: 210px;
+    min-width: 210px;
 
   }
   .headerText span{
@@ -86,7 +86,7 @@
       <div class="headBox">
         <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
-          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
+          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损坐席平台</span>
           <div class="menu" style="display: flex;">
             <el-tabs v-model="activeName" @tab-click="handleClick" >
               <el-tab-pane  label="案件管理" name="first">
@@ -191,6 +191,7 @@
           axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout",data)
             .then(response => {
               if(response.data.rescode == 200){
+                localStorage.removeItem('insurecode');
                 localStorage.removeItem('orgCode');
                 localStorage.removeItem('chinaName')
                 localStorage.removeItem('userName')

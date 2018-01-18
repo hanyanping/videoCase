@@ -429,7 +429,11 @@ export default {
          this.thirdvehicleLicenseNo =  vehicleLicenseNo
         },
         handleCurrentChangethird(currentPage){
-          this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,"")
+          for(let i in this.accidentVehicleInfos){
+            if(this.thirdvehicleLicenseNo == this.accidentVehicleInfos[i].vehicleLicenseNo){
+              this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,i)
+            }
+          }
         },
         handleCurrentChangeAim(currentPage) {//跳转
           //当前页改变调用接口 currentPage   pageSizeAim
@@ -462,6 +466,7 @@ export default {
                     var thirdLength = this.accidentVehicleInfos.length;
                     for(let i in this.accidentVehicleInfos){
                       if(i == source){
+                        this.accidentVehicleInfos[i].thirdCarImg = [];
                         for(let j in response.data.data.records){
                           this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records[j])
                         }
@@ -470,14 +475,8 @@ export default {
                       }
                     }
                     this.$nextTick(() => {
+                      this.thirdCar = ''
                       this.thirdCar = this.accidentVehicleInfos;
-                      console.log(this.thirdCar)
-                      for(let i in this.thirdCar){
-                        for(let j in this.thirdCar[i].thirdCarImg){
-                          console.log(this.thirdCar[i].thirdCarImg[j])
-                          console.log(this.thirdCar[i].thirdCarImg[j].photoTypeComment)
-                        }
-                      }
                       for (let i in this.thirdCar) {
                         this.$nextTick(() => {
                           new Viewer(document.getElementsByClassName('suibian')[i], {

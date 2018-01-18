@@ -9,15 +9,16 @@
         <span>保险报案号:</span>
         <input type="text" v-model="reportInsuranceNo" placeholder="请输入保险报案号"/>
         <span>保险公司:</span>
-        <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
-          <el-option
-            v-for="item in companeyOptions"
-            :key="item.insureCompanyName"
-            :label="item.insureCompanyName"
-            :value="item.insureCompanyCode">
-          </el-option>
-        </el-select>
-
+        <div>
+          <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
+            <el-option
+              v-for="item in companeyOptions"
+              :key="item.insureCompanyName"
+              :label="item.insureCompanyName"
+              :value="item.insureCompanyCode">
+            </el-option>
+          </el-select>
+        </div>
         <span>机构:</span>
         <el-select v-model="orgCode" name="insititution" placeholder="请选择机构">
           <el-option
@@ -144,6 +145,7 @@
   export default {
     data() {
       return {
+
         tableActive: false,
         reporterPhoneNo: "",
         reporterCarLicenseNo: "",
@@ -225,7 +227,8 @@
 
     created() {
       this.getCompaney();
-      this.getCaseList()
+      this.getCaseList();
+
     },
     mounted() {
       this.caseDetailActive = this.$store.state.caseDetailActive;
