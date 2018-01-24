@@ -166,7 +166,7 @@
     background: rgba(255,255,255,.5);
     z-index: 99;
   }
-  .scalImgBox,.editorCarInfo,.takePhoneImgBox,.takePhonetypeBox{
+  .scalImgBox,.editorCarInfo,.takePhoneImgBox,.takePhonetypeBox,.beizhuDiolag{
     background: rgba(0,0,0,0.8);
     width:100%;
     position: fixed;
@@ -175,7 +175,7 @@
     left: 0;
     z-index: 1020;
   }
-  .editorCarInfo{
+  .editorCarInfo,.beizhuDiolag{
     background: rgba(0,0,0,0.2);
      }
   .takePhonetypeBox{
@@ -200,7 +200,7 @@
     height: 820px;
     position: relative;
   }
-  .editorCarInfo .editorContent{
+  .editorCarInfo .editorContent,.beizhuDiolag .editorContent{
     width: 350px;
     margin-top: 16vh;
     margin-left: 72%;
@@ -208,6 +208,9 @@
     padding: 20px;
     height: 280px;
     position: relative;
+  }
+  .beizhuDiolag .editorContent{
+    height: 325px;
   }
   .closeCaleImgBox,.closeEditorCar,.closeCityDiolag,.closetypeBox{
     font-size: 42px;
@@ -359,21 +362,26 @@
   .item-btn-max{
     width:195px;
   }
-   .item-btn-max #finishOrder {
+   .item-btn-max #finishOrder, #beizhu {
     background: #35aa42;
     color: #fff;
     text-align: center;
     font-size: 16px;
-    display: block;
+    display: inline-block;
     padding: 10px;
+     min-width:85px;
+  }
+  #beizhu{
+    margin-left: 6px;
   }
   .item-btn-max #nofinishOrder{
     background: rgb(239, 239, 244);
     color: rgb(153, 153, 153);
     text-align: center;
     font-size: 16px;
-    display: block;
+    display: inline-block;
     padding: 10px;
+    min-width:85px;
   }
 
   .wait-law-case {
@@ -386,8 +394,12 @@
     font-size: 14px;
     line-height: 24px;
   }
+
   .inputBox{
     margin: 30px 20px;
+  }
+  .beizhuDiolag .inputBox{
+    margin: 12px 20px;
   }
   .inputBox input{
     border:1px solid #bbb;
@@ -820,6 +832,18 @@
         </div>
       </div>
     </div>
+    <div class="beizhuDiolag hide">
+      <div class="editorContent">
+        <h4>备注信息</h4>
+        <span @click="closeBeizhu" class="right closeEditorCar">×</span>
+        <div class="inputBox">
+          <textarea style="width:100%;height:200px;border:1px solid #bbb;border-radius:6px;" v-model="beizhuInfo" placeholder="请输入备注信息" ></textarea>
+        </div>
+        <div style="margin: 20px auto;text-align: center;">
+          <span class="backColorGreen saveCarInfo" @click="saveBeizhu">保存</span>
+        </div>
+      </div>
+    </div>
     <div class="editorCarInfo hide">
       <div class="editorContent">
         <h4>车辆信息</h4>
@@ -961,6 +985,7 @@
             <div class="item-btn-max">
               <a href="javascript:;" class="link-btn-max" v-if="twoButton && surveyActive" id="finishOrder" @click="openOrderSelect">查勘完成</a>
               <a href="javascript:;"  v-else id="nofinishOrder">查勘完成</a>
+              <a href="javascript:;"   id="beizhu" @click="openBeizhu">备注</a>
             </div>
           </div>
           <div class="m-noContent-mod" v-else>
@@ -1176,6 +1201,7 @@
     },
     data() {
       return{
+        beizhuInfo: "",
         editorcar: "",
         opsType: "1",
         isOrderVehicleone: "",
@@ -2006,46 +2032,8 @@
     },
 
     watch:{
-      "warning": function(){
-         alert(this.warning)
-      },
-      "steamActive": function(){
-      if(this.steamActive){
-        console.log(this.steamActive)
-        this.$nextTick(() => {
-          var myVid = document.getElementById("remote");
-          myVid.volume = 1;
-          var oDiv = document.getElementById('voice')
-          oDiv.onmousedown=function(ev){
-            var disX=ev.clientX-oDiv.offsetLeft
-            var disY=ev.clientY-oDiv.offsetTop
-            document.onmousemove=function(ev){
-              var l=ev.clientX-disX
-              var t=ev.clientY-disY
-              var a = oDiv.style.left;
-              if(l<-70){
-                oDiv.style.left='-70px';
-                myVid.volume=1;
-              }else if(l > 0){
-                oDiv.style.left='-0px';
-                myVid.volume=0;
-              }else{
-                oDiv.style.left=l+'px';
-                var b = oDiv.style.left;
-                myVid.volume = (70+l)/70;
-                console.log( myVid.volume)
-              }
-              oDiv.style.top = -5
-            }
-            document.onmouseup=function(){
-              document.onmousemove=null;
-              document.onmouseup=null
-            }
-          }
-        })
 
-      }
-      }
+
     },
     mounted () {
       var that = this;
@@ -2794,48 +2782,77 @@
         this.vehicleLicenseNo = vehicleLicenseNo.substring(1);
         console.log(vehicleLicenseNo)
       },
+      //保存车辆车牌号
       savevehicle(){
-      if(this.vehicleLicenseNo == ''){
-        this.open4("请输入车牌号")
-      }else{
-        if(this.originalVehicleLicenseNo == ''){
-          this.originalVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
-        }
-        var data = {
-          'surveyNo':this.roomId,
-          "vehicleLicenseNo":this.getCity+this.vehicleLicenseNo,
-          "originalVehicleLicenseNo": this.originalVehicleLicenseNo,
-          "isOrderVehicle": this.isOrderVehicle,
-          "opsType": this.opsType
-        }
-        axios.post(this.ajaxUrl+"/survey/vehicle/v1/vehicle",data)
-          .then(response => {
-            if(response.data.rescode == 200){
-              if(this.isOrderVehicle == "1"){
-                this.leftData.reportVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
+        if(this.vehicleLicenseNo == ''){
+          this.open4("请输入车牌号")
+        }else{
+          if(this.originalVehicleLicenseNo == ''){
+            this.originalVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
+          }
+          var data = {
+            'surveyNo':this.roomId,
+            "vehicleLicenseNo":this.getCity+this.vehicleLicenseNo,
+            "originalVehicleLicenseNo": this.originalVehicleLicenseNo,
+            "isOrderVehicle": this.isOrderVehicle,
+            "opsType": this.opsType
+          }
+          axios.post(this.ajaxUrl+"/survey/vehicle/v1/vehicle",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(this.isOrderVehicle == "1"){
+                  this.leftData.reportVehicleLicenseNo = this.getCity+this.vehicleLicenseNo;
+                }
+                $(".editorCarInfo").addClass("hide")
+                this.vehicleLicenseNo = "";
+                this.getCity = "京";
+                this.open2(response.data.resdes);
+                this.getPhontos()
+              }else{
+                this.open4(response.data.resdes)
               }
-              $(".editorCarInfo").addClass("hide")
-              this.vehicleLicenseNo = "";
-              this.getCity = "京";
-              this.open2(response.data.resdes);
-              this.getPhontos()
-            }else{
-              this.open4(response.data.resdes)
-            }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      },
+        //保存备注信息
+      saveBeizhu(){
+        this.beizhuInfo = this.beizhuInfo.replace(/(^\s*)|(\s*$)/g, "");
+        if(this.beizhuInfo == ''){
+          this.open4("请输入备注")
+        }else{
+          var data = {
+            'surveyNo':this.roomId,
+            "noteContent":this.beizhuInfo
 
-
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/save/note",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.beizhuInfo = '';
+                $(".beizhuDiolag").addClass('hide');
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
       },
       closeEditorCar(){
         $(".editorCarInfo").addClass('hide');
         this.getCity = '京';
         this.vehicleLicenseNo = '';
+      },
+      closeBeizhu(){
+        $(".beizhuDiolag").addClass('hide');
       },
       getPhontos(){
         var data = {
@@ -3492,6 +3509,25 @@
       },
       openOrderSelect(){
         $(".orderSelectDialog").removeClass("hide");
+      },
+      openBeizhu(){
+        $(".beizhuDiolag").removeClass("hide");
+          var data = {
+            'surveyNo':this.roomId,
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/query/note",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.beizhuInfo =response.data.data.noteContent;
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
       },
       closeOrderDiolag(){
         $(".orderSelectDialog").addClass("hide");

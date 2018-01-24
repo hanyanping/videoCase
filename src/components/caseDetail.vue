@@ -156,6 +156,14 @@
   #videoBox video{
     object-fit:fill
   }
+  .beizhuInfo{
+    border: 1px solid #bbb;
+    min-height:100px;
+    width:100%;
+    padding:10px 16px;
+    font-size: 14px;
+    line-height: 20px;
+  }
 
 </style>
 <template>
@@ -187,6 +195,13 @@
               </div>
 
               <div class="caseInfoBox" v-if="caseDetailData.accidentInfo.exceptionReason != null"><span>异常原因：</span><i>{{caseDetailData.accidentInfo.exceptionReason}}</i></div>
+          </div>
+          <div class="AimCar" v-if="beizhuActive">
+            <div  class="aimheader clear"><span style="color:#fff;">备注信息</span><span style="color:#fff;padding-right:10px;cursor: pointer;" @click="saveBeizhu" class="right">保存</span></div>
+            <div class="aimInfo">
+              <textarea class="beizhuInfo" v-model="beizhuInfo">
+              </textarea>
+            </div>
           </div>
           <div class="AimCar">
             <div class="aimheader">标的车</div>
@@ -290,6 +305,7 @@ import axios from 'axios'
 export default {
   data() {
       return{
+        beizhuActive: false,
         showOldActive: false,
         currentPageNoAim: 1,//当前页码
         pageSizeAim: 4,//每页记录数
@@ -298,6 +314,7 @@ export default {
         caseDetailData: {},
         recordsThird: [],
         surveyNo: "",
+        beizhuInfo: "",
         thirdCar: [],
         accidentVehicleInfos:[],
         siStatusText: '',
@@ -311,7 +328,7 @@ export default {
         surveyId: '',
         thirdvehicleLicenseNo: "",
         surveyVideoRooms: [],
-        showFlash: false
+        showFlash: false,
       }
     },
   watch:{
@@ -336,6 +353,7 @@ export default {
            this.showOldActive = true;
          }
       }
+
        if(this.caseDetailData.sceneSurveyorInfo != null){
            if(this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo === null){
              this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo = '暂无'
@@ -380,6 +398,8 @@ export default {
            this.getCasePhones(1,4,this.accidentVehicleInfos[i].vehicleLicenseNo,this.surveyNo,i)
          }
        }
+      //获取备注信息
+      this.getBeizhu()
     },
     mounted() {
       if(this.showOldActive){
@@ -392,6 +412,53 @@ export default {
 //      caseOrder: string
     },
       methods: {
+        saveBeizhu(){
+          this.beizhuInfo = this.beizhuInfo.replace(/(^\s*)|(\s*$)/g, "");
+          if(this.beizhuInfo == ''){
+            this.open4("请输入备注")
+          }else{
+            var data = {
+              'surveyNo':this.surveyNo,
+              "noteContent":this.beizhuInfo
+
+            }
+            axios.post(this.ajaxUrl+"/survey/order/v1/save/note",data)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.open2(response.data.resdes)
+                }else{
+                  this.open4(response.data.resdes)
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+        },
+        getBeizhu(){
+          $(".beizhuDiolag").removeClass("hide");
+          var data = {
+            'surveyNo':this.surveyNo,
+          }
+          axios.post(this.ajaxUrl+"/survey/order/v1/query/note",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(response.data.data != '' || response.data.data != null){
+                  this.beizhuInfo = response.data.data.noteContent;
+                  this.beizhuActive = true;
+                }
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
         getvedio(){
           if(this.surveyVideoRooms.length!=0){
            this.$nextTick(() => {
