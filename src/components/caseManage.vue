@@ -58,7 +58,6 @@
   }
   .casePhotos .g-content-row {
     margin-bottom: 20px;
-    overflow: hidden;
   }
   .casePhotos .g-content-row .gcr-mod{
     background: #fff;
@@ -120,31 +119,34 @@
   }
   .casePhotos .g-content-row .gcr-cont {
     padding: 10px 0;
-    height: 200px;
+    min-height: 300px;
   }
  #picListZone .suibian{
-    display: -webkit-box;
-    margin: 0px;
+    /*display: -webkit-box;*/
+    margin-left: 15px;
     position:absolute;
     left:0;
   }
-
+  #picListZone .suibian li{
+   float: left;
+    margin-bottom: 8px;
+  }
   #picListZone .suibian img {
-    width: 168px;
-    height: 140px;
+    width: 140px;
+    height: 125px;
     display: block;
   }
   #picListZone .suibian  .liImgbox{
     background: #dcdcdc;
     position: relative;
-    width: 168px;
+    width: 140px;
     left: 0;
     top: 20px;
-    height: 140px;
+    height: 125px;
     margin: 0 8px;
   }
   #picListZone{
-    width: 1210px;
+    width: 1310px;
     margin: 0 auto;
     display: flex;
     height: 200px;
@@ -152,8 +154,8 @@
   }
   #picListZone .ulBox{
     position:relative;
-    width: 1110px;
-    overflow: hidden ;
+    width: 1310px;
+    /*overflow: hidden ;*/
   }
   #picListZone .suibian  .title {
     text-align: center;
@@ -521,7 +523,7 @@
    }
   .m-selectImgType-cont dl dd a{
     height: 40px;
-    min-width: 130px;
+    min-width: 140px;
     display: inline-block;
     padding: 0 6px;
     line-height: 40px;
@@ -566,8 +568,8 @@
   .hoverBox{
     position: absolute;
     background: rgba(0,0,0,0.3);
-    height:140px;
-    width: 168px;
+    height:125px;
+    width: 140px;
     z-index: 100;
     margin-left: 8px;
     margin-top:20px;
@@ -1116,7 +1118,7 @@
           </div>
           <div class="gcr-cont" style="padding-top: 0">
             <div class="m-carNo-imgList" id="picListZone" v-if="carPhoneActive">
-              <div class="prev" @click="preImginfo"></div>
+              <!--<div class="prev" @click="preImginfo"></div>-->
               <div class="ulBox">
                 <ul v-if="oneCarActive" class="suibian">
                   <li @click="seletedCarType($event,saveonevehicleLicenseNo,item.photoType)" @mouseenter="enterBox($event)" @mouseleave="leaveBox($event)" v-for="(item,index) in oneTypeSurveyPhotos">
@@ -1168,7 +1170,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="next" @click="nextImgInfo"></div>
+              <!--<div class="next" @click="nextImgInfo"></div>-->
             </div>
           </div>
         </div>
