@@ -3390,6 +3390,7 @@
                   ]
                 }
               ];
+              console.log(this.ImgInfo.length)
               if(this.ImgInfo.length == 3){
                  this.carThreeActive = false;
               }
