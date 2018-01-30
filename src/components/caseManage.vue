@@ -1,8 +1,9 @@
 <style scoped>
   .caseManage{
     margin: 15px auto;
-    width: 1278px;
+    width: 1310px;
     overflow-y: scroll;
+    overflow-x: hidden;
     height: 82vh;
     padding-bottom: 20px;
   }
@@ -2344,6 +2345,16 @@
           })
       },
       join(){
+        navigator.getUserMedia = navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia;
+
+        if(navigator.getUserMedia){
+          alert("支持调取摄像头麦克风")
+        } else {
+          alert("抱歉不支持")
+        }
         this.haveVideoActive = false;
         this.handleSurvey = '';
         this.acceptStatus(this.roomId);
@@ -2359,7 +2370,7 @@
         var that = this;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
-          captureVideo: false,
+          captureVideo: true,
           captureAudio: true,
           dimension: '480p',
           maxFPS: 15
