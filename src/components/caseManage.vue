@@ -945,7 +945,9 @@
       </div>
     </div>
     <div class="caseContent">
-      <video v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
+      <video id="videoOne" v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
+      <button id="capture">Capture</button>
+      <div id="output"></div>
       <div class="caseLeft">
         <div class="tit">
           <h4>正在处理案件</h4>
@@ -2008,10 +2010,14 @@
         beatTime: "",
         freshActive: false,
         originalVehicleLicenseNo: "",
-        isOrderVehicle: ""
+        isOrderVehicle: "",
+        video: '',
+        $output: "",
+        scale: "0.25"
       }
     },
     created(){
+
 //      this.getUserMedia({video:true},"","");
       this.userId = localStorage.getItem('userId');
       this.orgCode = localStorage.getItem('orgCode');
@@ -2041,6 +2047,7 @@
     },
     mounted () {
       var that = this;
+//      this.initialize()
       window.onbeforeunload = function(){
         localStorage.setItem('A',"2")
       };
@@ -2053,6 +2060,23 @@
       }, 15000)
     },
     methods: {
+       initialize(){
+        this.$output = $("#output");
+        this.video = $("#videoOne").get(0);
+        var that = this;
+        $("#capture").click(function(){
+          that.captureImage()
+        });
+      },
+       captureImage(){
+          var canvas = document.createElement("canvas");
+          canvas.width = this.video.videoWidth*(this.scale);
+          canvas.height = this.video.videoHeight*(this.scale);
+          canvas.getContext('2d').drawImage(this.video,0,0,canvas.width,canvas.height);
+          var img = document.createElement("img");
+          img.src = canvas.toDataURL();
+          this.$output.prepend(img);
+       },
       //判断浏览器是否允许摄像头访问
 //      getUserMedia(obj, success, error) {
 //        if (navigator.getUserMedia) {
@@ -2374,16 +2398,6 @@
           })
       },
       join(){
-        navigator.getUserMedia = navigator.getUserMedia ||
-          navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia ||
-          navigator.msGetUserMedia;
-
-        if(navigator.getUserMedia){
-          alert("支持调取摄像头麦克风")
-        } else {
-          alert("抱歉不支持")
-        }
         this.haveVideoActive = false;
         this.handleSurvey = '';
         this.acceptStatus(this.roomId);
