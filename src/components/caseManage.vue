@@ -2009,7 +2009,6 @@
       }
     },
     created(){
-      this.getUserMedia({video:true},"","");
       this.userId = localStorage.getItem('userId');
       this.orgCode = localStorage.getItem('orgCode');
       this.localEl = document.getElementById('local');
