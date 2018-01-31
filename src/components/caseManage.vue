@@ -2374,16 +2374,6 @@
           })
       },
       join(){
-        navigator.getUserMedia = navigator.getUserMedia ||
-          navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia ||
-          navigator.msGetUserMedia;
-
-        if(navigator.getUserMedia){
-          alert("支持调取摄像头麦克风")
-        } else {
-          alert("抱歉不支持")
-        }
         this.haveVideoActive = false;
         this.handleSurvey = '';
         this.acceptStatus(this.roomId);
@@ -2477,7 +2467,7 @@
          //此时接受的了真正的流，可以把获取到的远端流放入远端标签
          roomInstance.on('stream_received',function (roomStream) {
            if(roomStream){
-             if(setIntervalTime > 10){_
+             if(setIntervalTime > 10){
                clearInterval(settime);
              that.open4("连接视频失败")
              }
