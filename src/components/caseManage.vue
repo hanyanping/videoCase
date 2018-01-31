@@ -1102,7 +1102,7 @@
                   <span v-if="TwoCarActive" style="color: #35aa42;">三者车：{{savetwovehicleLicenseNo}}</span>
                   <span v-else>三者车：{{savetwovehicleLicenseNo}}</span>
                   <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-if="TwoCarActive" class="u-edit-icon"></i>
-                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-else class="u-edit-iconGreay "></i>
+                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-else class="u-edit-iconGreay"></i>
                 </dd>
               </dl>
               <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event,savethreevehicleLicenseNo)">
@@ -2012,6 +2012,7 @@
       }
     },
     created(){
+//      this.getUserMedia({video:true},"","");
       this.userId = localStorage.getItem('userId');
       this.orgCode = localStorage.getItem('orgCode');
       this.localEl = document.getElementById('local');
@@ -2052,6 +2053,34 @@
       }, 15000)
     },
     methods: {
+      //判断浏览器是否允许摄像头访问
+//      getUserMedia(obj, success, error) {
+//        if (navigator.getUserMedia) {
+//          getUserMedia = function(obj, success, error) {
+//            navigator.getUserMedia(obj, function(stream) {
+//              success(stream);
+//            }, error);
+//          }
+//        } else if (navigator.webkitGetUserMedia) {
+//          getUserMedia = function(obj, success, error) {
+//            navigator.webkitGetUserMedia(obj, function(stream) {
+//              var _URL = window.URL || window.webkitURL;
+//              success(_URL.createObjectURL(stream));
+//            }, error);
+//          }
+//        } else if (navigator.mozGetUserMedia) {
+//          getUserMedia = function(obj, success, error) {
+//            navigator.mozGetUserMedia(obj, function(stream) {
+//              success(window.URL.createObjectURL(stream));
+//            }, error);
+//          }
+//        } else {
+//          return false;
+//        }
+//        return getUserMedia(obj, success, error);
+//
+//    },
+
       showFull(){
         var myvideo=document.getElementById("remote");
         myvideo.webkitrequestFullscreen();
@@ -2548,6 +2577,7 @@
 
          //Room内有流离开，将流从远端移除
          roomInstance.on('stream_removed',function (roomStream) {
+           that.disconnect()
            console.log("远端移除");
            wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
            that.node = '';
