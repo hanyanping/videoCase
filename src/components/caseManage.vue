@@ -944,10 +944,11 @@
         </div>
       </div>
     </div>
+    <button id="capture">Capture</button>
+    <div id="output"></div>
     <div class="caseContent">
       <video id="videoOne" v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
-      <button id="capture">Capture</button>
-      <div id="output"></div>
+
       <div class="caseLeft">
         <div class="tit">
           <h4>正在处理案件</h4>
@@ -2069,9 +2070,11 @@
         });
       },
        captureImage(){
+
           var canvas = document.createElement("canvas");
           canvas.width = this.video.videoWidth*(this.scale);
           canvas.height = this.video.videoHeight*(this.scale);
+         console.log(canvas.height)
           canvas.getContext('2d').drawImage(this.video,0,0,canvas.width,canvas.height);
           var img = document.createElement("img");
           img.src = canvas.toDataURL();
@@ -2402,18 +2405,18 @@
         this.handleSurvey = '';
         this.acceptStatus(this.roomId);
         $(".takePhoneImgBox").addClass("hide");
-         this.twoButton= false;
-          this.toOnlineActive= true;
-          this.processOnlineActive= false;
-          this.OnlineActive=false;
-          this.surveyActive = false;
-          this.conttime = 30;
+        this.twoButton= false;
+        this.toOnlineActive= true;
+        this.processOnlineActive= false;
+        this.OnlineActive=false;
+        this.surveyActive = false;
+        this.conttime = 30;
         clearInterval(this.t);
         var localStream = '';
         var that = this;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
-          captureVideo: true,
+          captureVideo: false,
           captureAudio: true,
           dimension: '480p',
           maxFPS: 15
@@ -2434,9 +2437,9 @@
         //room事件
 
 
-       roomInstance.on('connected',function () {
+        roomInstance.on('connected',function () {
           if(localStream!=''){
-         //向远程端送连接指令
+            //向远程端送连接指令
             var node = that.node;
             console.log(node)
             console.log(localStream)
@@ -2455,191 +2458,191 @@
             });
           }
           var setIntervalTime = '',settime = '';
-         //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
-         roomInstance.on('stream_added',function (roomStream) {
-           if(roomStream){
-             clearInterval(settime);       //停止计时器
-             settime = setInterval(function () {
-               setIntervalTime ++ ;
-             }, 1000)
-           }
-           $(".takePhoneImgBox").addClass("hide")
-           //订阅远端流
-           roomInstance.subscribe(roomStream,function (error) {
-             if(error == null){
-               that.remoteStream = roomStream;
-               console.log('subscribe success');
-             }else{
-               var localStream = that.localStream;
-               roomInstance.unpublish(localStream,function(error){
-                 if(error == null){
-                   console.log('unpublish success');
-                 }else{
-                   that.errorCode = error.code;
-                   that.errorMsg = error.message;
-                   that.pushErroCode()
-                 }
-               });
-               that.errorCode = err.code;
-               that.errorMsg = err.message;
-               that.pushErroCode();
-               that.connectFail();
-             }
-           });
-         });
+          //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
+          roomInstance.on('stream_added',function (roomStream) {
+            if(roomStream){
+              clearInterval(settime);       //停止计时器
+              settime = setInterval(function () {
+                setIntervalTime ++ ;
+              }, 1000)
+            }
+            $(".takePhoneImgBox").addClass("hide")
+            //订阅远端流
+            roomInstance.subscribe(roomStream,function (error) {
+              if(error == null){
+                that.remoteStream = roomStream;
+                console.log('subscribe success');
+              }else{
+                var localStream = that.localStream;
+                roomInstance.unpublish(localStream,function(error){
+                  if(error == null){
+                    console.log('unpublish success');
+                  }else{
+                    that.errorCode = error.code;
+                    that.errorMsg = error.message;
+                    that.pushErroCode()
+                  }
+                });
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode();
+                that.connectFail();
+              }
+            });
+          });
           var streamId = '';
-         //此时接受的了真正的流，可以把获取到的远端流放入远端标签
-         roomInstance.on('stream_received',function (roomStream) {
-           if(roomStream){
-             if(setIntervalTime > 10){_
-               clearInterval(settime);
-             that.open4("连接视频失败")
-             }
-           }
-           if(setIntervalTime < 10 && roomStream){
-             clearInterval(settime);
-             $(".takePhoneImgBox").addClass('hide');
-             that.getNodealCase();
-             that.steamActive = true;
-             that.$nextTick(() => {
-               var remoteEl = document.getElementById('remote');
-               roomStream.attach(remoteEl);
-               that.twoButton = false;
-               that.surveyActive = false;
-               that.toOnlineActive = false;
-               that.processOnlineActive =  false;
-               that.OnlineActive = true;
-               streamId = roomStream.streamId;
+          //此时接受的了真正的流，可以把获取到的远端流放入远端标签
+          roomInstance.on('stream_received',function (roomStream) {
+            if(roomStream){
+              if(setIntervalTime > 10){_
+                clearInterval(settime);
+                that.open4("连接视频失败")
+              }
+            }
+            if(setIntervalTime < 10 && roomStream){
+              clearInterval(settime);
+              $(".takePhoneImgBox").addClass('hide');
+              that.getNodealCase();
+              that.steamActive = true;
+              that.$nextTick(() => {
+                var remoteEl = document.getElementById('remote');
+                roomStream.attach(remoteEl);
+                that.twoButton = false;
+                that.surveyActive = false;
+                that.toOnlineActive = false;
+                that.processOnlineActive =  false;
+                that.OnlineActive = true;
+                streamId = roomStream.streamId;
 
-               //接受照片
-               wilddog.sync().ref(that.node+'/video_session').on('child_added', function(snapshot) {
-                 //获取抽帧图片的路径
-                 var snapshot = snapshot.val();
-                 console.log(that.node+'/video_session')
-                 console.log(snapshot)
-                 if(snapshot.indexOf("APP$$PHOTO$$")> -1 ){
-                   var lastIndex = snapshot.lastIndexOf('$')+1;
-                   if(lastIndex > -1){
-                     snapshot = snapshot.substring(lastIndex)
-                     snapshot = snapshot.replace(/&/g,",");
-                     snapshot = snapshot.split(",")
-                     for(let i in snapshot){
-                       if(i == 0){
-                         snapshot[i] = snapshot[i].replace(/%/g,"/")
-                         that.originalPhotoUrl = snapshot[i];
-                       }else if(i == 1){
-                         snapshot[i] = snapshot[i].replace(/%/g,"/")
-                         that.watermarkPhotoUrl = snapshot[i];
-                       }else if(i == 2){
-                         that.longitude = snapshot[i]
-                       }else if(i == 3){
-                         that.latitude = snapshot[i]
-                       }
-                     }
-                     that.$nextTick(() => {
-                       that.openTakePhone();
-                     })
-                   }
-                 }else if(snapshot.indexOf("APP$$PHOTO$$ERROR")>-1){
-                   that.open4("请重新拍照")
-                 }
-               },function(err){
-                 that.errorCode = err.code;
-                 that.errorMsg = err.message;
-                 that.pushErroCode()
-               })
-               //录制视频
-               var s = roomStream.streamId;
-               var a = {"left":0,"top":100,"width":900,"height":800,"zOrder":2},  map={};
-               map[s] = a;
-               var options = {
-                 "fps":10,
-                 "canvasWidth":1000,
-                 "canvasHeight":1000,
-               }
-               options.streams = map;
-               roomInstance.startRecording(options,function(url,error){
-                 if(error == null){
-                   console.log('开始录制，录制的文件地址：'+ url);
-                   var data = {
-                     "surveyNo": that.roomId,
-                     "videoRecordUrl": url,
-                   }
-                   axios.post(that.ajaxUrl+"/survey/video/v1/connect/success",data)
-                     .then(response => {
-                       if(response.data.rescode == 200){
-                       }else{
-                         this.open4(response.data.resdes)
-                       }
-                     }, err => {
-                       console.log(err);
-                     })
-                     .catch((error) => {
-                       console.log(error)
-                     })
-                 }else{
-                   that.errorCode = error.code;
-                   that.errorMsg = error.message;
-                   that.pushErroCode();
-                   that.connectFail();
-                 }
-               });
-             })
+                //接受照片
+                wilddog.sync().ref(that.node+'/video_session').on('child_added', function(snapshot) {
+                  //获取抽帧图片的路径
+                  var snapshot = snapshot.val();
+                  console.log(that.node+'/video_session')
+                  console.log(snapshot)
+                  if(snapshot.indexOf("APP$$PHOTO$$")> -1 ){
+                    var lastIndex = snapshot.lastIndexOf('$')+1;
+                    if(lastIndex > -1){
+                      snapshot = snapshot.substring(lastIndex)
+                      snapshot = snapshot.replace(/&/g,",");
+                      snapshot = snapshot.split(",")
+                      for(let i in snapshot){
+                        if(i == 0){
+                          snapshot[i] = snapshot[i].replace(/%/g,"/")
+                          that.originalPhotoUrl = snapshot[i];
+                        }else if(i == 1){
+                          snapshot[i] = snapshot[i].replace(/%/g,"/")
+                          that.watermarkPhotoUrl = snapshot[i];
+                        }else if(i == 2){
+                          that.longitude = snapshot[i]
+                        }else if(i == 3){
+                          that.latitude = snapshot[i]
+                        }
+                      }
+                      that.$nextTick(() => {
+                        that.openTakePhone();
+                      })
+                    }
+                  }else if(snapshot.indexOf("APP$$PHOTO$$ERROR")>-1){
+                    that.open4("请重新拍照")
+                  }
+                },function(err){
+                  that.errorCode = err.code;
+                  that.errorMsg = err.message;
+                  that.pushErroCode()
+                })
+                //录制视频
+                var s = roomStream.streamId;
+                var a = {"left":0,"top":100,"width":900,"height":800,"zOrder":2},  map={};
+                map[s] = a;
+                var options = {
+                  "fps":10,
+                  "canvasWidth":1000,
+                  "canvasHeight":1000,
+                }
+                options.streams = map;
+                roomInstance.startRecording(options,function(url,error){
+                  if(error == null){
+                    console.log('开始录制，录制的文件地址：'+ url);
+                    var data = {
+                      "surveyNo": that.roomId,
+                      "videoRecordUrl": url,
+                    }
+                    axios.post(that.ajaxUrl+"/survey/video/v1/connect/success",data)
+                      .then(response => {
+                        if(response.data.rescode == 200){
+                        }else{
+                          this.open4(response.data.resdes)
+                        }
+                      }, err => {
+                        console.log(err);
+                      })
+                      .catch((error) => {
+                        console.log(error)
+                      })
+                  }else{
+                    that.errorCode = error.code;
+                    that.errorMsg = error.message;
+                    that.pushErroCode();
+                    that.connectFail();
+                  }
+                });
+              })
 
-           }
-         });
+            }
+          });
 
-         //Room内有流离开，将流从远端移除
-         roomInstance.on('stream_removed',function (roomStream) {
-           that.disconnect()
-           console.log("远端移除");
-           wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
-           that.node = '';
-           that.releaseStatius()
+          //Room内有流离开，将流从远端移除
+          roomInstance.on('stream_removed',function (roomStream) {
+            that.disconnect()
+            console.log("远端移除");
+            wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
+            that.node = '';
+            that.releaseStatius()
             if(that.steamActive){
               roomStream.detach(document.getElementById('remote'));
             }
-           that.$nextTick(() => {
-             that.steamActive = false;
-             that.twoButton =  true;
-             that.toOnlineActive = false;
-             that.processOnlineActive = false;
-             that.OnlineActive  = false;
-             that.surveyActive = true;
-           })
-           //停止录制视频
-           roomInstance.stopRecording(function(url,err){
-             if(err == null){
-               console.log('停止录制，录制的文件地址：'+ url);
-             }else{
-               that.errorCode = err.code;
-               that.errorMsg = err.message;
-               that.pushErroCode()
-             }
-           });
-         });
-         //pc断开视频
-         roomInstance.on('disconnected',function () {
-           //停止录制视频
-           roomInstance.stopRecording(function(url,err){
-             if(err == null){
-               console.log('停止录制，录制的文件地址：'+ url);
-             }else{
-               that.errorCode = err.code;
-               that.errorMsg = err.message;
-               that.pushErroCode()
-             }
-           });
-           console.log(node);
-               wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
-               that.node = '';
-               that.steamActive = false;
-               that.twoButton =  true;
-               that.toOnlineActive = false;
-               that.processOnlineActive = false;
-               that.OnlineActive  = false;
-             console.log('disconnected room')
-           })
+            that.$nextTick(() => {
+              that.steamActive = false;
+              that.twoButton =  true;
+              that.toOnlineActive = false;
+              that.processOnlineActive = false;
+              that.OnlineActive  = false;
+              that.surveyActive = true;
+            })
+            //停止录制视频
+            roomInstance.stopRecording(function(url,err){
+              if(err == null){
+                console.log('停止录制，录制的文件地址：'+ url);
+              }else{
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode()
+              }
+            });
+          });
+          //pc断开视频
+          roomInstance.on('disconnected',function () {
+            //停止录制视频
+            roomInstance.stopRecording(function(url,err){
+              if(err == null){
+                console.log('停止录制，录制的文件地址：'+ url);
+              }else{
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode()
+              }
+            });
+            console.log(node);
+            wilddog.sync().ref(that.node+'/video_session').off("child_added");//移除照片监听
+            that.node = '';
+            that.steamActive = false;
+            that.twoButton =  true;
+            that.toOnlineActive = false;
+            that.processOnlineActive = false;
+            that.OnlineActive  = false;
+            console.log('disconnected room')
+          })
         });
       },
       //监听是否有视频发起
