@@ -944,11 +944,10 @@
         </div>
       </div>
     </div>
-    <button id="capture">Capture</button>
+    <button id="capture" @click="initializeq">Capture</button>
     <div id="output"></div>
     <div class="caseContent">
-      <video id="videoOne" v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
-
+      <video v-if="haveVideoActive" style="height:1px;width: 1px;" src="../images/source.mp3" autoplay="" type="video/mp3" controls="controls"></video>
       <div class="caseLeft">
         <div class="tit">
           <h4>正在处理案件</h4>
@@ -2048,7 +2047,6 @@
     },
     mounted () {
       var that = this;
-//      this.initialize()
       window.onbeforeunload = function(){
         localStorage.setItem('A',"2")
       };
@@ -2061,16 +2059,14 @@
       }, 15000)
     },
     methods: {
-       initialize(){
+      initializeq(){
         this.$output = $("#output");
-        this.video = $("#videoOne").get(0);
+        this.video = $("#remote").get(0);
         var that = this;
-        $("#capture").click(function(){
           that.captureImage()
-        });
       },
        captureImage(){
-
+         console.log(this.video)
           var canvas = document.createElement("canvas");
           canvas.width = this.video.videoWidth*(this.scale);
           canvas.height = this.video.videoHeight*(this.scale);
