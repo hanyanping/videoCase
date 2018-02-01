@@ -2387,15 +2387,21 @@
         clearInterval(this.t);
         var localStream = '';
         var that = this;
+        var roomInstance = that.roomInstance;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
-          captureVideo: false,
+          captureVideo: true,
           captureAudio: true,
-          dimension: '480p',
+          dimension: '120p',
           maxFPS: 15
         }).then(function (screenStream) {
           localStream = screenStream;
           that.localStream = localStream;
+
+          //进入到room
+          roomInstance.connect();
+          //room事件
+
         }).catch(function (err) {
           that.errorCode = err.code;
           that.errorMsg = err.message;
@@ -2404,10 +2410,7 @@
           }
           that.pushErroCode()
         });
-        var roomInstance = this.roomInstance;
-        //进入到room
-        roomInstance.connect();
-        //room事件
+
 
 
         roomInstance.on('connected',function () {
@@ -2467,7 +2470,7 @@
           //此时接受的了真正的流，可以把获取到的远端流放入远端标签
           roomInstance.on('stream_received',function (roomStream) {
             if(roomStream){
-              if(setIntervalTime > 10){_
+              if(setIntervalTime > 10){
                 clearInterval(settime);
                 that.open4("连接视频失败")
               }
