@@ -196,10 +196,10 @@
 
               <div class="caseInfoBox" v-if="caseDetailData.accidentInfo.exceptionReason != null"><span>异常原因：</span><i>{{caseDetailData.accidentInfo.exceptionReason}}</i></div>
           </div>
-          <div class="AimCar" v-if="beizhuActive">
+          <div class="AimCar">
             <div  class="aimheader clear"><span style="color:#fff;">备注信息</span><span style="color:#fff;padding-right:10px;cursor: pointer;" @click="saveBeizhu" class="right">保存</span></div>
             <div class="aimInfo">
-              <textarea class="beizhuInfo" v-model="beizhuInfo">
+              <textarea placeholder="请输入备注信息" class="beizhuInfo" v-model="beizhuInfo">
               </textarea>
             </div>
           </div>
@@ -231,12 +231,12 @@
           </div>
           <!--<div class="thirdCar AimCar" v-if="thirdActive" v-for="(item,index) in thirdCar">-->
           <div class="thirdCar AimCar" v-if="thirdActive" v-for="(item,index) in thirdCar">
-            <div class="aimheader">三者车({{item.vehicleLicenseNo}})</div>
+            <div class="aimheader">三者车({{item.vehicleLicenseNo}})<span style="color:#fff;padding-right:10px;cursor: pointer;" @click="savethirdCar(item.vehicleLicenseNo)" class="right">保存</span></div>
             <div class="aimInfo">
               <table class="table" border="0" cellspacing="0" cellpadding="0">
-                <tr><td>车牌号:</td><td>{{item.vehicleLicenseNo}}</td><td>车主电话: </td><td>{{item.contactPhoneNo}}</td></tr>
+                <tr><td>车牌号:</td><td>{{item.vehicleLicenseNo}}</td><td>车主电话: </td><td v-if="item.contactPhoneNo == null || item.contactPhoneNo == ''"> <input class="thirdphone" type="tel" maxlength="11" style="height:35px;" value="暂无"/></td><td v-else><input  maxlength="11" class="thirdphone" style="height:35px;" type="tel" :value="item.contactPhoneNo"/></td></tr>
               </table>
-              <div class="aimCarImg thirdImg">
+              <div class="aimCarImg thirdImg" v-if="item.thirdCarImg.length!=0">
                 <ul class="suibian">
                   <li v-for="itemImg in item.thirdCarImg">
                     <img :data-src="itemImg.photoUri" :src="itemImg.smallPhotoUri"/>
@@ -393,6 +393,7 @@ export default {
        }
         this.accidentVehicleInfos = this.caseDetailData.accidentVehicleInfos;
        if(this.accidentVehicleInfos !== null){
+
          for(let i in this.accidentVehicleInfos){
            this.accidentVehicleInfos[i].thirdCarImg = [];
            this.getCasePhones(1,4,this.accidentVehicleInfos[i].vehicleLicenseNo,this.surveyNo,i)
@@ -423,6 +424,46 @@ export default {
 
             }
             axios.post(this.ajaxUrl+"/survey/order/v1/save/note",data)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.open2(response.data.resdes)
+                }else{
+                  this.open4(response.data.resdes)
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+        },
+        savethirdCar(vehicleLicenseNumber){
+          for(var i=0;i<this.thirdCar.length;i++){
+            if(this.thirdCar[i].vehicleLicenseNo == vehicleLicenseNumber){
+              var vehicleOwnerPhone = $(".thirdphone").eq(i).val();
+            }
+          }
+          vehicleOwnerPhone = vehicleOwnerPhone.replace(/\s/g,"");
+          var reg = new RegExp("^[0-9]*$");
+          if(!reg.test(vehicleOwnerPhone)){
+            this.open4("请输入正确手机号")
+          }else if(vehicleOwnerPhone.length<11 && vehicleOwnerPhone.length>0) {
+            this.open4("请输入正确手机号")
+          }else{
+            if(vehicleOwnerPhone == '') {
+              for (var i = 0; i < this.thirdCar.length; i++) {
+                if (this.thirdCar[i].vehicleLicenseNo == vehicleLicenseNumber) {
+                  $(".thirdphone").eq(i).val('暂无');
+                }
+              }
+            }
+            var data = {
+              'surveyNo':this.surveyNo,
+              "vehicleLicenseNumber":vehicleLicenseNumber,
+              "vehicleOwnerPhone": vehicleOwnerPhone
+            }
+            axios.post(this.ajaxUrl+"/survey/vehicle/v1/owner",data)
               .then(response => {
                 if(response.data.rescode == 200){
                   this.open2(response.data.resdes)
@@ -474,14 +515,6 @@ export default {
                 swfobj.addParam('wmode', 'transparent');
                 swfobj.write("video" + i);
               }
-//             for(let i in this.surveyVideoRooms){
-//                console.log($("video"+i).html())
-//                if($("video"+i).html()){
-//                    this.showFlash = false;
-//                }else{
-//                  this.showFlash = true;
-//                }
-//             }
             })
           }
 
@@ -498,6 +531,7 @@ export default {
         handleCurrentChangethird(currentPage){
           for(let i in this.accidentVehicleInfos){
             if(this.thirdvehicleLicenseNo == this.accidentVehicleInfos[i].vehicleLicenseNo){
+
               this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,i)
             }
           }
@@ -517,9 +551,9 @@ export default {
           axios.post(this.ajaxUrl+"/survey/order/history/v1/photo/list",paramData)
             .then(response => {
               if(response.data.rescode == 200){
-                if(response.data.data.records.length != 0){
                   if(source == ""){
                     this.recordsImg = response.data.data.records;
+
                     this.totalCountAim = response.data.data.total;
                     this.$nextTick(() => {
                       new Viewer(document.getElementById('scaleImg'), {
@@ -556,7 +590,7 @@ export default {
                       }
                     })
                   }
-                }
+
               }else{
 
               }

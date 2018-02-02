@@ -244,7 +244,6 @@
             .then(response => {
                 if(response.data.rescode == 200){
                   localStorage.setItem('A',"2")
-                  this.open2();
                   localStorage.setItem('insurecode',response.data.data.insurecode);
                   localStorage.setItem('orgCode',response.data.data.organizationCode);
                   localStorage.setItem('chinaName',response.data.data.organizationName)
@@ -255,8 +254,6 @@
                     'orgCode':response.data.data.organizationCode,
                     "userId":response.data.data.userId
                   }
-
-
                 }else {
                   this.open4(response.data.resdes);
                   this.getCode()
