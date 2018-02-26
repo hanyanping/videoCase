@@ -287,7 +287,7 @@
   }
   #doing .item-txt-list {
     border-bottom: 1px dashed #dcdcdc;
-    padding: 15px 0;
+    padding: 10px 0;
     line-height: 25px;
   }
   #doing .item-txt-list p {
@@ -785,6 +785,19 @@
     border: 1px solid #35aa42;
     color: #35aa42;
   }
+  .backColorGreenButton{
+    color: #fff;
+    font-size: 15px;
+    display: inline-block;
+    width: 85px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    margin-right: 8px;
+  }
+  .viewer-footer{
+    display:none;
+  }
 </style>
 <template>
 
@@ -869,7 +882,7 @@
         <h4>{{imgType}}</h4>
         <span @click="closetakeCaleImg" class="right closeCaleImgBox">×</span>
         <div class="imgSize">
-          <img :src="originalPhotoUrl" />
+          <img id="bigsizeImg" :src="originalPhotoUrl"/>
         </div>
         <div style="display: flex;justify-content: center;margin-top:20px;">
           <div class="takedeletImg" @click="deletTakeImg">删除</div>
@@ -964,6 +977,7 @@
             <div class="item-txt-list">
               <p>查勘员姓名：{{leftData.liveSurveyorName}} </p>
               <p>查勘员电话：{{leftData.liveSurveyorPhone }}</p>
+              <p>查勘员接单数：{{leftData.liveSurveyorCompleteOrderCount}}</p>
               <p v-if="leftData.liveSurveyorStatus == '11'">查勘员状态：待指派</p>
               <p v-if="leftData.liveSurveyorStatus == '12'">查勘员状态：已指派</p>
               <p v-if="leftData.liveSurveyorStatus == '13'">查勘员状态：已到达</p>
@@ -1086,36 +1100,42 @@
     <div class="casePhotos">
       <div class="g-content-row">
         <div class="gcr-mod m-carNo-imgInfo">
-          <div class="gcr-tit" id="carInfo">
-            <h4>照片信息</h4>
-            <div v-if="carPhoneActive" style="display:flex;">
-              <dl class="m-carNo-list" id="selectImgType" @click="selectCarAim('0',$event,saveonevehicleLicenseNo)">
-                <dd id="c0" class="data-car-m" >
-                  <span v-if="oneCarActive" style="color: #35aa42;">标的车：{{saveonevehicleLicenseNo}}</span>
-                  <span v-else>标的车：{{saveonevehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0' )" v-if="oneCarActive" class="u-edit-icon"></i>
-                  <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0')" v-else class="u-edit-iconGreay hide"></i>
-                </dd>
-              </dl>
-              <dl v-if="ImgInfo.length>1" class="m-carNo-list" id="selectImgTypeTwo" @click="selectCarAim('1',$event,savetwovehicleLicenseNo)">
-                <dd id="c1" class="data-car-m">
-                  <span v-if="TwoCarActive" style="color: #35aa42;">三者车：{{savetwovehicleLicenseNo}}</span>
-                  <span v-else>三者车：{{savetwovehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-if="TwoCarActive" class="u-edit-icon"></i>
-                  <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-else class="u-edit-iconGreay"></i>
-                </dd>
-              </dl>
-              <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event,savethreevehicleLicenseNo)">
-                <dd id="c2" class="data-car-m">
-                  <span v-if="threeCarActive" style="color: #35aa42;">三者车：{{savethreevehicleLicenseNo}}</span>
-                  <span v-else>三者车：{{savethreevehicleLicenseNo}}</span>
-                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-if="threeCarActive" class="u-edit-icon"></i>
-                  <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-else class="u-edit-iconGreay "></i>
-                </dd>
-              </dl>
-              <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar('3')"></div>
+          <div class="gcr-tit" style="justify-content: space-between;" id="carInfo">
+            <div class="flex">
+                <h4>照片信息</h4>
+                <div v-if="carPhoneActive" style="display:flex;">
+                  <dl class="m-carNo-list" id="selectImgType" @click="selectCarAim('0',$event,saveonevehicleLicenseNo)">
+                    <dd id="c0" class="data-car-m" >
+                      <span v-if="oneCarActive" style="color: #35aa42;">标的车：{{saveonevehicleLicenseNo}}</span>
+                      <span v-else>标的车：{{saveonevehicleLicenseNo}}</span>
+                      <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0' )" v-if="oneCarActive" class="u-edit-icon"></i>
+                      <i data-type="1"  data-id="839" data-licenseno="saveonevehicleLicenseNo" @click="editorCar(saveonevehicleLicenseNo,saveoneoriginalVehicleLicenseNo,isOrderVehicleone,'0')" v-else class="u-edit-iconGreay hide"></i>
+                    </dd>
+                  </dl>
+                  <dl v-if="ImgInfo.length > 1" class="m-carNo-list" id="selectImgTypeTwo" @click="selectCarAim('1',$event,savetwovehicleLicenseNo)">
+                    <dd id="c1" class="data-car-m">
+                      <span v-if="TwoCarActive" style="color: #35aa42;">三者车：{{savetwovehicleLicenseNo}}</span>
+                      <span v-else>三者车：{{savetwovehicleLicenseNo}}</span>
+                      <i data-type="1"  data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-if="TwoCarActive" class="u-edit-icon"></i>
+                      <i data-type="1" data-id="839"  @click="editorCar(savetwovehicleLicenseNo,savetwooriginalVehicleLicenseNo,isOrderVehicletwo,'1')" v-else class="u-edit-iconGreay"></i>
+                    </dd>
+                  </dl>
+                  <dl v-if="ImgInfo.length > 2" class="m-carNo-list" id="selectImgTypeThree" @click="selectCarAim('2',$event,savethreevehicleLicenseNo)">
+                    <dd id="c2" class="data-car-m">
+                      <span v-if="threeCarActive" style="color: #35aa42;">三者车：{{savethreevehicleLicenseNo}}</span>
+                      <span v-else>三者车：{{savethreevehicleLicenseNo}}</span>
+                      <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-if="threeCarActive" class="u-edit-icon"></i>
+                      <i data-type="1"  data-id="839" @click="editorCar(savethreevehicleLicenseNo,savethreeoriginalVehicleLicenseNo,isOrderVehiclethree,'2')" v-else class="u-edit-iconGreay "></i>
+                    </dd>
+                  </dl>
+                  <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar('3')"></div>
+                </div>
             </div>
-
+            <div style="margin-top: 3px;">
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('0')">45度角</span>
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('1')">车架号</span>
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('2')">行驶驾驶证</span>
+            </div>
           </div>
           <div class="gcr-cont" style="padding-top: 0">
             <div class="m-carNo-imgList" id="picListZone" v-if="carPhoneActive">
@@ -1204,6 +1224,7 @@
     },
     data() {
       return{
+        liveSurveyorCompleteOrderCount: "",//骑手接单数
         beizhuInfo: "",
         editorcar: "",
         opsType: "1",
@@ -1250,7 +1271,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1261,7 +1282,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1273,7 +1294,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1284,7 +1305,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },
@@ -1296,7 +1317,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },{
@@ -1307,7 +1328,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1319,7 +1340,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1330,7 +1351,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1342,7 +1363,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1353,7 +1374,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1365,7 +1386,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1376,7 +1397,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/2.png"
+                "watermarkPhotoUrl": "../../video/static/2.png"
               }
             ]
           },
@@ -1388,7 +1409,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1399,7 +1420,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1411,7 +1432,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/3.png"
+                "watermarkPhotoUrl": "../../video/static/3.png"
               }
             ]
           }
@@ -1425,7 +1446,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -1436,7 +1457,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_2.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_2.jpg"
               }
             ]
           },
@@ -1448,7 +1469,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_3.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_3.jpg"
               }
             ]
           },{
@@ -1459,7 +1480,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },
@@ -1471,7 +1492,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/1.png"
+                "watermarkPhotoUrl": "../../video/static/1.png"
               }
             ]
           },{
@@ -1482,7 +1503,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_4.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_4.jpg"
               }
             ]
           },
@@ -1494,7 +1515,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_5.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_5.jpg"
               }
             ]
           },{
@@ -1505,7 +1526,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_6.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_6.jpg"
               }
             ]
           },
@@ -1517,7 +1538,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_7.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_7.jpg"
               }
             ]
           },{
@@ -1528,7 +1549,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_8.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_8.jpg"
               }
             ]
           },
@@ -1540,7 +1561,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_9.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_9.jpg"
               }
             ]
           },{
@@ -1551,7 +1572,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/2.png"
+                "watermarkPhotoUrl": "../../video/static/2.png"
               }
             ]
           },
@@ -1563,7 +1584,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_10.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_10.jpg"
               }
             ]
           },{
@@ -1574,7 +1595,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/icon_noImg_11.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_11.jpg"
               }
             ]
           },
@@ -1586,7 +1607,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": "../video/3.png"
+                "watermarkPhotoUrl": "../../video/static/3.png"
               }
             ]
           }
@@ -1600,7 +1621,7 @@
             "surveyPhotos": [
               {
                 "photoId": "",
-                "watermarkPhotoUrl": " ../../video/static/icon_noImg_1.jpg"
+                "watermarkPhotoUrl": "../../video/static/icon_noImg_1.jpg"
               }
             ]
           },{
@@ -2080,7 +2101,13 @@
 //        return getUserMedia(obj, success, error);
 //
 //    },
-
+    //3个照片类型
+      takephoneType(type){
+        var node = this.node;
+        var photoType = 'WEB$$takePic'+ type;
+        console.log(photoType)
+        wilddog.sync().ref(node).child("video_session").push(photoType);
+      },
       showFull(){
         var myvideo=document.getElementById("remote");
         myvideo.webkitrequestFullscreen();
@@ -2211,7 +2238,7 @@
       //点击拍照
       takePic(){
         var node = this.node;
-        console.log(node)
+        console.log(this.photoType);
         wilddog.sync().ref(node).child("video_session").push("WEB$$takePic");
       },
       pushErroCode(){
@@ -2391,6 +2418,7 @@
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
           captureVideo: true,
+//          captureVideo: false,
           captureAudio: true,
           dimension: '120p',
           maxFPS: 15
@@ -2412,7 +2440,7 @@
         });
 
 
-
+//        roomInstance.connect();
         roomInstance.on('connected',function () {
           if(localStream!=''){
             //向远程端送连接指令
@@ -2506,6 +2534,15 @@
                         if(i == 0){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
                           that.originalPhotoUrl = snapshot[i];
+                          that.$nextTick(() => {
+                            new Viewer(document.getElementById('bigsizeImg'), {
+                              url: 'data-src',
+                              navbar:false,
+                              toolbar:false,
+                              loop: true
+                            })
+                          })
+
                         }else if(i == 1){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
                           that.watermarkPhotoUrl = snapshot[i];
@@ -2710,9 +2747,7 @@
                         wilddogVideo.initialize({'appId':appVideoId,'token':user.getToken()});
                         //获取WilddogVideoRoom实例
                         that.roomId = snapshot.val().surveyNo;
-
                         that.getPhontos();
-//                      that.roomId = "3869dc3e14c14e3eb12590200ed437a9"
                         that.roomInstance = wilddogVideo.room(that.roomId);
                       }).catch(function (error) {
                         // Handle Errors here.
