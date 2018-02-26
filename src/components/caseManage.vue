@@ -2534,14 +2534,14 @@
                         if(i == 0){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
                           that.originalPhotoUrl = snapshot[i];
-                       /*   that.$nextTick(() => {
+                          that.$nextTick(() => {
                             new Viewer(document.getElementById('bigsizeImg'), {
                               url: 'data-src',
                               navbar:false,
                               toolbar:false,
                               loop: true
                             })
-                          })*/
+                          })
 
                         }else if(i == 1){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
