@@ -1131,11 +1131,11 @@
                   <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar('3')"></div>
                 </div>
             </div>
-            <div style="margin-top: 3px;">
-              <span class="backColorGreen backColorGreenButton" @click="takephoneType('0')">45度角</span>
-              <span class="backColorGreen backColorGreenButton" @click="takephoneType('1')">车架号</span>
-              <span class="backColorGreen backColorGreenButton" @click="takephoneType('2')">行驶驾驶证</span>
-            </div>
+            <!--<div style="margin-top: 3px;">-->
+              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('0')">45度角</span>-->
+              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('1')">车架号</span>-->
+              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('2')">行驶驾驶证</span>-->
+            <!--</div>-->
           </div>
           <div class="gcr-cont" style="padding-top: 0">
             <div class="m-carNo-imgList" id="picListZone" v-if="carPhoneActive">
@@ -2450,16 +2450,16 @@
             wilddog.sync().ref(node).child("video_connection").push("WEB$$goToConnection");
             //发布本地流
             console.log(roomInstance)
-            roomInstance.publish(localStream,function(error){
-              if(error == null){
-                console.log('publish success');
-              }else{
-                that.errorCode = err.code;
-                that.errorMsg = err.message;
-                that.pushErroCode();
-                that.connectFail();
-              }
-            });
+//            roomInstance.publish(localStream,function(error){
+//              if(error == null){
+//                console.log('publish success');
+//              }else{
+//                that.errorCode = err.code;
+//                that.errorMsg = err.message;
+//                that.pushErroCode();
+//                that.connectFail();
+//              }
+//            });
           }
           var setIntervalTime = '',settime = '';
           //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
@@ -2534,14 +2534,14 @@
                         if(i == 0){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
                           that.originalPhotoUrl = snapshot[i];
-                          that.$nextTick(() => {
+                       /*   that.$nextTick(() => {
                             new Viewer(document.getElementById('bigsizeImg'), {
                               url: 'data-src',
                               navbar:false,
                               toolbar:false,
                               loop: true
                             })
-                          })
+                          })*/
 
                         }else if(i == 1){
                           snapshot[i] = snapshot[i].replace(/%/g,"/")
