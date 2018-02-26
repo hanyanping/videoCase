@@ -1220,7 +1220,6 @@
 
   export default {
     ready() {
-      console.log('111');
     },
     data() {
       return{
