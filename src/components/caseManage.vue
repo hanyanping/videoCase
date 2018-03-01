@@ -1050,6 +1050,12 @@
                         <!--</div>-->
                       </div>
                     </div>
+                    <!--<div class="player-auto-flash" id="closevideo" @click="closeVideo">-->
+                      <!--<img style="width:30px;height:30px;" src="../images/videoClose.png">-->
+                    <!--</div>-->
+                    <!--<div class="player-auto-flash" id="openvideo" style="display:none" @click="openVideo">-->
+                      <!--<img style="width:30px;height:30px;" src="../images/videoOpen.png">-->
+                    <!--</div>-->
                     <div class="player-auto-flash" id="closeflashButton" style="display:none">
                     <img src="../images/video_ico_11.png">
                     </div>
@@ -2232,7 +2238,18 @@
       openLight(){
         var node = this.node;
         wilddog.sync().ref(node).child("video_session").push("WEB$$openLight");
-
+      },
+      closeVideo(){
+        var node = this.node;
+        wilddog.sync().ref(node).child("video_session").push("WEB$$CloseVideo");
+        $("#closevideo").css("display",'none');
+        $("#openvideo").css("display",'block')
+      },
+      openVideo(){
+        var node = this.node;
+        wilddog.sync().ref(node).child("video_session").push("WEB$$openVideo");
+        $("#closevideo").css("display",'block');
+        $("#openvideo").css("display",'none')
       },
       //点击拍照
       takePic(){
@@ -2416,8 +2433,8 @@
         var roomInstance = that.roomInstance;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
-          captureVideo: true,
-//          captureVideo: false,
+//           captureVideo: true,
+          captureVideo: false,
           captureAudio: true,
           dimension: '120p',
           maxFPS: 15
@@ -2449,16 +2466,16 @@
             wilddog.sync().ref(node).child("video_connection").push("WEB$$goToConnection");
             //发布本地流
             console.log(roomInstance)
-//            roomInstance.publish(localStream,function(error){
-//              if(error == null){
-//                console.log('publish success');
-//              }else{
-//                that.errorCode = err.code;
-//                that.errorMsg = err.message;
-//                that.pushErroCode();
-//                that.connectFail();
-//              }
-//            });
+            roomInstance.publish(localStream,function(error){
+              if(error == null){
+                console.log('publish success');
+              }else{
+                that.errorCode = err.code;
+                that.errorMsg = err.message;
+                that.pushErroCode();
+                that.connectFail();
+              }
+            });
           }
           var setIntervalTime = '',settime = '';
           //Room内有流加入，此时不是真正的流，需要选择订阅才能获取
@@ -2496,6 +2513,7 @@
           var streamId = '';
           //此时接受的了真正的流，可以把获取到的远端流放入远端标签
           roomInstance.on('stream_received',function (roomStream) {
+            console.log("远端流："+JSON.stringify(roomStream));
             if(roomStream){
               if(setIntervalTime > 10){
                 clearInterval(settime);

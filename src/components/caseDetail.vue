@@ -531,7 +531,6 @@ export default {
         handleCurrentChangethird(currentPage){
           for(let i in this.accidentVehicleInfos){
             if(this.thirdvehicleLicenseNo == this.accidentVehicleInfos[i].vehicleLicenseNo){
-
               this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,i)
             }
           }
