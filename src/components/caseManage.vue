@@ -1050,12 +1050,12 @@
                         <!--</div>-->
                       </div>
                     </div>
-                    <!--<div class="player-auto-flash" id="closevideo" @click="closeVideo">-->
-                      <!--<img style="width:30px;height:30px;" src="../images/videoClose.png">-->
-                    <!--</div>-->
-                    <!--<div class="player-auto-flash" id="openvideo" style="display:none" @click="openVideo">-->
-                      <!--<img style="width:30px;height:30px;" src="../images/videoOpen.png">-->
-                    <!--</div>-->
+                    <div class="player-auto-flash" id="closevideo" style="display:none" @click="closeVideo">
+                      <img style="width:30px;height:30px;" src="../images/videoClose.png">
+                    </div>
+                    <div class="player-auto-flash" id="openvideo"  @click="openVideo">
+                      <img style="width:30px;height:30px;" src="../images/videoOpen.png">
+                    </div>
                     <div class="player-auto-flash" id="closeflashButton" style="display:none">
                     <img src="../images/video_ico_11.png">
                     </div>
@@ -1137,11 +1137,11 @@
                   <div class="m-carNo-add" v-if="carThreeActive" id="addCarNo" @click="openAddCar('3')"></div>
                 </div>
             </div>
-            <!--<div style="margin-top: 3px;">-->
-              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('0')">45度角</span>-->
-              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('1')">车架号</span>-->
-              <!--<span class="backColorGreen backColorGreenButton" @click="takephoneType('2')">行驶驾驶证</span>-->
-            <!--</div>-->
+            <div style="margin-top: 3px;">
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('0')">45度角</span>
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('1')">车架号</span>
+              <span class="backColorGreen backColorGreenButton" @click="takephoneType('2')">行驶驾驶证</span>
+            </div>
           </div>
           <div class="gcr-cont" style="padding-top: 0">
             <div class="m-carNo-imgList" id="picListZone" v-if="carPhoneActive">
@@ -1175,7 +1175,7 @@
                         <a href="javascript:;">{{item.photoTypeComment}}</a>
                        </span>
                       <div class="tag hide"></div>
-                      <div class="circle" v-if="photoCountActive">{{item.photoCount}}</div>
+                      <div class="circle" v-if="item.photoCount>1">{{item.photoCount}}</div>
                     </div>
 
                   </li>
@@ -1192,7 +1192,7 @@
                         <a href="javascript:;">{{item.photoTypeComment}}</a>
                        </span>
                       <div class="tag hide"></div>
-                      <div class="circle" v-if="photoCountActive">{{item.photoCount}}</div>
+                      <div class="circle" v-if="item.photoCount>1">{{item.photoCount}}</div>
                     </div>
                   </li>
                 </ul>
@@ -2241,13 +2241,13 @@
       },
       closeVideo(){
         var node = this.node;
-        wilddog.sync().ref(node).child("video_session").push("WEB$$CloseVideo");
+        wilddog.sync().ref(node).child("video_session").push("WEB$$closeRemoteWindow");
         $("#closevideo").css("display",'none');
         $("#openvideo").css("display",'block')
       },
       openVideo(){
         var node = this.node;
-        wilddog.sync().ref(node).child("video_session").push("WEB$$openVideo");
+        wilddog.sync().ref(node).child("video_session").push("WEB$$openRemoteWindow");
         $("#closevideo").css("display",'block');
         $("#openvideo").css("display",'none')
       },
@@ -2273,12 +2273,13 @@
           this.roomId = "noSurveyNo"
         }
         var data = {
+          'errorOrigin ':'0',
           'surveyNo':this.roomId,
           "videoRoomId":this.roomId,
           "errorCode": this.errorCode,
           "errorMsg":this.errorMsg
         }
-        axios.post(this.ajaxUrl+"/survey/video/v1//error/trace",data)
+        axios.post(this.ajaxUrl+"/survey/video/v1/error/trace",data)
           .then(response => {
             if(response.data.rescode == 200){
 
@@ -2433,8 +2434,8 @@
         var roomInstance = that.roomInstance;
         // 创建本地桌面或窗口媒体流，用于进行屏幕共享。注意：该媒体流只有视频流，无音频流，且视频流分辨率有窗口大小决定。
         wilddogVideo.createLocalStream({
-//           captureVideo: true,
-          captureVideo: false,
+           captureVideo: true,
+//          captureVideo: false,
           captureAudio: true,
           dimension: '120p',
           maxFPS: 15
